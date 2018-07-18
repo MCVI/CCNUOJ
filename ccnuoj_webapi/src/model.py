@@ -45,7 +45,7 @@ class Group(db.Model):
 
     userList = db.relationship(
         'User',
-        secondary=UserGroup,
+        secondary='user_group',
         backref=db.backref('groupList', lazy='dynamic'),
         lazy='dynamic',
     )
@@ -151,8 +151,8 @@ class JudgeScheme(db.Model):
     script = db.Column(db.Text, nullable=False)
 
     languages = db.relationship(
-        'language',
-        secondary=JudgeSchemeLanguage,
+        'Language',
+        secondary='judge_scheme_language',
         lazy='dynamic',
     )
 
@@ -267,7 +267,7 @@ class Contest(EntityMixin, db.Model):
 
     problemList = db.relationship(
         'Problem',
-        secondary=ContestProblem,
+        secondary='contest_problem',
         backref=db.backref('contestList', lazy='dynamic'),
         lazy='dynamic',
     )
