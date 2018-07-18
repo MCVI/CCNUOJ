@@ -15,11 +15,16 @@ class UserGroup(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
     group = db.Column(db.Integer, db.ForeignKey('group.id'), primary_key=True, nullable=False)
 
+    __table_args__ = (
+        db.Index('ix_user_group_user', 'user'),
+        db.Index('ix_user_group_group', 'group'),
+    )
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    nickname = db.Column(db.String(), unique=True, index=True, nullable=False)
-    email = db.Column(EmailType, unique=True, index=True, nullable=False)
+    email = db.Column(EmailType, nullable=False)
+    shortName = db.Column(db.String(), nullable=False)
 
     createTime = db.Column(db.DateTime, nullable=False)
     realPersonInfo = db.Column(JSONType, nullable=False)
@@ -27,10 +32,15 @@ class User(db.Model):
 
     auth = db.Column(JSONType, nullable=False)
 
+    __table_args__ = (
+        db.UniqueConstraint('email'),
+        db.UniqueConstraint('shortName'),
+    )
+
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    displayName = db.Column(db.String(), unique=True, nullable=False)
+    displayName = db.Column(db.String(), nullable=False)
     extraInfo = db.Column(JSONType, nullable=False)
 
     userList = db.relationship(
@@ -40,23 +50,49 @@ class Group(db.Model):
         lazy='dynamic',
     )
 
+    __table_args__ = (
+        db.UniqueConstraint('displayName'),
+    )
 
-class AccessControlObjectType(Enum):
-    User = 'user'
-    Group = 'group'
+
+class AccessControlSubjectEnum(Enum):
+    User = 'USER'
+    Group = 'GRP'
+
+
+class AccessControlObjectEnum(Enum):
+    Super = 'SUPR'
+    ServerOperation = 'SERV'
+
+    User = 'USER'
+    Problem = 'PRBL'
+    Contest = 'CNTS'
+
+
+AccessControlSubjectEnumType = ChoiceType(AccessControlSubjectEnum, impl=db.String(4))
+AccessControlObjectEnumType = ChoiceType(AccessControlObjectEnum, impl=db.String(4))
 
 
 class AccessLevel(Enum):
-    readable = 'readable'
-    editable = 'editable'
-    fullControl = 'fullControl'
+    readable = 'read'
+    editable = 'edit'
+    fullControl = 'full'
+
+
+AccessLevelType = ChoiceType(AccessLevel, impl=db.String(4))
 
 
 class AccessControlList(db.Model):
-    group = db.Column(db.Integer, db.ForeignKey('group.id'), primary_key=True, nullable=False)
-    objType = db.Column(ChoiceType(AccessControlObjectType), primary_key=True, nullable=False)
-    objId = db.Column(db.Integer, primary_key=True, nullable=False)
-    level = db.Column(ChoiceType(AccessLevel), nullable=False)
+    subjectType = db.Column(AccessControlSubjectEnumType, primary_key=True, nullable=False)
+    subjectId = db.Column(db.Integer, primary_key=True, nullable=True)
+    objectType = db.Column(AccessControlObjectEnumType, primary_key=True, nullable=False)
+    objectId = db.Column(db.Integer, primary_key=True, nullable=True)
+    level = db.Column(AccessLevelType, nullable=False)
+
+    __table_args__ = (
+        db.Index('ix_access_control_list_subjectType_subjectId', 'subjectType', 'subjectId'),
+        db.Index('ix_access_control_list_objectType_objectId', 'objectType', 'objectId'),
+    )
 
 
 class TimestampMixin:
@@ -77,8 +113,34 @@ class EntityMixin(TimestampMixin):
 class Problem(EntityMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
 
-    judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), primary_key=True, nullable=False)
+    timeLimit = db.Column(db.Integer, nullable=False)
+    memoryLimit = db.Column(db.Integer, nullable=False)
+    judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), nullable=False)
     judgeParam = db.Column(JSONType, nullable=False)
+
+    __table_args__ = (
+        db.Index('ix_problem_author', 'author'),
+    )
+
+class Language(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    shortName = db.Column(db.String(8), nullable=False)
+    displayName = db.Column(db.String(), nullable=False)
+
+    script = db.Column(db.Text, nullable=False)
+
+    __table_args__ = (
+        db.UniqueConstraint('shortName'),
+        db.UniqueConstraint('displayName'),
+    )
+
+class JudgeSchemeLanguage(db.Model):
+    judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), primary_key=True, nullable=False)
+    language = db.Column(db.String(8), db.ForeignKey('language.id'), primary_key=True, nullable=False)
+
+    __table_args__ = (
+        db.Index('ix_judge_scheme_language_judge_scheme', 'judgeScheme'),
+    )
 
 
 class JudgeScheme(db.Model):
@@ -88,9 +150,21 @@ class JudgeScheme(db.Model):
 
     script = db.Column(db.Text, nullable=False)
 
+    languages = db.relationship(
+        'language',
+        secondary=JudgeSchemeLanguage,
+        lazy='dynamic',
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint('displayName'),
+    )
+
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+
+    createTime = db.Column(db.DateTime, nullable=False)
 
     problem = db.Column(db.Integer, db.ForeignKey('problem.id'), nullable=False)
     contest = db.Column(db.Integer, db.ForeignKey('contest.id'), nullable=True)
@@ -98,8 +172,78 @@ class Submission(db.Model):
 
     text = db.Column(db.Text, nullable=False)
 
-    judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), nullable=False)
-    judgeParam = db.Column(JSONType, nullable=False)
+    judgeRequests = db.relationship(
+        'JudgeRequest',
+        lazy='dynamic',
+    )
+
+    __table_args__ = (
+        db.Index('ix_submission_problem', 'problem'),
+        db.Index('ix_submission_contest', 'contest'),
+        db.Index('ix_submission_author', 'author'),
+    )
+
+
+class JudgeState(Enum):
+    pending = 'PEND'
+
+    compiling = 'CMPL'
+    compileError = 'CE'
+    compileTimeLimitExceeded = 'CTLE'
+
+    running = 'RUN'
+    runtimeError = 'RE'
+    timeLimitExceeded = 'TLE'
+    memoryLimitExceeded = 'MLE'
+    outputLimitExceeded = 'OLE'
+
+    comparing = 'CMPR'
+
+    accepted = 'AC'
+    wrongAnswer = 'WA'
+    presentationError = 'PE'
+
+    systemError = 'SYSE'
+
+
+JudgeStateType = ChoiceType(JudgeState, impl=db.String(4))
+
+
+class JudgeRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    submission = db.Column(db.Integer, db.ForeignKey('submission.id'), nullable=False)
+
+    operator = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    reason = db.Column(db.Text, nullable=True)
+
+    createTime = db.Column(db.DateTime, nullable=False)
+    finishTime = db.Column(db.DateTime, nullable=True)
+
+    state = db.Column(JudgeStateType, nullable=False)
+
+    judgeCommand = db.Column(db.Integer, db.ForeignKey('judge_command.id'), nullable=False)
+
+    __table_args__ = (
+        db.Index('ix_judge_request_submission', 'submission'),
+        db.Index('ix_judge_request_operator', 'operator'),
+        db.UniqueConstraint('judgeCommand'),
+    )
+
+
+class JudgeCommand(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+
+    operator = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    createTime = db.Column(db.DateTime, nullable=False)
+    command = db.Column(JSONType, nullable=False)
+
+    finishTime = db.Column(db.DateTime, nullable=True)
+    result = db.Column(JSONType, nullable=True)
+
+    __table_args__ = (
+        db.Index('ix_judge_command_operator', 'operator'),
+    )
 
 
 class ContestProblem(db.Model):
@@ -107,6 +251,10 @@ class ContestProblem(db.Model):
     problem = db.Column(db.Integer, db.ForeignKey('problem.id'), primary_key=True, nullable=False)
     identifier = db.Column(db.String(8), nullable=False)
     color = db.Column(ColorType, nullable=False)
+
+    __table_args__ = (
+        db.Index('ix_contest_problem_contest', 'contest'),
+    )
 
 
 class Contest(EntityMixin, db.Model):
@@ -122,4 +270,8 @@ class Contest(EntityMixin, db.Model):
         secondary=ContestProblem,
         backref=db.backref('contestList', lazy='dynamic'),
         lazy='dynamic',
+    )
+
+    __table_args__ = (
+        db.Index('ix_contest_author', 'author'),
     )
