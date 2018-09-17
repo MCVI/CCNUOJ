@@ -1,9 +1,8 @@
 from enum import Enum
 from sqlalchemy.ext.declarative import declared_attr
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_utils import EmailType, JSONType, ChoiceType, ColorType
+from sqlalchemy_utils import EmailType, JSONType, ChoiceType, ColorType, UUIDType
 
-db = SQLAlchemy()
+from .global_obj import database as db
 
 
 class KVPair(db.Model):
@@ -30,11 +29,13 @@ class User(db.Model):
     realPersonInfo = db.Column(JSONType, nullable=False)
     extraInfo = db.Column(JSONType, nullable=True)
 
-    auth = db.Column(JSONType, nullable=False)
+    uuid = db.Column(UUIDType, nullable=False)
+    authentication = db.Column(JSONType, nullable=False)
 
     __table_args__ = (
         db.UniqueConstraint('email'),
         db.UniqueConstraint('shortName'),
+        db.UniqueConstraint('uuid'),
     )
 
 
@@ -75,6 +76,7 @@ AccessControlObjectEnumType = ChoiceType(AccessControlObjectEnum, impl=db.String
 
 class AccessLevel(Enum):
     readable = 'read'
+    executable = 'exec'
     editable = 'edit'
     fullControl = 'full'
 
@@ -113,14 +115,14 @@ class EntityMixin(TimestampMixin):
 class Problem(EntityMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
 
-    timeLimit = db.Column(db.Integer, nullable=False)
-    memoryLimit = db.Column(db.Integer, nullable=False)
+    limitInfo = db.Column(JSONType, nullable=False)
     judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), nullable=False)
     judgeParam = db.Column(JSONType, nullable=False)
 
     __table_args__ = (
         db.Index('ix_problem_author', 'author'),
     )
+
 
 class Language(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -133,6 +135,7 @@ class Language(db.Model):
         db.UniqueConstraint('shortName'),
         db.UniqueConstraint('displayName'),
     )
+
 
 class JudgeSchemeLanguage(db.Model):
     judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), primary_key=True, nullable=False)

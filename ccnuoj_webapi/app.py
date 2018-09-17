@@ -1,7 +1,8 @@
 import os
-from flask import Flask
 
-from .model import db
+from flask import Flask
+from src import database, blueprint
+from src import authentication_init
 
 
 def load_config(app: Flask):
@@ -14,10 +15,12 @@ def load_config(app: Flask):
     app.config.from_pyfile(config_path, silent=False)
 
 
-def create_app(module_name: str):
-    app = Flask(module_name)
-    load_config(app)
+app = Flask(__name__)
+load_config(app)
+database.init_app(app)
+app.register_blueprint(blueprint)
 
-    db.init_app(app)
+authentication_init(app)
 
-    return app
+if __name__ == '__main__':
+    app.run()
