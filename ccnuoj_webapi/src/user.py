@@ -8,7 +8,7 @@ from .model import User
 from .authentication import salt_available_char, server_hash
 
 
-@bp.route('/user', methods=["POST"])
+@bp.route("/user", methods=["POST"])
 def create_user():
     schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -82,5 +82,5 @@ def create_user():
     db.session.commit()
 
     return to_json({
-        "status": "success"
+        "status": "Success"
     })

@@ -48,13 +48,13 @@ def sign_auth_token(user: User) -> str:
     return signer.dumps(payload).decode('ASCII')
 
 
-@bp.route('/user/authentication_info/email/<string:email>', methods=["GET"])
+@bp.route("/user/authentication_info/email/<string:email>", methods=["GET"])
 def get_info_by_email(email: str):
     user = User.query.filter_by(email=email).first()
     return get_info(user)
 
 
-@bp.route('/user/authentication_info/shortName/<string:username>', methods=["GET"])
+@bp.route("/user/authentication_info/shortName/<string:username>", methods=["GET"])
 def get_info_by_username(username: str):
     user = User.query.filter_by(shortName=username).first()
     return get_info(user)
@@ -67,7 +67,7 @@ def get_info(user: User):
     })
 
 
-@bp.route('/user/authentication/id/<int:user_id>', methods=["POST"])
+@bp.route("/user/authentication/id/<int:user_id>", methods=["POST"])
 def auth_by_id(user_id: int):
     schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -87,25 +87,25 @@ def auth_by_id(user_id: int):
     if user.authentication["hashResult"] == server_hash_result:
         token = sign_auth_token(user)
         return to_json({
-            "status": "success",
+            "status": "Success",
             "token": token
         })
     else:
         return to_json({
             "status": "failed",
-            "reason": "password_mismatch"
+            "reason": "PasswordMismatch"
         }), HTTPStatusCode.Unauthorized
 
 
-class NoTokenDetected(BaseException):
+class NoTokenDetected(Exception):
     pass
 
 
-class InvalidToken(BaseException):
+class InvalidToken(Exception):
     pass
 
 
-class TokenExpired(BaseException):
+class TokenExpired(Exception):
     pass
 
 
@@ -131,33 +131,38 @@ def load_token():
         raise NoTokenDetected()
 
 
-def require_authentication(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+def require_authentication(allow_anonymous: bool=False):
 
-        try:
-            token_load_failed = False
+    def decorator(func: callable):
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
 
             try:
                 user = load_token()
-            except:
-                token_load_failed = True
-                raise
+                token_status = "Valid"
+            except NoTokenDetected:
+                token_status = "NotDetected"
+            except InvalidToken:
+                token_status = "Invalid"
+            except TokenExpired:
+                token_status = "Expired"
 
-        except NoTokenDetected:
-            pass
-        except InvalidToken:
-            pass
-        except TokenExpired:
-            pass
+            if token_status != "Valid":
+                if allow_anonymous:
+                    current_user = None
+                else:
+                    return to_json({
+                        "status": "failed",
+                        "reason": "AuthenticationFailed",
+                        "tokenStatus": token_status
+                    }), HTTPStatusCode.Unauthorized
+            else:
+                current_user = user
 
-        if token_load_failed:
-            return to_json({
-                "status": "failed",
-                "reason": "require_authentication"
-            }), HTTPStatusCode.Unauthorized
-        else:
-            g.user = user
-            func(*args, **kwargs)
+            g.user = current_user
+            return func(*args, **kwargs)
 
-    return wrapper
+        return wrapper
+
+    return decorator
