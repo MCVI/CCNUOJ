@@ -1,3 +1,4 @@
+import uuid
 import string
 import hashlib
 from functools import wraps
@@ -8,7 +9,7 @@ from itsdangerous import BadSignature, SignatureExpired
 
 from .util import random_string
 from .util import get_request_json, to_json
-from .util import HTTPStatusCode
+from .util import http
 from .global_obj import blueprint as bp
 from .model import User
 
@@ -91,10 +92,10 @@ def auth_by_id(user_id: int):
             "token": token
         })
     else:
-        return to_json({
+        raise http.Unauthorized(body={
             "status": "failed",
             "reason": "PasswordMismatch"
-        }), HTTPStatusCode.Unauthorized
+        })
 
 
 class NoTokenDetected(Exception):
@@ -110,7 +111,7 @@ class TokenExpired(Exception):
 
 
 def load_token():
-    if 'X-CCNU-AUTH-TOKEN' in request.headers.has_key:
+    if 'X-CCNU-AUTH-TOKEN' in request.headers:
 
         token = request.headers['X-CCNU-AUTH-TOKEN']
 
@@ -122,7 +123,7 @@ def load_token():
             raise TokenExpired()
 
         user = User.query.get(payload["id"])
-        if user.uuid == payload["uuid"]:
+        if (user is not None) and (user.uuid == uuid.UUID(payload["uuid"])):
             return user
         else:
             raise InvalidToken()
@@ -152,11 +153,11 @@ def require_authentication(allow_anonymous: bool=False):
                 if allow_anonymous:
                     current_user = None
                 else:
-                    return to_json({
-                        "status": "failed",
+                    raise http.Unauthorized(body={
+                        "status": "Failed",
                         "reason": "AuthenticationFailed",
                         "tokenStatus": token_status
-                    }), HTTPStatusCode.Unauthorized
+                    })
             else:
                 current_user = user
 

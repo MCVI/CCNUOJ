@@ -129,8 +129,6 @@ class Language(db.Model):
     shortName = db.Column(db.String(8), nullable=False)
     displayName = db.Column(db.String(), nullable=False)
 
-    script = db.Column(db.Text, nullable=False)
-
     __table_args__ = (
         db.UniqueConstraint('shortName'),
         db.UniqueConstraint('displayName'),
@@ -148,10 +146,8 @@ class JudgeSchemeLanguage(db.Model):
 
 class JudgeScheme(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+    shortName = db.Column(db.String(8), nullable=False)
     displayName = db.Column(db.String(), nullable=False)
-    extraInfo = db.Column(JSONType, nullable=False)
-
-    script = db.Column(db.Text, nullable=False)
 
     languages = db.relationship(
         'Language',
@@ -160,6 +156,7 @@ class JudgeScheme(db.Model):
     )
 
     __table_args__ = (
+        db.UniqueConstraint('shortName'),
         db.UniqueConstraint('displayName'),
     )
 

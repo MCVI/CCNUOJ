@@ -56,7 +56,8 @@ def create_user():
                 "required": ["salt", "hashResult"]
             }
         },
-        "required": ["email", "shortName", "realPersonInfo", "extraInfo", "authentication"]
+        "required": ["email", "shortName", "realPersonInfo", "extraInfo", "authentication"],
+        "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
 
@@ -82,5 +83,6 @@ def create_user():
     db.session.commit()
 
     return to_json({
-        "status": "Success"
+        "status": "Success",
+        "userID": user.id
     })
