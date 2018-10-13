@@ -1,9 +1,10 @@
 from flask import g
 
 from .util import get_request_json, to_json
-from .global_obj import blueprint as bp
+from .util import http
 from .global_obj import database as db
-from .model import Submission
+from .global_obj import blueprint as bp
+from .model import Submission, Language
 from .authentication import require_authentication
 from .judge_request import auto_create_for_submission
 
@@ -23,11 +24,14 @@ def create_submission():
                 "comment": "optional",
                 "type": "null"
             },
+            "languageShortName": {
+                "tpye": "string"
+            },
             "text": {
                 "type": "string"
             }
         },
-        "required": ["problemID", "text"],
+        "required": ["problemID", "text", "languageShortName"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
@@ -38,6 +42,18 @@ def create_submission():
         contest_id = instance["contestID"]
         if contest_id is not None:
             submission.contest = contest_id
+            raise http.NotImplemented(body={
+                "status": "Failed",
+                "reason": "ContestNotImplemented"
+            })
+    language = Language.query.filter_by(shortName=instance["languageShortName"]).first()
+    if language is None:
+        raise http.NotFound(body={
+            "status": "Failed",
+            "reason": "LanguageNotFound"
+        })
+    else:
+        submission.language = language.id
 
     submission.text = instance["text"]
 

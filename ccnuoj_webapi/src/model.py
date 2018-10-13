@@ -170,6 +170,7 @@ class Submission(db.Model):
     contest = db.Column(db.Integer, db.ForeignKey('contest.id'), nullable=True)
     author = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    language = db.Column(db.Integer, db.ForeignKey('language.id'), nullable=False)
     text = db.Column(db.Text, nullable=False)
 
     judgeRequests = db.relationship(
@@ -185,6 +186,7 @@ class Submission(db.Model):
 
 
 class JudgeState(Enum):
+    waiting = 'WAIT'
     pending = 'PEND'
 
     compiling = 'CMPL'
@@ -221,12 +223,9 @@ class JudgeRequest(db.Model):
 
     state = db.Column(JudgeStateType, nullable=False)
 
-    judgeCommand = db.Column(db.Integer, db.ForeignKey('judge_command.id'), nullable=False)
-
     __table_args__ = (
         db.Index('ix_judge_request_submission', 'submission'),
         db.Index('ix_judge_request_operator', 'operator'),
-        db.UniqueConstraint('judgeCommand'),
     )
 
 
@@ -234,15 +233,19 @@ class JudgeCommand(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
 
     operator = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    judgeRequest = db.Column(db.Integer, db.ForeignKey('judge_request.id'), nullable=True)
 
     createTime = db.Column(db.DateTime, nullable=False)
     command = db.Column(JSONType, nullable=False)
+
+    fetchTime = db.Column(db.DateTime, nullable=True)
 
     finishTime = db.Column(db.DateTime, nullable=True)
     result = db.Column(JSONType, nullable=True)
 
     __table_args__ = (
         db.Index('ix_judge_command_operator', 'operator'),
+        db.UniqueConstraint('judgeRequest'),
     )
 
 

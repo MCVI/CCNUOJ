@@ -2,10 +2,6 @@ import werkzeug.exceptions
 from flask import json
 
 
-class HTTPStatusCode:
-    OK = 200
-
-
 class HTTPException(werkzeug.exceptions.HTTPException):
     code = None
 
@@ -42,6 +38,18 @@ class NotFound(HTTPException):
 
 class InternalServerError(HTTPException):
     code = 500
+
+
+class NotAcceptable(HTTPException):
+    code = 406
+
+
+class Conflict(HTTPException):
+    code = 409
+
+
+class Gone(HTTPException):
+    code = 410
 
 
 class NotImplemented(HTTPException):
