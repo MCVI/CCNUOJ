@@ -34,13 +34,6 @@ class SimpleComparison(common.JudgeScheme):
             raise common.ValidationError()
 
     @classmethod
-    def validate_judge_param(cls, judge_param: dict) -> None:
-        schema = {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "properties": {},
-            "additionalProperties": False
-        }
-        try:
-            jsonschema.validate(instance=judge_param, schema=schema)
-        except jsonschema.ValidationError:
-            raise common.ValidationError()
+    def validate_judge_data(cls, judge_data: bytes) -> dict:
+        ''' !! stub '''
+        return {}

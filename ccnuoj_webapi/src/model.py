@@ -115,9 +115,8 @@ class EntityMixin(TimestampMixin):
 class Problem(EntityMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
 
-    limitInfo = db.Column(JSONType, nullable=False)
     judgeScheme = db.Column(db.Integer, db.ForeignKey('judge_scheme.id'), nullable=False)
-    judgeParam = db.Column(JSONType, nullable=False)
+    limitInfo = db.Column(JSONType, nullable=False)
 
     __table_args__ = (
         db.Index('ix_problem_author', 'author'),
@@ -159,6 +158,14 @@ class JudgeScheme(db.Model):
         db.UniqueConstraint('shortName'),
         db.UniqueConstraint('displayName'),
     )
+
+
+class JudgeData(db.Model):
+    problem = db.Column(db.Integer, db.ForeignKey('problem.id'), primary_key=True, nullable=False)
+    author = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    uploadTime = db.Column(db.DateTime, nullable=False)
+
+    data = db.Column(db.LargeBinary, nullable=False)
 
 
 class Submission(db.Model):

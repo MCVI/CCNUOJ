@@ -27,21 +27,18 @@ def create_problem():
             "extraInfo": {
                 "type": "object"
             },
+            "judgeSchemeShortName": {
+                "type": "string"
+            },
             "limitInfo": {
                 "type": "object"
             },
-            "judgeScheme": {
-                "type": "string"
-            },
-            "judgeParam": {
-                "type": "object"
-            }
         },
-        "required": ["title", "text", "extraInfo", "limitInfo", "judgeScheme", "judgeParam"],
+        "required": ["title", "text", "extraInfo", "limitInfo"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
-    judge_scheme_short_name = instance["judgeScheme"]
+    judge_scheme_short_name = instance["judgeSchemeShortName"]
 
     judge_scheme_rec = model.JudgeScheme.query.filter_by(shortName=judge_scheme_short_name).first()
     if judge_scheme_rec is None:
@@ -56,15 +53,6 @@ def create_problem():
         raise http.NotImplemented(body={
             "status": "Failed",
             "reason": "JudgeSchemeNotImplemented"
-        })
-
-    try:
-        judge_scheme_cls.validate_judge_param(instance["judgeParam"])
-    except judge_scheme.ValidationError as e:
-        raise http.BadRequest(body={
-            "status": "Failed",
-            "reason": "InvalidJudgeParam",
-            "detail": e.detail
         })
 
     try:

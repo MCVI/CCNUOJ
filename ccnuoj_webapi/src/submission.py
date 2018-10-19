@@ -25,7 +25,7 @@ def create_submission():
                 "type": "null"
             },
             "languageShortName": {
-                "tpye": "string"
+                "type": "string"
             },
             "text": {
                 "type": "string"

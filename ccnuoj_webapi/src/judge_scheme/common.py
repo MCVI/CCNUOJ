@@ -29,9 +29,9 @@ class JudgeScheme:
 
     @classmethod
     @abstractmethod
-    def validate_judge_param(cls, judge_param: dict) -> None:
+    def resolve_judge_data(cls, judge_data: bytes) -> dict:
         """
-        raise ValidationError if judge_param is invalid
+        raise ValidationError if judge_data is invalid
         :return: None
         """
         pass

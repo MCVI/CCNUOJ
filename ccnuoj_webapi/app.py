@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from src import database, blueprint
-from src import authentication_init
+from src import authentication
 
 
 def load_config(app: Flask):
@@ -20,7 +20,7 @@ load_config(app)
 database.init_app(app)
 app.register_blueprint(blueprint)
 
-authentication_init(app)
+authentication.init(app)
 
 if __name__ == '__main__':
     app.run()
