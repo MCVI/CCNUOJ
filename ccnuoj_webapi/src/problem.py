@@ -34,7 +34,7 @@ def create_problem():
                 "type": "object"
             },
         },
-        "required": ["title", "text", "extraInfo", "limitInfo"],
+        "required": ["title", "text", "extraInfo", "limitInfo", "judgeSchemeShortName"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
@@ -65,10 +65,11 @@ def create_problem():
         })
 
     problem = Problem()
-    for key in ["title", "text", "extraInfo", "judgeScheme", "judgeParam", "limitInfo"]:
+    for key in ["title", "text", "extraInfo", "limitInfo"]:
         value = instance[key]
         setattr(problem, key, value)
 
+    problem.judgeScheme = judge_scheme_rec.id
     problem.author = g.user.id
     problem.createTime = g.request_datetime
     problem.lastModifiedTime = g.request_datetime
@@ -93,10 +94,12 @@ def get_problem(id: int):
         })
     else:
         instance = {}
-        for key in ["title", "text", "extraInfo", "judgeScheme", "limitInfo", "createTime", "lastModifiedTime"]:
+        for key in ["title", "text", "extraInfo", "limitInfo", "createTime", "lastModifiedTime"]:
             value = getattr(problem, key)
             instance[key] = value
 
+        judge_scheme_rec = model.JudgeScheme.query.get(problem.judgeScheme)
+        instance["judgeSchemeShortName"] = judge_scheme_rec.shortName
         instance["authorID"] = problem.author
 
         return to_json({

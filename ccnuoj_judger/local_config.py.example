@@ -1,0 +1,3 @@
+api_base = "http://localhost:5000"
+
+token="""eyJhbGciOiJIUzUxMiIsImlhdCI6MTU0MDAyMzIzNCwiZXhwIjoxNTQyNjE1MjM0fQ.eyJpZCI6MSwidXVpZCI6ImI4NWM4MDQ0ZDQzZjExZTg5ZDk0MzQ0MTVkZTU0ZjRkIiwicmFuZG9tIjoiMVpzbTd0Z3gifQ.KzwxaW_OpANDgSBOd2afGsh46iw2-AtPG7sgrpzM0RR-B4CrLri-bNuDi2M-fQa_EezCuFq0wKxI7Ty18OQxzw"""

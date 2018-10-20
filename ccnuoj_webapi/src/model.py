@@ -165,6 +165,7 @@ class JudgeData(db.Model):
     author = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     uploadTime = db.Column(db.DateTime, nullable=False)
 
+    resolveResult = db.Column(JSONType, nullable=False)
     data = db.Column(db.LargeBinary, nullable=False)
 
 

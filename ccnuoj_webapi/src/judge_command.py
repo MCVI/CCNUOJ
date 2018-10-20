@@ -23,13 +23,13 @@ def auto_create_for_submission(
     command.fetched = False
 
     problem = Problem.query.get(submission.problem)
-    judge_scheme = JudgeScheme.query.filter_by(shortName=problem.judgeScheme).first()
+    judge_scheme = JudgeScheme.query.get(problem.judgeScheme)
     language = Language.query.get(submission.language)
 
     command.command = {
         "type": "CodeJudge",
         "judgeRequest": judge_request.id,
-        "judgeScheme": judge_scheme.shortName,
+        "judgeSchemeShortName": judge_scheme.shortName,
         "language": language.shortName,
         "code": submission.text
     }
@@ -43,7 +43,13 @@ def auto_create_for_submission(
 @bp.route("/judge_command/unfetched/<int:limit>", methods=["GET"])
 @require_authentication(allow_anonymous=False)
 def get_unfetched_command(limit: int):
-    commands = JudgeCommand.query.filter_by(fetchTime=None).limit(limit).all()
+    commands = (
+        JudgeCommand.query
+        .filter_by(fetchTime=None)
+        .order_by(JudgeCommand.createTime.asc())
+        .limit(limit)
+        .all()
+    )
 
     result = []
     for command in commands:
@@ -73,7 +79,8 @@ def mark_command_fetched(id: int):
             command.fetchTime = g.request_datetime
             db.session.commit()
             return to_json({
-                "status": "Success"
+                "status": "Success",
+                "fetchTime": command.fetchTime
             })
         else:
             raise http.Gone(body={
@@ -116,7 +123,8 @@ def mark_command_finished(id: int):
     elif command.finishTime is not None:
         raise http.Gone(body={
             "status": "Failed",
-            "reason": "JudgeCommandAlreadyFinished"
+            "reason": "JudgeCommandAlreadyFinished",
+            "finishTime": command.finishTime
         })
     else:
         command.finishTime = g.request_datetime
@@ -127,5 +135,6 @@ def mark_command_finished(id: int):
 
         db.session.commit()
         return to_json({
-            "status": "Success"
+            "status": "Success",
+            "finishTime": request.finishTime
         })

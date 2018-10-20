@@ -32,6 +32,6 @@ class JudgeScheme:
     def resolve_judge_data(cls, judge_data: bytes) -> dict:
         """
         raise ValidationError if judge_data is invalid
-        :return: None
+        :return: resolveResult
         """
         pass

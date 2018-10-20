@@ -2,6 +2,9 @@ import werkzeug.exceptions
 from flask import json
 
 
+OK = 200
+
+
 class HTTPException(werkzeug.exceptions.HTTPException):
     code = None
 

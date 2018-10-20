@@ -34,6 +34,6 @@ class SimpleComparison(common.JudgeScheme):
             raise common.ValidationError()
 
     @classmethod
-    def validate_judge_data(cls, judge_data: bytes) -> dict:
+    def resolve_judge_data(cls, judge_data: bytes) -> dict:
         ''' !! stub '''
         return {}

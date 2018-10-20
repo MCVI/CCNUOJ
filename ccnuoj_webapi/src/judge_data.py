@@ -9,7 +9,7 @@ from . import judge_scheme
 
 
 # Notice: The request body is not supposed to be json
-@bp.route("/problem/id/<int:id>/judge_data", methods=["PUT"])
+@bp.route("/problem/id/<int:problem_id>/judge_data", methods=["PUT"])
 @require_authentication(allow_anonymous=False)
 def upload_judge_data(problem_id: int):
     if not ("judgeData" in request.files):
@@ -38,6 +38,7 @@ def upload_judge_data(problem_id: int):
                 instance = file.stream.read()
                 try:
                     resolve_result = judge_scheme_cls.resolve_judge_data(instance)
+                    print(resolve_result)
                 except judge_scheme.ValidationError as e:
                     raise http.NotAcceptable(body={
                         "status": "Failed",
@@ -53,6 +54,7 @@ def upload_judge_data(problem_id: int):
 
                 judge_data.author = g.user.id
                 judge_data.uploadTime = g.request_datetime
+                judge_data.resolveResult = resolve_result
                 judge_data.data = instance
 
                 if create:
@@ -63,3 +65,47 @@ def upload_judge_data(problem_id: int):
                     "status": "Success",
                     "resolveResult": resolve_result
                 })
+
+
+# Notice: When succeed, the response body is not json
+@bp.route("/problem/id/<int:problem_id>/judge_data/raw", methods=["GET"])
+@require_authentication(allow_anonymous=False)
+def download_judge_data(problem_id: int):
+    problem = Problem.query.get(problem_id)
+    if problem is None:
+        raise http.NotFound(body={
+            "status": "Failed",
+            "reason": "ProblemNotFound"
+        })
+    else:
+        judge_data = JudgeData.query.get(problem_id)
+        if judge_data is None:
+            raise http.NotFound(body={
+                "status": "Failed",
+                "reason": "JudgeDataNotUploaded"
+            })
+        else:
+            return judge_data.data, http.OK, {'Content-Type': 'application/octet-stream'}
+
+
+@bp.route("/problem/id/<int:problem_id>/judge_data/resolved", methods=["GET"])
+@require_authentication(allow_anonymous=False)
+def retrieve_judge_data_info(problem_id: int):
+    problem = Problem.query.get(problem_id)
+    if problem is None:
+        raise http.NotFound(body={
+            "status": "Failed",
+            "reason": "ProblemNotFound"
+        })
+    else:
+        judge_data = JudgeData.query.get(problem_id)
+        if judge_data is None:
+            raise http.NotFound(body={
+                "status": "Failed",
+                "reason": "JudgeDataNotUploaded"
+            })
+        else:
+            return to_json({
+                "status": "Success",
+                "result": judge_data.resolveResult
+            })

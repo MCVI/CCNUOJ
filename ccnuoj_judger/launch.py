@@ -2,11 +2,9 @@ from time import sleep
 
 import requests
 
+from command import execute
+from local_config import api_base, token
 
-api_base = "http://localhost:5000"
-
-with open("local_config.txt", "rt") as config:
-    token = config.read().strip('\n')
 
 session = requests.Session()
 session.headers.update({"X-CCNU-AUTH-TOKEN": token})
@@ -26,9 +24,10 @@ while True:
                     print("Reason: %s" % fetch_response["reason"])
                 else:
                     print("Successfully fetched judge command #%d: %s" % (obj["id"], obj["command"]))
-                    print("Execution has not yet implemented")
-        sleep(1)
+                    execute(obj["command"])
 
     except requests.RequestException as e:
         print("Error occurred:")
         print(e)
+
+    sleep(1)
