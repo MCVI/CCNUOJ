@@ -1,9 +1,13 @@
 from typing import TypeVar
 
-from .common import SchemeNotFound, JudgeScheme
+from .common import JudgeScheme
 
 
 scheme_pool = {}
+
+
+class SchemeNotFound(Exception):
+    pass
 
 
 class JudgeSchemeShortNameConflict(Exception):

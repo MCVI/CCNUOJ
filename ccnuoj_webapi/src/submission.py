@@ -4,9 +4,10 @@ from .util import get_request_json, to_json
 from .util import http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
-from .model import Submission, Language
+from .model import Submission
 from .authentication import require_authentication
 from .judge_request import auto_create_for_submission
+from . import language
 
 
 @bp.route("/submission", methods=["POST"])
@@ -24,7 +25,7 @@ def create_submission():
                 "comment": "optional",
                 "type": "null"
             },
-            "languageShortName": {
+            "language": {
                 "type": "string"
             },
             "text": {

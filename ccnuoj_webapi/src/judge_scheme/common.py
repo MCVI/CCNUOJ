@@ -2,10 +2,6 @@ from abc import abstractmethod
 from typing import Union
 
 
-class SchemeNotFound(Exception):
-    pass
-
-
 class ValidationError(Exception):
     @property
     def detail(self) -> Union[None, str, dict]:
@@ -13,6 +9,11 @@ class ValidationError(Exception):
 
 
 class JudgeScheme:
+    @classmethod
+    def get(cls, short_name: str) -> 'JudgeScheme':
+        # implemented in pool.py
+        pass
+
     @classmethod
     @abstractmethod
     def get_short_name(cls) -> str:

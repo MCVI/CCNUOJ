@@ -5,13 +5,11 @@ from .util import get_request_json, to_json
 from .util import http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
-from .model import JudgeCommand, JudgeRequest, JudgeScheme
-from .model import Submission, Problem, Language
+from .model import JudgeCommand, JudgeRequest
 from .authentication import require_authentication
 
 
-def auto_create_for_submission(
-        submission: Submission,
+def create_for_judge_request(
         judge_request: JudgeRequest
 ) -> JudgeCommand:
     current_datetime = datetime.datetime.now()
@@ -22,16 +20,9 @@ def auto_create_for_submission(
     command.createTime = current_datetime
     command.fetched = False
 
-    problem = Problem.query.get(submission.problem)
-    judge_scheme = JudgeScheme.query.get(problem.judgeScheme)
-    language = Language.query.get(submission.language)
-
     command.command = {
-        "type": "CodeJudge",
-        "judgeRequest": judge_request.id,
-        "judgeSchemeShortName": judge_scheme.shortName,
-        "language": language.shortName,
-        "code": submission.text
+        "type": "JudgeRequest",
+        "judgeRequestID": judge_request.id,
     }
 
     db.session.add(command)

@@ -7,21 +7,43 @@ OK = 200
 
 class HTTPException(werkzeug.exceptions.HTTPException):
     code = None
-
-    def __init__(self, body={}):
-        super().__init__()
-        self.body = body
-        self.description = json.dumps(body)
+    _reason = None
 
     @property
-    def name(self):
-        if "reason" in self.body:
-            return self.body["name"]
+    def reason(self) -> str:
+        if self._reason is None:
+            return self.__class__.__name__
         else:
-            return "UnknownError"
+            return self._reason
 
-    def get_body(self, environ=None):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+        body = {
+            "status": "Failed",
+            "reason": self.reason
+        }
+
+        if len(args) > 0:
+            assert(args == 1)
+            body["detail"] = args[0]
+
+        body.update(kwargs)
+
+        if body["reason"] != self.reason:
+            self._reason = body["reason"]
+
+        self.body = body
+
+    @property
+    def description(self) -> str:
+        return json.dumps(body)
+
+    def get_description(self, environ=None) -> str:
         return self.description
+
+    def get_body(self, environ=None) -> str:
+        return self.get_description()
 
     def get_headers(self, environ=None):
         return [('Content-Type', 'application/json')]
