@@ -5,6 +5,7 @@ from .common import JudgeScheme, ValidationError
 
 class SimpleComparison(JudgeScheme):
     short_name = "SimpComp"
+    supported_language = ["cpp"]
 
     @classmethod
     def validate_limit_info(cls, limit_info: dict) -> None:

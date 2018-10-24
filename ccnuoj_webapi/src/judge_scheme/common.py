@@ -20,6 +20,7 @@ class JudgeSchemeMeta(ElementMeta):
 
 class JudgeScheme(metaclass=JudgeSchemeMeta):
     short_name = None
+    supported_language = []
 
     @classmethod
     @abstractmethod

@@ -19,6 +19,7 @@ def auto_create_for_submission(submission: Submission) -> JudgeRequest:
     judge_request.reason = "Auto created for submission"
     judge_request.createTime = current_datetime
     judge_request.state = JudgeState.waiting
+    judge_request.detail = None
     db.session.add(judge_request)
     db.session.flush()
 
@@ -35,25 +36,31 @@ def update_judge_request_state(id: int):
         "description": "update the state of a judge request",
         "type": "object",
         "properties": {
-            "value": {
+            "state": {
                 "type": "string"
+            },
+            "detail": {
+                "type": "object"
             }
         },
-        "required": ["value"],
+        "required": ["state"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
-    value = instance["value"]
-    if value in JudgeState.__members__:
+    state = instance["state"]
+    if state in JudgeState.__members__:
         judge_request = JudgeRequest.query.get(id)
         if judge_request is None:
             raise http.NotFound(reason="JudgeRequestNotFound")
         else:
             if judge_request.finishTime is None:
                 old_state = judge_request.state
-                judge_request.state = JudgeState[value]
+                judge_request.state = JudgeState[state]
+                judge_request.detail = instance["detail"]
                 db.session.commit()
-                return http.Success(oldState=old_state.name)
+                return http.Success({
+                    "oldState": old_state.name,
+                })
             else:
                 raise http.Conflict(
                     reason="JudgeRequestAlreadyFinished",

@@ -4,10 +4,11 @@ from .util import get_request_json
 from .util import http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
-from .model import Submission
+from .model import Submission, Problem
 from .authentication import require_authentication
 from .judge_request import auto_create_for_submission
 from .language import language_dict, LanguageNotFound
+from .judge_scheme import judge_scheme_dict
 
 
 @bp.route("/submission", methods=["POST"])
@@ -48,10 +49,19 @@ def create_submission():
         language = language_dict[instance["language"]]
     except LanguageNotFound:
         raise http.NotFound(reason="LanguageNotFound")
-
     submission.language = language.short_name
-    submission.text = instance["text"]
 
+    problem = Problem.query.get(instance["problemID"])
+    judge_scheme = judge_scheme_dict[problem.judgeScheme]
+    if language.short_name not in judge_scheme.supported_language:
+        raise http.Conflict(
+            reason="LanguageNotSupportedByJudgeScheme",
+            detail={
+                "supportedLanguage": judge_scheme.supported_language
+            }
+        )
+
+    submission.text = instance["text"]
     submission.createTime = g.request_datetime
     submission.author = g.user.id
 
