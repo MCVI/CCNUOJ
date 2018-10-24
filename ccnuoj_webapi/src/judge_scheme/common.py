@@ -1,6 +1,12 @@
 from abc import abstractmethod
 from typing import Union
 
+from ..util.class_dict import ElementMeta, SubClassDict, SubClassNotFound
+
+
+class JudgeSchemeNotFound(SubClassNotFound):
+    pass
+
 
 class ValidationError(Exception):
     @property
@@ -8,16 +14,12 @@ class ValidationError(Exception):
         return None
 
 
-class JudgeScheme:
-    @classmethod
-    def get(cls, short_name: str) -> 'JudgeScheme':
-        # implemented in pool.py
-        pass
+class JudgeSchemeMeta(ElementMeta):
+    pass
 
-    @classmethod
-    @abstractmethod
-    def get_short_name(cls) -> str:
-        pass
+
+class JudgeScheme(metaclass=JudgeSchemeMeta):
+    short_name = None
 
     @classmethod
     @abstractmethod
@@ -36,3 +38,6 @@ class JudgeScheme:
         :return: resolveResult
         """
         pass
+
+
+judge_scheme_dict = SubClassDict(JudgeSchemeMeta, "short_name", JudgeSchemeNotFound)

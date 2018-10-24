@@ -8,7 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer
 from itsdangerous import BadSignature, SignatureExpired
 
 from .util import random_string
-from .util import get_request_json, to_json
+from .util import get_request_json
 from .util import http
 from .global_obj import blueprint as bp
 from .model import User
@@ -49,23 +49,23 @@ def sign_auth_token(user: User) -> str:
     return signer.dumps(payload).decode('ASCII')
 
 
+def get_info(user: User):
+    return {
+        "id": user.id,
+        "salt": user.authentication["clientSalt"]
+    }
+
+
 @bp.route("/user/authentication_info/email/<string:email>", methods=["GET"])
 def get_info_by_email(email: str):
     user = User.query.filter_by(email=email).first()
-    return get_info(user)
+    return http.Success(result=get_info(user))
 
 
 @bp.route("/user/authentication_info/shortName/<string:username>", methods=["GET"])
 def get_info_by_username(username: str):
     user = User.query.filter_by(shortName=username).first()
-    return get_info(user)
-
-
-def get_info(user: User):
-    return to_json({
-        "id": user.id,
-        "salt": user.authentication["clientSalt"]
-    })
+    return http.Success(result=get_info(user))
 
 
 @bp.route("/user/authentication/id/<int:user_id>", methods=["POST"])
@@ -87,15 +87,9 @@ def auth_by_id(user_id: int):
     server_hash_result = server_hash(user.authentication["serverSalt"], instance["hashResult"])
     if user.authentication["hashResult"] == server_hash_result:
         token = sign_auth_token(user)
-        return to_json({
-            "status": "Success",
-            "token": token
-        })
+        return http.Success(token=token)
     else:
-        raise http.Unauthorized(body={
-            "status": "failed",
-            "reason": "PasswordMismatch"
-        })
+        raise http.Conflict(reason="PasswordMismatch")
 
 
 class NoTokenDetected(Exception):
@@ -149,17 +143,18 @@ def require_authentication(allow_anonymous: bool=False):
             except TokenExpired:
                 token_status = "Expired"
 
-            if token_status != "Valid":
+            if token_status == "Valid":
+                current_user = user
+            else:
                 if allow_anonymous:
                     current_user = None
                 else:
-                    raise http.Unauthorized(body={
-                        "status": "Failed",
-                        "reason": "AuthenticationFailed",
-                        "tokenStatus": token_status
-                    })
-            else:
-                current_user = user
+                    raise http.Unauthorized(
+                        reason="AuthenticationFailed",
+                        detail={
+                            "tokenStatus": token_status
+                        }
+                    )
 
             g.user = current_user
             return func(*args, **kwargs)

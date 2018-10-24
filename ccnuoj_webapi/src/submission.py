@@ -1,13 +1,13 @@
 from flask import g
 
-from .util import get_request_json, to_json
+from .util import get_request_json
 from .util import http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import Submission
 from .authentication import require_authentication
 from .judge_request import auto_create_for_submission
-from . import language
+from .language import language_dict, LanguageNotFound
 
 
 @bp.route("/submission", methods=["POST"])
@@ -32,7 +32,7 @@ def create_submission():
                 "type": "string"
             }
         },
-        "required": ["problemID", "text", "languageShortName"],
+        "required": ["problemID", "text", "language"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
@@ -43,19 +43,13 @@ def create_submission():
         contest_id = instance["contestID"]
         if contest_id is not None:
             submission.contest = contest_id
-            raise http.NotImplemented(body={
-                "status": "Failed",
-                "reason": "ContestNotImplemented"
-            })
-    language = Language.query.filter_by(shortName=instance["languageShortName"]).first()
-    if language is None:
-        raise http.NotFound(body={
-            "status": "Failed",
-            "reason": "LanguageNotFound"
-        })
-    else:
-        submission.language = language.id
+            raise http.NotImplemented(reason="ContestNotImplemented")
+    try:
+        language = language_dict[instance["language"]]
+    except LanguageNotFound:
+        raise http.NotFound(reason="LanguageNotFound")
 
+    submission.language = language.short_name
     submission.text = instance["text"]
 
     submission.createTime = g.request_datetime
@@ -67,8 +61,7 @@ def create_submission():
     judge_request = auto_create_for_submission(submission)
 
     db.session.commit()
-    return to_json({
-        "status": "Success",
+    return http.Success({
         "submissionID": submission.id,
         "judgeRequestID": judge_request.id
     })

@@ -1,4 +1,4 @@
-from ..util.class_list import SubClassNotFound, SubClassList
+from ..util.class_dict import SubClassNotFound, ElementMeta, SubClassDict
 
 
 class LanguageNotFound(SubClassNotFound):
@@ -10,7 +10,7 @@ class LanguageMeta(ElementMeta):
 
 
 class Language(metaclass=LanguageMeta):
-    pass
+    short_name = None
 
 
-language_pool = SubClassDict(Language)
+language_dict = SubClassDict(LanguageMeta, "short_name", LanguageNotFound)

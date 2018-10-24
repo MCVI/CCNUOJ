@@ -23,6 +23,7 @@ class Contest(EntityMixin, db.Model):
         db.Index('ix_contest_author', 'author'),
     )
 
+
 class ContestProblem(db.Model):
     contest = db.Column(db.Integer, db.ForeignKey('contest.id'), primary_key=True, nullable=False)
     problem = db.Column(db.Integer, db.ForeignKey('problem.id'), primary_key=True, nullable=False)

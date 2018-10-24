@@ -50,6 +50,7 @@ class JudgeRequest(db.Model):
     finishTime = db.Column(db.DateTime, nullable=True)
 
     state = db.Column(JudgeStateType, nullable=False)
+    detail = db.Column(JSONType, nullable=True)
 
     __table_args__ = (
         db.Index('ix_judge_request_submission', 'submission'),

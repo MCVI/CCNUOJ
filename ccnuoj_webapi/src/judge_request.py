@@ -1,7 +1,7 @@
 import datetime
 from flask import g
 
-from .util import http, get_request_json, to_json
+from .util import http, get_request_json
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import Submission
@@ -22,7 +22,7 @@ def auto_create_for_submission(submission: Submission) -> JudgeRequest:
     db.session.add(judge_request)
     db.session.flush()
 
-    judge_command.auto_create_for_submission(submission, judge_request)
+    judge_command.create_for_judge_request(judge_request)
 
     return judge_request
 
@@ -47,30 +47,22 @@ def update_judge_request_state(id: int):
     if value in JudgeState.__members__:
         judge_request = JudgeRequest.query.get(id)
         if judge_request is None:
-            raise http.NotFound(body={
-                "status": "Failed",
-                "reason": "JudgeRequestNotFound"
-            })
+            raise http.NotFound(reason="JudgeRequestNotFound")
         else:
             if judge_request.finishTime is None:
                 old_state = judge_request.state
                 judge_request.state = JudgeState[value]
                 db.session.commit()
-                return to_json({
-                    "status": "Success",
-                    "oldState": old_state.name
-                })
+                return http.Success(oldState=old_state.name)
             else:
-                raise http.Conflict({
-                    "status": "Failed",
-                    "reason": "JudgeRequestAlreadyFinished",
-                    "finishTime": judge_request.finishTime
-                })
+                raise http.Conflict(
+                    reason="JudgeRequestAlreadyFinished",
+                    detail={
+                        "finishTime": judge_request.finishTime
+                    }
+                )
     else:
-        raise http.BadRequest(body={
-            "status": "Failed",
-            "reason": "UnrecognizedJudgeState"
-        })
+        raise http.BadRequest(reason="UnrecognizedJudgeState")
 
 
 @bp.route("/judge_request/id/<int:id>/finished", methods=["POST"])
@@ -78,21 +70,16 @@ def update_judge_request_state(id: int):
 def mark_judge_request_finished(id: int):
     judge_request = JudgeRequest.query.get(id)
     if judge_request is None:
-        raise http.NotFound(body={
-            "status": "Failed",
-            "reason": "JudgeRequestNotFound"
-        })
+        raise http.NotFound(reason="JudgeRequestNotFound")
     else:
         if judge_request.finishTime is None:
             judge_request.finishTime = g.request_datetime
             db.session.commit()
-            return to_json({
-                "status": "Success",
-                "finishTime": judge_request.finishTime
-            })
+            return http.Success(finishTime=judge_request.finishTime)
         else:
-            raise http.Gone({
-                "status": "Failed",
-                "reason": "JudgeRequestAlreadyFinished",
-                "finishTime": judge_request.finishTime
-            })
+            raise http.Gone(
+                reason="JudgeRequestAlreadyFinished",
+                detail={
+                    "finishTime": judge_request.finishTime
+                }
+            )

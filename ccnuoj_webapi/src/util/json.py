@@ -9,10 +9,7 @@ def get_request_json(schema: dict, force=True, silent=False, cache=True):
     try:
         jsonschema.validate(instance=instance, schema=schema)
     except jsonschema.ValidationError:
-        raise BadRequest(body={
-            "status": "Failed",
-            "reason": "InvalidRequestInstance"
-        })
+        raise BadRequest(reason="InvalidRequestInstance")
     return instance
 
 

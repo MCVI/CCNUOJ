@@ -1,7 +1,7 @@
 import uuid
 from flask import g
 
-from .util import random_string, get_request_json, to_json
+from .util import random_string, get_request_json, http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import User
@@ -82,7 +82,6 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
-    return to_json({
-        "status": "Success",
+    return http.Success({
         "userID": user.id
     })

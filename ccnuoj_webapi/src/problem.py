@@ -1,13 +1,12 @@
 from flask import g
 
-from .util import get_request_json, to_json
+from .util import get_request_json
 from .util import http
-from . import model
 from .model import Problem
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .authentication import require_authentication
-from . import judge_scheme
+from .judge_scheme import judge_scheme_dict, JudgeSchemeNotFound
 
 
 @bp.route("/problem", methods=["POST"])
@@ -27,49 +26,37 @@ def create_problem():
             "extraInfo": {
                 "type": "object"
             },
-            "judgeSchemeShortName": {
+            "judgeScheme": {
                 "type": "string"
             },
             "limitInfo": {
                 "type": "object"
             },
         },
-        "required": ["title", "text", "extraInfo", "limitInfo", "judgeSchemeShortName"],
+        "required": ["title", "text", "extraInfo", "limitInfo", "judgeScheme"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)
-    judge_scheme_short_name = instance["judgeSchemeShortName"]
-
-    judge_scheme_rec = model.JudgeScheme.query.filter_by(shortName=judge_scheme_short_name).first()
-    if judge_scheme_rec is None:
-        raise http.NotFound(body={
-            "status": "Failed",
-            "reason": "JudgeSchemeNotFound"
-        })
 
     try:
-        judge_scheme_cls = judge_scheme.get(judge_scheme_short_name)
-    except judge_scheme.SchemeNotFound:
-        raise http.NotImplemented(body={
-            "status": "Failed",
-            "reason": "JudgeSchemeNotImplemented"
-        })
+        judge_scheme = judge_scheme_dict[instance["judgeScheme"]]
+    except JudgeSchemeNotFound:
+        raise http.NotFound(reason="JudgeSchemeNotFound")
 
     try:
-        judge_scheme_cls.validate_limit_info(instance["limitInfo"])
+        judge_scheme.validate_limit_info(instance["limitInfo"])
     except judge_scheme.ValidationError as e:
-        raise http.BadRequest(body={
-            "status": "Failed",
-            "reason": "InvalidLimitInfo",
-            "detail": e.detail
-        })
+        raise http.BadRequest(
+            reason="InvalidLimitInfo",
+            detail=e.detail
+        )
 
     problem = Problem()
     for key in ["title", "text", "extraInfo", "limitInfo"]:
         value = instance[key]
         setattr(problem, key, value)
 
-    problem.judgeScheme = judge_scheme_rec.id
+    problem.judgeScheme = judge_scheme.short_name
     problem.author = g.user.id
     problem.createTime = g.request_datetime
     problem.lastModifiedTime = g.request_datetime
@@ -77,8 +64,7 @@ def create_problem():
     db.session.add(problem)
     db.session.commit()
 
-    return to_json({
-        "status": "Success",
+    return http.Success({
         "problemID": problem.id
     })
 
@@ -88,24 +74,18 @@ def get_problem(id: int):
     problem = Problem.query.get(id)
 
     if problem is None:
-        raise http.NotFound(body={
-            "status": "Failed",
-            "reason": "ProblemNotFound"
-        })
+        raise http.NotFound(reason="ProblemNotFound")
     else:
         instance = {}
         for key in ["title", "text", "extraInfo", "limitInfo", "createTime", "lastModifiedTime"]:
             value = getattr(problem, key)
             instance[key] = value
 
-        judge_scheme_rec = model.JudgeScheme.query.get(problem.judgeScheme)
-        instance["judgeSchemeShortName"] = judge_scheme_rec.shortName
+        judge_scheme = judge_scheme_dict[problem.judgeScheme]
+        instance["judgeScheme"] = judge_scheme.short_name
         instance["authorID"] = problem.author
 
-        return to_json({
-            "status": "Success",
-            "result": instance
-        })
+        return http.Success(result=instance)
 
 
 @bp.route("/problem/id/<int:id>", methods=["PUT"])
