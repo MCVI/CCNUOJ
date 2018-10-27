@@ -1,14 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import helloidentity from '../components/Identity/helloidentity'
 import homeheader from '../components/homeheader'
 import home from '../pages/home'
-import photowalls from '../components/photowalls'
-import queslist from '../components/queslist'
-import quesdetail from '../components/quesdetail'
-import questable from '../components/questable'
-import login from '../components/login'
-import register from '../components/register'
+import photowalls from '../components/NewsAndPhoto/photowalls'
+import queslist from '../components/Question/queslist'
+import quesdetail from '../components/Question/quesdetail'
+import questable from '../components/Question/questable'
+import login from '../components/Identity/login'
+import register from '../components/Identity/register'
+import contestlist from '../components/Contest/contestlist'
+import contdetail from '../components/Contest/contdetail'
+import contable from '../components/Contest/contable'
+import conquesrank from '../components/Contest/ConDetailPage/conquesrank'
+import conquestable from '../components/Contest/ConDetailPage/conquestable'
+import conquesupdate from '../components/Contest/ConDetailPage/conquesupdate'
 
 Vue.use(Router)
 
@@ -16,8 +22,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      name: 'helloidentity',
+      component: helloidentity,
       children: [
         {
           path: '',
@@ -39,6 +45,39 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home
+    },
+    {
+      path: '/contestlist',
+      name: 'contestlist',
+      component: contestlist,
+      children: [
+        {
+          path: '',
+          component: contable
+        },
+        {
+          path: 'contdetail',
+          name: 'contdetail',
+          component: contdetail,
+          children: [
+            {
+              path: 'conquesrank',
+              name: 'conquesrank',
+              component: conquesrank
+            },
+            {
+              path: 'conquestable',
+              name: 'conquestable',
+              component: conquestable
+            },
+            {
+              path: 'conquesupdate',
+              name: 'conquesupdate',
+              component: conquesupdate
+            }
+          ]
+        }
+      ]
     },
     {
       path: '/homeheader',

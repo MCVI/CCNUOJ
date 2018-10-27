@@ -1,21 +1,21 @@
 <template>
-  <!-- 本组件是每个页面的菜单栏 包含了 “首页”“比赛”“题库”“课堂”“数据中心”的跳转  -->
-  <div>
-    <el-tabs @tab-click="handleClick" v-model="activeName">
-      <el-tab-pane label="首  页" name="photowalls"></el-tab-pane>
-      <el-tab-pane label="比  赛" name="contest"></el-tab-pane>
-      <el-tab-pane label="题  库" name="queslist"></el-tab-pane>
-      <el-tab-pane label="课  堂" name="class"></el-tab-pane>
-      <el-tab-pane label="数据中心" name="analysis"></el-tab-pane>
+   <!-- 本组件是每个页面的菜单栏 包含了 “首页”“比赛”“题库”“课堂”“数据中心”的跳转  -->
+ <div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="首  页" name="photowalls"></el-tab-pane>
+    <el-tab-pane label="比  赛" name="contestlist"></el-tab-pane>
+    <el-tab-pane label="题  库" name="queslist"></el-tab-pane>
+    <el-tab-pane label="课  堂" name="class"></el-tab-pane>
+    <el-tab-pane label="数据中心" name="analysis"></el-tab-pane>
     </el-tabs>
     <router-view/>
-  </div>
+ </div>
 </template>
 
 <script>
-import queslist from '../components/queslist'
-import photowalls from '../components/photowalls'
-
+import contestlist from './Contest/contestlist'
+import queslist from '../components/Question/queslist'
+import photowalls from './NewsAndPhoto/photowalls'
 export default {
   name: 'homeheader',
   data () {
@@ -41,7 +41,8 @@ export default {
   },
   components: {
     queslist,
-    photowalls
+    photowalls,
+    contestlist
   }
 }
 </script>
