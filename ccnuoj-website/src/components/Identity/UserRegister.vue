@@ -1,58 +1,55 @@
 <template>
-  <greeting-message>
 
-    <el-form :model="UserRegisterForm" :rules="UserRegisterRule" label-width="80px" ref="UserForm" style="margin-top: 0;">
+  <el-form :model="UserRegisterForm" :rules="UserRegisterRule" label-width="80px" ref="UserForm" style="margin-top: 0;">
 
-      <el-form-item label="昵称" prop="name">
-        <el-input v-model="UserRegisterForm.name"></el-input>
-      </el-form-item>
+    <el-form-item label="昵称" prop="name">
+      <el-input v-model="UserRegisterForm.name"></el-input>
+    </el-form-item>
 
-      <div style="height:12px"></div>
+    <div style="height:12px"></div>
 
-      <el-form-item label="电话" prop="phone">
-        <el-input v-model="UserRegisterForm.phone"></el-input>
-      </el-form-item>
+    <el-form-item label="电话" prop="phone">
+      <el-input v-model="UserRegisterForm.phone"></el-input>
+    </el-form-item>
 
-      <div style="height:12px"></div>
+    <div style="height:12px"></div>
 
-      <el-form-item label="学校" prop="school">
-        <el-input v-model="UserRegisterForm.school"></el-input>
-      </el-form-item>
+    <el-form-item label="学校" prop="school">
+      <el-input v-model="UserRegisterForm.school"></el-input>
+    </el-form-item>
 
-      <div style="height:12px"></div>
+    <div style="height:12px"></div>
 
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="UserRegisterForm.password"></el-input>
-      </el-form-item>
+    <el-form-item label="密码" prop="password">
+      <el-input v-model="UserRegisterForm.password"></el-input>
+    </el-form-item>
 
-      <div style="height:12px"></div>
+    <div style="height:12px"></div>
 
-      <el-form-item label="专业" prop="major">
-        <el-input v-model="UserRegisterForm.major"></el-input>
-      </el-form-item>
+    <el-form-item label="专业" prop="major">
+      <el-input v-model="UserRegisterForm.major"></el-input>
+    </el-form-item>
 
-      <div style="height:12px"></div>
+    <div style="height:12px"></div>
 
-      <el-form-item label="性别" prop="sex">
-        <el-radio-group size="medium" v-model="UserRegisterForm.sex">
-          <el-radio border label="MAN"></el-radio>
-          <el-radio border label="WOMAN"></el-radio>
-        </el-radio-group>
-      </el-form-item>
+    <el-form-item label="性别" prop="sex">
+      <el-radio-group size="medium" v-model="UserRegisterForm.sex">
+        <el-radio border label="MAN"></el-radio>
+        <el-radio border label="WOMAN"></el-radio>
+      </el-radio-group>
+    </el-form-item>
 
-      <div style="height:18px"></div>
+    <div style="height:18px"></div>
 
-      <el-form-item size="large">
-        <el-button @click="onSubmit('UserLoginForm')" style="width:200px ; height:40px" type="primary">注册</el-button>
-      </el-form-item>
+    <el-form-item size="large">
+      <el-button @click="onSubmit('UserLoginForm')" style="width:200px ; height:40px" type="primary">注册</el-button>
+    </el-form-item>
 
-    </el-form>
+  </el-form>
 
-  </greeting-message>
 </template>
 
 <script>
-import GreetingMessage from './GreetingMessage'
 
 export default {
   name: 'UserRegister',
@@ -101,10 +98,9 @@ export default {
         }
       })
     }
-  },
-
-  components: {GreetingMessage}
+  }
 }
+
 </script>
 
 <style>

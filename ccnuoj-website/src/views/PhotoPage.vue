@@ -1,35 +1,43 @@
 <template>
-  <!-- 本页面 是由 homeheader.vue 的"首页"跳转过来 -->
-  <!-- 本页面的功能主要是 发表ACM的新闻或者图片， 目前是图片浏览-->
-  <div>
+  <page-common>
+
+    <!-- 本页面的功能主要是 发表ACM的新闻或者图片， 目前是图片浏览-->
     <el-carousel indicator-position="outside" height="400px" >
       <el-carousel-item v-for="(img,index) in photoList" :key="index">
         <img v-bind:src="img.url">
       </el-carousel-item>
     </el-carousel>
-  </div>
+
+  </page-common>
+
+  <!-- 本页面 是由 homeheader.vue 的"首页"跳转过来 -->
+
 </template>
 
 <script>
+
+import PageCommon from './PageCommon'
+
 export default {
-  name: 'PhotoWall',
+  name: 'PhotoPage',
   data () {
     return {
       photoList: [
-        {url: require('../../assets/photocarousel/ccnuacm02.jpg')},
-        {url: require('../../assets/photocarousel/ccnuacm03.jpg')},
-        {url: require('../../assets/photocarousel/ccnuacm01.png')},
-        {url: require('../../assets/photocarousel/ccnuacm04.jpg')}
+        {url: require('../assets/photocarousel/ccnuacm02.jpg')},
+        {url: require('../assets/photocarousel/ccnuacm03.jpg')},
+        {url: require('../assets/photocarousel/ccnuacm01.png')},
+        {url: require('../assets/photocarousel/ccnuacm04.jpg')}
       ]
     }
   },
   components: {
-
+    PageCommon
   }
 }
+
 </script>
 
-<style>
+<style scoped>
 
   img{
     width: auto;

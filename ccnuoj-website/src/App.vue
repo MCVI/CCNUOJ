@@ -1,23 +1,19 @@
 <template>
   <div id="app">
-    <home-page/>
+    <router-view/>
   </div>
 </template>
 
 <script>
 
-import HomePage from './views/HomePage'
-
 export default {
   name: 'App',
-  components: {
-    HomePage
-  }
+  components: {}
 }
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

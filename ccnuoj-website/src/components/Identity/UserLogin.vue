@@ -1,31 +1,29 @@
 <template>
-  <greeting-message>
 
-    <el-form :model="UserLoginForm" :rules="UserRulers" label-width="80px" ref="UserForm" style="margin-top: 10%;">
+  <el-form :model="UserLoginForm" :rules="UserRulers" label-width="80px" ref="UserForm" style="margin-top: 10%;">
 
-      <el-form-item label="昵称" prop="name">
-        <el-input v-model="UserLoginForm.name"></el-input>
-      </el-form-item>
+    <el-form-item label="昵称" prop="name">
+      <el-input v-model="UserLoginForm.name"></el-input>
+    </el-form-item>
 
-      <div style="height:30px"></div>
+    <div style="height:30px"></div>
 
-      <el-form-item label="密码" prop="major">
-        <el-input v-model="UserLoginForm.major"></el-input>
-      </el-form-item>
+    <el-form-item label="密码" prop="major">
+      <el-input v-model="UserLoginForm.major"></el-input>
+    </el-form-item>
 
-      <div style="height:35px"></div>
+    <div style="height:35px"></div>
 
-      <el-form-item size="large">
-        <el-button @click="onSubmit('UserLoginForm')" style="width:200px ; height:40px" type="primary">登录</el-button>
-      </el-form-item>
+    <el-form-item size="large">
+      <el-button @click="onSubmit('UserLoginForm')" style="width:200px ; height:40px" type="primary">登录</el-button>
+    </el-form-item>
 
-    </el-form>
+  </el-form>
 
-  </greeting-message>
 </template>
 
 <script>
-import GreetingMessage from './GreetingMessage'
+
 export default {
   name: 'UserLogin',
   data () {
@@ -57,10 +55,9 @@ export default {
         }
       })
     }
-  },
-
-  components: {GreetingMessage}
+  }
 }
+
 </script>
 
 <style>

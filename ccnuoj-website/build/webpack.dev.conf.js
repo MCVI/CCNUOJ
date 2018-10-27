@@ -11,18 +11,8 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
 /* add express 20180923*/
-const express = require('express')
-const app = express()
-var appData = require('../dev-data/problem.json')//加载本地数据文件
-var question = appData.question
-var apiRoutes = express.Router()
-app.use('/api', apiRoutes)
-/* add express 20180923 end */
-/* add express 20181023 */
-var appContestData = require('../dev-data/contest.json')//加载本地数据文件
-var contest = appContestData.contest
-var apiRoutes2 = express.Router()
-app.use('/api', apiRoutes2)
+var problem = require('../dev-data/problem.json').problem//加载本地数据文件
+var contest = require('../dev-data/contest.json').contest//加载本地数据文件
 /* add express 20181023 end */
 
 const HOST = process.env.HOST
@@ -59,11 +49,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       poll: config.dev.poll,
     },
     /** add express 20180923 */
-    before(app) {
-      app.get('/api/question', (req, res) => {
+    before (app) {
+      app.get('/api/problem', (req, res) => {
         res.json({
           code: 0,
-          data: question
+          data: problem
         })
       }),
       app.get('/api/contest', (req, res) => {

@@ -1,16 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import PhotoWall from '../components/PhotoWall/PhotoWall'
+import PhotoPage from '../views/PhotoPage'
 
+import IdentityPage from '../views/IdentityPage'
 import UserLogin from '../components/Identity/UserLogin'
 import UserRegister from '../components/Identity/UserRegister'
 
+import ProblemPage from '../views/ProblemPage'
 import ProblemList from '../components/Problem/ProblemList'
-// import ProblemDetail from '../components/Problem/ProblemDetail'
+import ProblemDetail from '../components/Problem/ProblemDetail'
 
+import ContestPage from '../views/ContestPage'
 import ContestList from '../components/Contest/ContestList'
-// import ContestDetail from '../components/Contest/ContestDetail'
+import ContestDetail from '../components/Contest/ContestDetail'
 
 Vue.use(Router)
 
@@ -18,32 +21,69 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
-    },
-    {
-      path: '/register',
-      name: 'UserRegister',
-      component: UserRegister
-    },
-    {
-      path: '/login',
-      name: 'UserLogin',
-      component: UserLogin
+      alias: ['/login', '/register'],
+      component: IdentityPage,
+      children: [
+        {
+          path: '',
+          redirect: 'login'
+        },
+        {
+          path: 'login',
+          name: 'UerLogin',
+          component: UserLogin
+        },
+        {
+          path: 'register',
+          name: 'UserRegister',
+          component: UserRegister
+        }
+      ]
     },
     {
       path: '/photo',
-      name: 'PhotoWall',
-      component: PhotoWall
+      name: 'PhotoPage',
+      component: PhotoPage
     },
     {
       path: '/problem',
-      name: 'ProblemList',
-      component: ProblemList
+      component: ProblemPage,
+      children: [
+        {
+          path: '',
+          redirect: 'list'
+        },
+        {
+          path: 'list',
+          name: 'ProblemList',
+          component: ProblemList
+        },
+        {
+          path: ':problem_id',
+          name: 'ProblemDetail',
+          component: ProblemDetail
+        }
+      ]
     },
     {
       path: '/contest',
-      name: 'ContestList',
-      component: ContestList
+      component: ContestPage,
+      children: [
+        {
+          path: '',
+          redirect: 'list'
+        },
+        {
+          path: 'list',
+          name: 'ContestList',
+          component: ContestList
+        },
+        {
+          path: ':contest_id',
+          name: 'ContestDetail',
+          component: ContestDetail
+        }
+      ]
     }
   ]
 })
