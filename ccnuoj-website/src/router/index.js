@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import homeheader from '../components/homeheader'
-import home from '../pages/home'
-import photowalls from '../components/photowalls'
-import queslist from '../components/queslist'
-import quesdetail from '../components/quesdetail'
-import questable from '../components/questable'
-import login from '../components/login'
-import register from '../components/register'
+import GreetingMessage from '../components/GreetingMessage'
+import HomePage from '../views/HomePage'
+import PhotoWall from '../components/PhotoWall'
+import ProblemDetail from '../components/ProblemDetail'
+import ProblemList from '../components/ProblemList'
+import UserLogin from '../components/UserLogin'
+import UserRegister from '../components/UserRegister'
 
 Vue.use(Router)
 
@@ -16,53 +14,43 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      component: HomePage,
       children: [
         {
+          path: 'home',
+          name: 'GreetingMessage',
+          component: GreetingMessage
+        },
+        {
           path: '',
-          redirect: login
+          redirect: '/login'
         },
         {
           path: 'register',
-          name: 'register',
-          component: register
+          name: 'UserRegister',
+          component: UserRegister
         },
         {
           path: 'login',
-          name: 'login',
-          component: login
+          name: 'UserLogin',
+          component: UserLogin
         }
       ]
     },
     {
-      path: '/home',
-      name: 'home',
-      component: home
+      path: '/photo-wall',
+      name: 'PhotoWall',
+      component: PhotoWall
     },
     {
-      path: '/homeheader',
-      name: 'homeheader',
-      component: homeheader
-    },
-    {
-      path: '/photowalls',
-      name: 'photowalls',
-      component: photowalls
-    },
-    {
-      path: '/queslist',
-      name: 'queslist',
-      component: queslist,
+      path: '/problem',
+      name: 'ProblemList',
+      component: ProblemList,
       children: [
         {
-          path: '',
-          component: questable
-        },
-        {
-          path: 'quesdetail',
-          name: 'quesdetail',
-          component: quesdetail
+          path: 'ProblemDetail',
+          name: 'ProblemDetail',
+          component: ProblemDetail
         }
       ]
     }

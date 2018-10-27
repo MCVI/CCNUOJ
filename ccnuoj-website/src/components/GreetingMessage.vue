@@ -3,12 +3,17 @@
     <div class="left">
       <router-view/>
     </div>
+
     <div class="right">
+
       <img src="../assets/acmlogo.jpg">
-      <p>{{ msg }}</p>
+
+      <p>Welcome to CCNU OJ and Analysis System</p>
+
       <router-link style="height:50px" to="login">
         <el-tag class="centerButton">login</el-tag>
       </router-link>
+
       <router-link to="register">
         <el-tag class="centerButton">register</el-tag>
       </router-link>
@@ -18,21 +23,20 @@
 </template>
 
 <script>
-import login from '../components/login'
-import register from '../components/register'
+import login from './UserLogin'
+import UserRegister from './UserRegister'
 
 export default {
-  name: 'HelloWorld',
+  name: 'GreetingMessage',
   data () {
     return {
 
-      msg: 'Welcome to CCNU OJ and Analysis System'
     }
   },
 
   components: {
     login,
-    register
+    UserRegister
   }
 }
 </script>

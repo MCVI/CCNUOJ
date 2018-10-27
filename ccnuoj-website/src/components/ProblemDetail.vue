@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  name: 'quesdetail',
+  name: 'ProblemDetail',
   data () {
     return {
       textarea: '',

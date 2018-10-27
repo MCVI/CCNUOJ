@@ -18,7 +18,7 @@
         prop="title"
         style="width: 20%">
         <template slot-scope="scope">
-          <router-link :to=" { name:'quesdetail', query:{ques:scope.row}}">
+          <router-link :to=" { name:'ProblemDetail', query:{ques:scope.row}}">
             {{scope.row.title}}
           </router-link>
         </template>
@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import quesdetail from '../components/quesdetail'
+import ProblemDetail from './ProblemDetail'
 
 export default {
-  name: 'queslist',
+  name: 'ProblemList',
   data () {
     return {
       question: []
@@ -72,12 +72,12 @@ export default {
       })
   },
   components: {
-    quesdetail
+    ProblemDetail
   },
   methods: {
     // routeQuedetail(id){
     //     console.log(hhhhhh)
-    //     this.$router.push({name:'quesdetail',params:{quesObj:id}})
+    //     this.$router.push({name:'ProblemDetail',params:{quesObj:id}})
     // }
 
   }

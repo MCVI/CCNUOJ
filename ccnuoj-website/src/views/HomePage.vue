@@ -1,36 +1,35 @@
 <template>
   <div class="maincontainer" id="app">
+
     <el-header>
       <p class="header-p">Online Judge And Analysis System</p>
     </el-header>
+
     <el-main>
       <div class="content">
-        <homeheader/>
+        <nav-bar/>
       </div>
     </el-main>
+
+    <router-view/>
+
     <el-footer>
-      <p class="foot-p"> ccnu-acm 测试版</p>
+      <p class="foot-p"> CCNU ACM OJ 测试版</p>
     </el-footer>
+
   </div>
 </template>
 
 <script>
-import homeheader from '../components/homeheader'
-import photowalls from '../components/photowalls'
-import queslist from '../components/queslist'
-//  Vue.components('home-header',{
-//  })
-//  new Vue({el:'#app'})    全局创建components
-// webpack注册  2018.9.26 pyl
+import NavBar from '../components/NavBar'
+
 export default {
-  name: 'home',
+  name: 'HomePage',
   data () {
     return {}
   },
   components: {
-    homeheader,
-    photowalls,
-    queslist
+    NavBar
   }
 }
 </script>

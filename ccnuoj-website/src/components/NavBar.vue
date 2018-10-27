@@ -8,19 +8,15 @@
       <el-tab-pane label="课  堂" name="class"></el-tab-pane>
       <el-tab-pane label="数据中心" name="analysis"></el-tab-pane>
     </el-tabs>
-    <router-view/>
   </div>
 </template>
 
 <script>
-import queslist from '../components/queslist'
-import photowalls from '../components/photowalls'
-
 export default {
-  name: 'homeheader',
+  name: 'NavBar',
   data () {
     return {
-      activeName: 'qaq'
+      activeName: ''
       // 10.1
       //  初始化tab 路径为 “/” 也就是转到了helloworld组件， 可是我想让他转到photowalls组件，但是必须重新跳转一次路径才对。
       //  所以出了一个歪主意 ， 随便初始化一个activeName（此时是helloworld组件）， 然后再次点击路径正确。
@@ -39,11 +35,9 @@ export default {
       this.$router.push(url) //  动态加载 10.1 日
     }
   },
-  components: {
-    queslist,
-    photowalls
-  }
+  components: {}
 }
 </script>
+
 <style>
 </style>
