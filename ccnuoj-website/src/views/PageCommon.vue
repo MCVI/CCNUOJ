@@ -1,30 +1,25 @@
 <template>
 
 <!-- 根组件（除了APP.VUE) -->
-<div class="main-container" id="app">
-
-  <el-header>
-    <p class="header-p">Online Judge And Analysis System</p>
-  </el-header>
-
+<el-container>
+  
+  <!-- <nav-menu/> -->
+  
   <el-main>
+    <nav-menu/>
+    <p class="title">CCNU Online Judge</p>
     <div class="content">
-      <nav-bar/>
       <slot></slot>
     </div>
   </el-main>
 
-  <el-footer>
-    <p class="foot-p">  ccnu-acm 测试版</p>
-  </el-footer>
-
-</div>
+</el-container>
 
 </template>
 
 <script>
 
-import NavBar from '../components/NavBar'
+import NavMenu from '../components/NavMenu'
 
 export default {
   name: 'PageCommon',
@@ -33,67 +28,25 @@ export default {
     }
   },
   components: {
-    NavBar
+    NavMenu
   }
 }
 
 </script>
 
 <style lang="css" scoped>
-
-.header-p{
-  text-indent: 0em;
-  padding-left: 5em;
-  font-size:40%;
-}
-
-.foot-p{
-  text-indent: -5em;
-  padding-left: 35em;
-  font-size:40%;
-}
-
-.main-container {
-  height:100%;
-  margin:0;
-  padding:0;
-}
-
-.el-header{
-  height:100px;
-  line-height:100px;
-  background:  rgb(197, 207, 221);
-  width:100%;
-  position:absolute;
-  z-index:5;
-  top:0;
-  text-align:center;
-  color: #333;
-}
-
 .el-main {
-  width:100%;
-  overflow:auto;
-  top:30px;
-  position:absolute;
-  z-index:10;
-  bottom:100px;
+  padding: 0;
+}
+
+.title{
+  padding: 20px 0 10px;
+  text-align: center;
+  font-size: 40%;
 }
 
 .content{
-  padding:10px;
-}
-
-.el-footer {
-  height:100px;
-  line-height:100px;
-  background: rgb(197, 207, 221);
-  width:100%;
-  position:absolute;
-  z-index:200;
-  bottom:0;
-  text-align:center;
-  color: #333;
+  padding: 10px 20px;
 }
 
 </style>
