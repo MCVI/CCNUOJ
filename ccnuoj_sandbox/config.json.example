@@ -1,0 +1,29 @@
+{
+	"programPath": "./helloworld",
+
+	"timeLimit": 1,
+	"memoryLimit": 134217728,
+	
+	"file":{
+	},
+	
+	"syscall":{
+		"allow": [
+			"arch_prctl",
+			"brk",
+			"arch_prctl",
+			"access",
+			"openat",
+			"fstat",
+			"mmap",
+			"munmap",
+			"close",
+			"read",
+			"write",
+			"mprotect",
+			"lseek",
+			"exit_group"
+		]
+	}
+}
+
