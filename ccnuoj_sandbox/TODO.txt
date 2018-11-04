@@ -2,6 +2,4 @@
 2. Use dup2() to redirect the file descriptor 0(STDIN), 1(STDOUT), 2(STDERR) to normal files
 3. Use seccomp to accelerate the current sandbox implementation
 4. Code Review (Especially security check)
-5. Fuck Pure C, C++ Big Law is Good
-6. fybmain.sleep(24*60*60);
 

@@ -1,5 +1,7 @@
 {
-	"programPath": "./helloworld",
+	"sandboxOutput": "output.json",
+
+	"programPath": "helloworld",
 
 	"timeLimit": 1,
 	"memoryLimit": 134217728,
