@@ -3,17 +3,18 @@
 
 	"programPath": "helloworld",
 
-	"timeLimit": 1,
+	"timeLimit": 1000,
 	"memoryLimit": 134217728,
 	
 	"file":{
+		"/etc/ld.so.cache": ["read"],
+		"/usr/lib/*": ["read"]
 	},
 	
 	"syscall":{
 		"allow": [
 			"arch_prctl",
 			"brk",
-			"arch_prctl",
 			"access",
 			"openat",
 			"fstat",

@@ -25,4 +25,5 @@ target_sources(ccnuoj_sandbox PUBLIC run.cpp)
 target_sources(ccnuoj_sandbox PUBLIC SyscallHandler.cpp)
 target_sources(ccnuoj_sandbox PUBLIC ChildProcess.cpp)
 
+target_link_libraries(ccnuoj_sandbox stdc++fs)
 target_link_libraries(ccnuoj_sandbox libjsoncpp.a)

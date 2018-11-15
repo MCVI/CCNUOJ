@@ -47,8 +47,8 @@ void Run(const SandboxConfig &config){
 		exit(-1);
 	});
 
-	while(child.isRunning()){
-		try{
+	try{
+		while(child.isRunning()){
 			if(child.isPaused()){
 				switch(child.state){
 					case ChildProcess::State::ReceivedSignal:
@@ -66,7 +66,7 @@ void Run(const SandboxConfig &config){
 								}
 								break;
 							case SIGXCPU:
-								throw TimeLimitExceeded(Json::Value(), Json::Value());
+								throw TimeLimitExceeded();
 							default:
 								break;
 						}
@@ -85,23 +85,27 @@ void Run(const SandboxConfig &config){
 			}else{
 				child.waitNextEvent(true);
 			}
-		}catch(ProgramTerminated &e){
-			child.terminate();
-			e.time = child.time;
-			e.memory = child.memory;
-			throw;
 		}
-	}
+		switch(child.state){
+			case ChildProcess::State::Terminated:
+				throw ProgramSignaled(child.signal);
 
-	switch(child.state){
-		case ChildProcess::State::Terminated:
-			throw ProgramSignaled(child.time, child.memory, child.signal);
+			case ChildProcess::State::Exited:
+				if(child.information.time.asDouble()*1000>config.timeLimit){
+					throw TimeLimitExceeded();
+				}else{
+					throw ProgramExited(child.ret);
+				}
 
-		case ChildProcess::State::Exited:
-			throw ProgramExited(child.time, child.memory, child.ret);
-
-		default:
-			assert(false);
-			break;
+			default:
+				assert(false);
+				break;
+		}
+	}catch(ProcessInformation &e){
+		if(child.isRunning()){
+			child.terminate();
+		}
+		e.copyProcessInformationFrom(child.information);
+		throw;
 	}
 }

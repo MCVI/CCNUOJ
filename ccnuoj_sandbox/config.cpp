@@ -374,7 +374,7 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 		const Json::Value &value = *iti;
 		if(value.isArray()){
 			const Json::Value &array = requireNonEmptyArray(key, *iti);
-			for(int j=0;j<array.size();i++){
+			for(int j=0;j<array.size();j++){
 					const string permission_key = key+"["+to_string(j)+"]";
 					const string permission_name = requireType<Json::ValueType::stringValue>(permission_key, array[j]);
 					if(permission_name=="read"){

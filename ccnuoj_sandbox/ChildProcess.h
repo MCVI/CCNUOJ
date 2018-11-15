@@ -6,6 +6,31 @@
 #include <json/json.h>
 
 #include <sys/times.h>
+#include <sys/user.h>
+
+class ProcessInformation{
+	friend class ChildProcess;
+
+	Json::Value _time;
+	Json::Value _memory;
+
+public:
+	const Json::Value &time;
+	const Json::Value &memory;
+
+	ProcessInformation(): time(_time), memory(_memory){}
+	virtual ~ProcessInformation() = default;
+
+	virtual void copyProcessInformationFrom(const ProcessInformation &info){
+		this->_time = info._time;
+		this->_memory = info._memory;
+	}
+
+	virtual void fillDetail(Json::Value &detail)const{
+		detail["time"] = time;
+		detail["memory"] = memory;
+	}
+};
 
 class ChildProcess{
 	bool inSyscall;
@@ -33,12 +58,11 @@ public:
 
 	State state;
 	pid_t pid;
+	struct user_regs_struct regs;
 	int status, ret, signal;
-
 	bool inUser;
 
-	double time;
-	size_t memory;
+	ProcessInformation information;
 
 	explicit ChildProcess(std::function<int()> func);
 	ChildProcess(const ChildProcess &child) = delete;

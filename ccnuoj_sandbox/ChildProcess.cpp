@@ -72,7 +72,7 @@ ChildProcess::~ChildProcess(){
 void ChildProcess::calcMemory(){
 	const static string prefix("vmpeak:");
 
-	this->memory = 0;
+	Json::Value &memory = this->information._memory;
 
 	string proc_file_path = string("/proc/") + to_string(this->pid) + "/status";
 	fstream proc_file;
@@ -96,11 +96,11 @@ void ChildProcess::calcMemory(){
 				if(unit.empty()){
 					memory = num;
 				}else if(unit=="kb"){
-					this->memory = num*1024;
+					memory = num*1024;
 				}else if(unit=="mb"){
-					this->memory = num*1024*1024;
+					memory = num*1024*1024;
 				}else if(unit=="gb"){
-					this->memory = num*1024*1024*1024;
+					memory = num*1024*1024*1024;
 				}
 			}
 		}
@@ -110,9 +110,12 @@ void ChildProcess::calcMemory(){
 
 void ChildProcess::calcTime(){
 	times(&(this->timeEnd));
+	cerr<<"timeEnd.tms_utime"<<timeEnd.tms_utime<<" timeStart.tms_utime"<<timeStart.tms_utime<<endl;
+	cerr<<"timeEnd.tms_cutime"<<timeEnd.tms_cutime<<" timeStart.tms_cutime"<<timeStart.tms_cutime<<endl;
+
 	clock_t utime = timeEnd.tms_cutime - timeStart.tms_cutime;
 	clock_t stime = timeEnd.tms_cstime - timeStart.tms_cstime;
-	this->time = (utime+stime)/(double)(CLOCKS_PER_SEC);
+	this->information._time = (utime+stime)/(double)sysconf(_SC_CLK_TCK);;
 }
 
 void ChildProcess::terminate(){
@@ -120,8 +123,15 @@ void ChildProcess::terminate(){
 
 	calcMemory();
 
+	/*
+	cerr<<"waiting for char...";
+	getchar();
+	*/
+
 	kill(this->pid, SIGKILL);
-	ptrace(PTRACE_CONT, this->pid, nullptr, nullptr);
+
+	//ptrace(PTRACE_CONT, this->pid, nullptr, nullptr);
+
 	waitid(P_PID, (id_t)(this->pid), nullptr, WEXITED);
 	this->state = State::Terminated;
 

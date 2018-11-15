@@ -2,14 +2,10 @@
 
 #include "common.h"
 #include "SandboxException.h"
+#include "ChildProcess.h"
 
-class ProgramTerminated:public SandboxException{
+class ProgramTerminated: public SandboxException, public ProcessInformation{
 public:
-	Json::Value time;
-	Json::Value memory;
-
-	ProgramTerminated(Json::Value time, Json::Value memory):time(std::move(time)),memory(std::move(memory)){}
-
 	RetValue getRetValue()const override{
 		return RetValue::Finished;
 	}
@@ -30,16 +26,13 @@ public:
 
 	Json::Value getJsonObject()const override{
 		Json::Value json = SandboxException::getJsonObject();
-		json["detail"]["time"] = time;
-		json["detail"]["memory"] = memory;
+		this->ProcessInformation::fillDetail(json["detail"]);
 		return json;
 	}
 };
 
 class DangerousBehavior:public ProgramTerminated{
 public:
-	DangerousBehavior(Json::Value time, Json::Value memory):ProgramTerminated(std::move(time), std::move(memory)){}
-
 	static std::string staticName(){
 		return "DangerousBehavior";
 	}
@@ -60,10 +53,8 @@ public:
 	const uint64_t syscallID;
 
 	explicit DangerousSyscall(
-			Json::Value time,
-			Json::Value memory,
 			const uint64_t syscallID
-	):DangerousBehavior(std::move(time),std::move(memory)), syscallID(syscallID){}
+	):syscallID(syscallID){}
 
 	static std::string staticName(){
 		return "DangerousSyscall";
@@ -97,10 +88,8 @@ public:
 	const std::string path;
 
 	explicit DangerousFileOperation(
-			Json::Value time,
-			Json::Value memory,
 			std::string path
-	):DangerousBehavior(std::move(time),std::move(memory)), path(move(path)){}
+	):path(move(path)){}
 
 	static std::string staticName(){
 		return "DangerousFileOperation";
@@ -130,10 +119,8 @@ public:
 	const int signal;
 
 	explicit ProgramSignaled(
-			Json::Value time,
-			Json::Value memory,
 			const int signal
-	):ProgramTerminated(std::move(time), std::move(memory)), signal(signal){}
+	):signal(signal){}
 
 	static std::string staticName(){
 		return "ProgramSignaled";
@@ -160,10 +147,6 @@ public:
 
 class TimeLimitExceeded:public ProgramTerminated{
 public:
-	explicit TimeLimitExceeded(
-			Json::Value time,
-			Json::Value memory
-	):ProgramTerminated(std::move(time), std::move(memory)){}
 
 	static std::string staticName(){
 		return "TimeLimitExceeded";
@@ -182,11 +165,6 @@ public:
 
 class MemoryLimitExceeded:public ProgramTerminated{
 public:
-	explicit MemoryLimitExceeded(
-			Json::Value time,
-			Json::Value memory
-	):ProgramTerminated(std::move(time), std::move(memory)){}
-
 	static std::string staticName(){
 		return "MemoryLimitExceeded";
 	}
@@ -207,10 +185,8 @@ public:
 	int ret;
 
 	explicit ProgramExited(
-			Json::Value time,
-			Json::Value memory,
 			const int ret
-	):ProgramTerminated(std::move(time), std::move(memory)), ret(ret){}
+	):ret(ret){}
 
 	static std::string staticName(){
 		return "ProgramExited";

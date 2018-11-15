@@ -10,17 +10,20 @@ extern "C" {
 class SyscallHandler{
 	const SandboxConfig &config;
 
-	struct user_regs_struct regs;
-
 	using File=SandboxConfig::File;
-	std::map<std::string, File::Permission> fileMap;
-	std::vector<File> wildcardFileList;
+	std::map<std::string, File::Permission> _fileMap;
+	std::vector<File> _wildcardFileList;
 
-	std::vector<bool> syscallMap;
+	std::vector<bool> _syscallMap;
 
-	void HandleSyscall_openat(int dirfd)const;
+	void HandleSyscall_open(ChildProcess &child)const;
+	void HandleSyscall_openat(ChildProcess &child)const;
 
 public:
+	const std::map<std::string, File::Permission> &fileMap;
+	const std::vector<File> &wildcardFileList;
+	const std::vector<bool> &syscallMap;
+
 	explicit SyscallHandler(const SandboxConfig &config);
 
 	void beforeSyscall(ChildProcess &child);
