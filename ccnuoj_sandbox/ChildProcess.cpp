@@ -109,33 +109,34 @@ void ChildProcess::calcMemory(){
 }
 
 void ChildProcess::calcTime(){
-	times(&(this->timeEnd));
-	cerr<<"timeEnd.tms_utime"<<timeEnd.tms_utime<<" timeStart.tms_utime"<<timeStart.tms_utime<<endl;
-	cerr<<"timeEnd.tms_cutime"<<timeEnd.tms_cutime<<" timeStart.tms_cutime"<<timeStart.tms_cutime<<endl;
+	Json::Value &time = this->information._time;
 
-	clock_t utime = timeEnd.tms_cutime - timeStart.tms_cutime;
-	clock_t stime = timeEnd.tms_cstime - timeStart.tms_cstime;
-	this->information._time = (utime+stime)/(double)sysconf(_SC_CLK_TCK);;
+	string proc_file_path = string("/proc/") + to_string(this->pid) + "/stat";
+	fstream proc_file;
+
+	proc_file.open(proc_file_path, ios::in);
+	if(proc_file.is_open()){
+		for(int i=1;i<14;i++){
+			string tmp;
+			proc_file>>tmp;
+		}
+		uint64_t utime, stime;
+		proc_file>>utime>>stime;
+		time = (utime+stime)/(double)sysconf(_SC_CLK_TCK);
+
+		proc_file.close();
+	}
 }
 
 void ChildProcess::terminate(){
 	assert(this->isRunning());
 
 	calcMemory();
-
-	/*
-	cerr<<"waiting for char...";
-	getchar();
-	*/
+	calcTime();
 
 	kill(this->pid, SIGKILL);
-
-	//ptrace(PTRACE_CONT, this->pid, nullptr, nullptr);
-
 	waitid(P_PID, (id_t)(this->pid), nullptr, WEXITED);
 	this->state = State::Terminated;
-
-	calcTime();
 }
 
 void ChildProcess::continueRunning_Internal(){
@@ -168,11 +169,9 @@ void ChildProcess::waitNextEvent_Internal(){
 	if(WIFEXITED(status)){
 		state = State::Exited;
 		ret = WEXITSTATUS(status);
-		calcTime();
 	}else if(WIFSIGNALED(status)){
 		state = State::Terminated;
 		signal = WTERMSIG(status);
-		calcTime();
 	}else{
 		// stopped
 		this->signal = WSTOPSIG(status);
@@ -203,6 +202,7 @@ void ChildProcess::waitNextEvent_Internal(){
 			case SIGTRAP:
 				if((status>>8)==(SIGTRAP|PTRACE_EVENT_EXIT<<8)){
 					calcMemory();
+					calcTime();
 				}else{
 					state = State::ReceivedSignal;
 				}

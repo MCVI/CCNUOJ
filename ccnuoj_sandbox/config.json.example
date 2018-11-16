@@ -13,18 +13,22 @@
 	
 	"syscall":{
 		"allow": [
-			"arch_prctl",
-			"brk",
 			"access",
 			"openat",
-			"fstat",
+			"close",
+
+			"arch_prctl",
+			"brk",
+
 			"mmap",
 			"munmap",
-			"close",
+			"mprotect",
+
 			"read",
 			"write",
-			"mprotect",
 			"lseek",
+			"fstat",
+
 			"exit_group"
 		]
 	}

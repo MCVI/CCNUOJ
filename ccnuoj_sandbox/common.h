@@ -12,10 +12,12 @@
 
 namespace Config{
 	const uint64_t MaxTimeLimit = 100*1000;
-	const uint64_t TimeLimitRedundant = 1*1000;
+	const uint64_t TimeLimitSoftRedundant = 1*1000;
+	const uint64_t TimeLimitHardRedundant = 2*1000;
 
 	const uint64_t MaxMemoryLimit = 4*(uint64_t)1024*1024*1024;
-	const uint64_t MemoryLimitRedundant= 16*1024*1024;
+	const uint64_t MemoryLimitSoftRedundant= 16*1024*1024;
+	const uint64_t MemoryLimitHardRedundant= 1024ll*1024*1024;
 
 	const int MaxFileListItemNum = 100;
 	const uint64_t MaxSyscallID = 1000;

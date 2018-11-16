@@ -1,4 +1,4 @@
-1. Implement limitation when child using open() or openat()
+1. Implement checking for read/write permissions when child using open() or openat()
 2. Use dup2() to redirect the file descriptor 0(STDIN), 1(STDOUT), 2(STDERR) to normal files
 3. Use seccomp to accelerate the current sandbox implementation
 4. Code Review (Especially security check)

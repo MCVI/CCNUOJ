@@ -31,12 +31,12 @@ void Run(const SandboxConfig &config){
 	ChildProcess child([&config]() -> int{
 		struct rlimit limit;
 
-		limit.rlim_cur = (uint64_t) ceil(config.timeLimit/(double) 1000);
-		limit.rlim_max = (uint64_t) ceil((config.timeLimit+Config::TimeLimitRedundant)/(double) 1000);
+		limit.rlim_cur = (uint64_t) ceil((config.timeLimit+Config::TimeLimitSoftRedundant)/(double) 1000);
+		limit.rlim_max = (uint64_t) ceil((config.timeLimit+Config::TimeLimitHardRedundant)/(double) 1000);
 		setrlimit(RLIMIT_CPU, &limit);
 
-		limit.rlim_cur = config.memoryLimit;
-		limit.rlim_max = config.memoryLimit+Config::MemoryLimitRedundant;
+		limit.rlim_cur = config.memoryLimit+Config::MemoryLimitSoftRedundant;
+		limit.rlim_max = config.memoryLimit+Config::MemoryLimitHardRedundant;
 		setrlimit(RLIMIT_AS, &limit);
 
 		execl(config.programPath.c_str(), config.programPath.c_str(), nullptr); // will not return when succeeded
@@ -91,7 +91,9 @@ void Run(const SandboxConfig &config){
 				throw ProgramSignaled(child.signal);
 
 			case ChildProcess::State::Exited:
-				if(child.information.time.asDouble()*1000>config.timeLimit){
+				if(child.information.memory.asUInt64()>config.memoryLimit){
+					throw MemoryLimitExceeded();
+				}else if(child.information.time.asDouble()*1000>config.timeLimit){
 					throw TimeLimitExceeded();
 				}else{
 					throw ProgramExited(child.ret);
