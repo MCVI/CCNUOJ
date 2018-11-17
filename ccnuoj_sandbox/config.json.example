@@ -5,33 +5,38 @@
 
 	"timeLimit": 1000,
 	"memoryLimit": 134217728,
-	
+
 	"file":{
 		"/etc/ld.so.cache": ["read"],
 		"/usr/lib/*": ["read"],
 
+		"input.txt": ["read"],
 		"output.txt": ["create", "read", "write"]
 	},
-	
+
+	"stdioRedirection":{
+		"stdin": "input.txt",
+		"stdout": "output.txt"
+	},
+
 	"syscall":{
 		"allow": [
-			"access",
-			"openat",
-			"close",
-
 			"arch_prctl",
-			"brk",
+			"exit_group",
 
+			"brk",
 			"mmap",
 			"munmap",
 			"mprotect",
 
+			"access",
+			"openat",
+			"close",
+
 			"read",
 			"write",
 			"lseek",
-			"fstat",
-
-			"exit_group"
+			"fstat"
 		]
 	}
 }

@@ -1,12 +1,15 @@
 #pragma once
 
+extern "C"{
+#include <sys/times.h>
+#include <sys/user.h>
+}
+
 #include <cassert>
 
 #include <functional>
 #include <json/json.h>
 
-#include <sys/times.h>
-#include <sys/user.h>
 
 class ProcessInformation{
 	friend class ChildProcess;

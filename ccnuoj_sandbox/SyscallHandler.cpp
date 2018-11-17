@@ -112,6 +112,14 @@ inline static void checkPermission(
 		}
 	}
 
+	// Notice: Linux kernel (testing version: 4.19.1) allow truncating even if the access mode is O_RDONLY
+	// So the sandbox has to check manually
+	if(oflags&O_TRUNC){
+		if(!permission.write){
+			throw DangerousFileOperation(filePath);
+		}
+	}
+
 	// currently ignoring mode
 }
 

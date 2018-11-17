@@ -5,6 +5,10 @@
 
 class LaunchFailed:public SandboxException{
 public:
+	RetValue getRetValue()const override{
+		return RetValue::LaunchFailed;
+	}
+
 	static std::string staticName(){
 		return "LaunchFailed";
 	}
@@ -51,12 +55,34 @@ public:
 	};
 };
 
+class OpenFileFailed:public LaunchFailed{
+public:
+	RetValue getRetValue()const override{
+		return RetValue::OpenFileFailed;
+	}
+
+	static std::string staticName(){
+		return "OpenFileFailed";
+	}
+
+	std::string getName()const override{
+		return staticName();
+	}
+
+	Json::Value getCategory()const override{
+		Json::Value category = LaunchFailed::getCategory();
+		category.append(staticName());
+		return category;
+	}
+
+	Json::Value getJsonObject()const override{
+		Json::Value json = LaunchFailed::getJsonObject();
+		return json;
+	};
+};
+
 class ExecFailed:public LaunchFailed{
 public:
-	//const int errorCode;
-
-	explicit ExecFailed() = default;
-
 	RetValue getRetValue()const override{
 		return RetValue::ExecFailed;
 	}
@@ -77,7 +103,6 @@ public:
 
 	Json::Value getJsonObject()const override{
 		Json::Value json = LaunchFailed::getJsonObject();
-		//json["detail"]["errorCode"] = this->errorCode;
 		return json;
 	};
 };

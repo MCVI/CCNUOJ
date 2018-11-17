@@ -1,5 +1,4 @@
-1. Use dup2() to redirect the file descriptor 0(STDIN), 1(STDOUT), 2(STDERR) to normal files
+1. Implement limitation of parameter 'mode' in open() and openat() when flag bit 'O_CREAT' is set
 2. Use seccomp to accelerate the current sandbox implementation
-3. Implement limitation of parameter 'mode' in open() and openat() when flag bit 'O_CREAT' is set
-4. Code Review (Especially security check)
+3. Code Review (Especially security check)
 

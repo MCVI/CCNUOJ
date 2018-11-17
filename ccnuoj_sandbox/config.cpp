@@ -1,6 +1,11 @@
+extern "C"{
+#include <unistd.h>
+}
+
 #include <cstring>
 #include <cassert>
 
+#include <algorithm>
 #include <experimental/filesystem>
 
 #include "common.h"
@@ -148,7 +153,7 @@ public:
 	};
 };
 
-class ConfigLimitExceeded:ConfigSemanticError{
+class ConfigLimitExceeded:public ConfigSemanticError{
 public:
 	const Json::Value limit;
 	const Json::Value actual;
@@ -185,7 +190,78 @@ public:
 	};
 };
 
-class UnrecognizedSyscall:ConfigSemanticError{
+class ConfigKeyDuplicated:public ConfigSemanticError{
+public:
+	const Json::Value previous;
+	const Json::Value current;
+
+	ConfigKeyDuplicated(
+			string keyName,
+			Json::Value previous,
+			Json::Value current
+	):ConfigSemanticError(move(keyName)), previous(move(previous)), current(move(current)){}
+
+	RetValue getRetValue()const override{
+		return RetValue::ConfigKeyDuplicated;
+	}
+
+	static std::string staticName(){
+		return "ConfigKeyDuplicated";
+	}
+
+	string getName()const override{
+		return staticName();
+	}
+
+	Json::Value getCategory()const override{
+		Json::Value category = ConfigSemanticError::getCategory();
+		category.append(staticName());
+		return category;
+	}
+
+	Json::Value getJsonObject()const override{
+		Json::Value json = ConfigSemanticError::getJsonObject();
+		json["detail"]["previous"] = previous;
+		json["detail"]["current"] = current;
+		return json;
+	};
+};
+
+class UnrecognizedFile:public ConfigSemanticError{
+public:
+	const Json::Value unrecognized;
+
+	UnrecognizedFile(
+			string keyName,
+			Json::Value unrecognized
+	):ConfigSemanticError(move(keyName)), unrecognized(move(unrecognized)){}
+
+	RetValue getRetValue()const override{
+		return RetValue::UnrecognizedFile;
+	}
+
+	static std::string staticName(){
+		return "UnrecognizedFile";
+	}
+
+	string getName()const override{
+		return staticName();
+	}
+
+	Json::Value getCategory()const override{
+		Json::Value category = ConfigSemanticError::getCategory();
+		category.append(staticName());
+		return category;
+	}
+
+	Json::Value getJsonObject()const override{
+		Json::Value json = ConfigSemanticError::getJsonObject();
+		json["detail"]["unrecognized"] = unrecognized;
+		return json;
+	};
+};
+
+class UnrecognizedSyscall:public ConfigSemanticError{
 public:
 	const Json::Value unrecognized;
 
@@ -339,6 +415,7 @@ inline static const Json::Value& requireNonEmptyArray(
 
 static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 	Json::Value::const_iterator iti;
+	int i;
 
 	requireType<Json::ValueType::objectValue>("", json);
 
@@ -361,7 +438,7 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 	config.fileList.resize(fileList.size());
 
 	iti=fileList.begin();
-	int i=0;
+	i=0;
 	while(iti!=fileList.end()){
 		SandboxConfig::File &config_file = config.fileList[i];
 
@@ -409,6 +486,71 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 
 		iti++;
 		i++;
+	}
+
+	const int numStdioFile = sizeof(config.stdioRedirection)/sizeof(*(config.stdioRedirection));
+	Json::Value redirectionKey[numStdioFile];
+	for(i=0;i<numStdioFile;i++){
+		config.stdioRedirection[i] = -1;
+	}
+	if(json.isMember("stdioRedirection")){
+		const Json::Value &stdioRedirection = requireObjectLimit(
+				"stdioRedirection",
+				json["stdioRedirection"],
+				Config::MaxFileListItemNum
+		);
+
+		iti = stdioRedirection.begin();
+		for(;iti!=stdioRedirection.end();iti++){
+			const Json::Value key = iti.key();
+			int index;
+
+			if(key.isString()){
+				string keyName = key.asString();
+				transform(keyName.begin(), keyName.end(), keyName.begin(), ::tolower);
+				if(keyName=="stdin"||keyName=="in"){
+					index = STDIN_FILENO;
+				}else if(keyName=="stdout"||keyName=="out"){
+					index = STDOUT_FILENO;
+				}else if(keyName=="stderr"||keyName=="err"||keyName=="error"){
+					index = STDERR_FILENO;
+				}else{
+					Json::Value limit;
+					limit.append("stdin");limit.append("in");
+					limit.append("stdout");limit.append("out");
+					limit.append("stderr");limit.append("err");limit.append("error");
+					throw ConfigLimitExceeded("stdioRedirection::keyName", limit, keyName);
+				}
+			}else{
+				throw ConfigTypeError(
+						"stdioRedirection::keyType["+key.toStyledString()+"]",
+						Json::ValueType::stringValue,
+						key.type()
+				);
+			}
+
+			ssize_t *cur = &(config.stdioRedirection[index]);
+			if(*cur!=-1){
+				throw ConfigKeyDuplicated("stdioRedirection", redirectionKey[index], key);
+			}else{
+				redirectionKey[index] = key;
+
+				const string filename = fs::absolute(requireType<Json::ValueType::stringValue>(
+						"stdioRedirection["+key.toStyledString()+"]",
+						*iti
+				));
+				vector<SandboxConfig::File>::const_iterator itj = config.fileList.cbegin();
+				for(;itj!=config.fileList.cend();itj++){
+					if(itj->filename==filename){
+						*cur = itj-(config.fileList.cbegin());
+						break;
+					}
+				}
+				if(itj==config.fileList.cend()){
+					throw UnrecognizedFile("stdioRedirection["+key.toStyledString()+"]", filename);
+				}
+			}
+		}
 	}
 
 	const Json::Value &syscallList = requireType<Json::ValueType::objectValue>("syscall", json["syscall"]);

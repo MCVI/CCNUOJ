@@ -44,8 +44,8 @@ public:
 	uint64_t timeLimit;
 	uint64_t memoryLimit;
 
-	std::string stdioFile[3];
 	std::vector<File> fileList;
+	ssize_t stdioRedirection[3];
 
 	std::set<uint64_t> allowedSyscall;
 };

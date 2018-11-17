@@ -15,7 +15,6 @@ SandboxException::RetValue main_Internal(){
 
 	SandboxConfig config;
 	try{
-
 		ReadConfigFromFile(config, configFile);
 	}catch(SandboxException &e){
 		if(config.sandboxOutput){

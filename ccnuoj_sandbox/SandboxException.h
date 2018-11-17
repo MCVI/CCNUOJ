@@ -19,11 +19,14 @@ public:
 		ConfigSemanticError = 20,
 		ConfigTypeError = 21,
 		ConfigLimitExceeded = 22,
-		UnrecognizedSyscall = 23,
+		ConfigKeyDuplicated = 23,
+		UnrecognizedFile = 24,
+		UnrecognizedSyscall = 25,
 
 		LaunchFailed = 30,
 		CloneFailed = 31,
-		ExecFailed = 35,
+		OpenFileFailed = 35,
+		ExecFailed = 39,
 	};
 
 	virtual ~SandboxException() = default;
