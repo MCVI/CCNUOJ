@@ -8,7 +8,9 @@
 	
 	"file":{
 		"/etc/ld.so.cache": ["read"],
-		"/usr/lib/*": ["read"]
+		"/usr/lib/*": ["read"],
+
+		"output.txt": ["create", "read", "write"]
 	},
 	
 	"syscall":{

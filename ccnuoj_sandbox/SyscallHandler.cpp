@@ -14,7 +14,7 @@
 #include "ProgramTerminated.h"
 
 using namespace std;
-using namespace std::experimental::filesystem;
+namespace fs = std::experimental::filesystem;
 using File = SandboxConfig::File;
 
 class GetSymlinkTargetFailed{};
@@ -75,34 +75,67 @@ inline static string ReadChildString(ChildProcess &child, char *addr, size_t max
 }
 
 inline static void checkPermission(
+		uint64_t syscall_id,
+		const fs::path &filePath,
 		const int oflags,
+		const mode_t mode,
 		const SandboxConfig::File::Permission &permission
 ){
-	// stub
-	printf("stub: check oflags=%x\n", oflags);
+	const int accessMode = oflags&O_ACCMODE;
+	switch(accessMode){
+		case O_RDONLY:
+			if(!permission.read){
+				throw DangerousFileOperation(filePath);
+			}
+			break;
+		case O_WRONLY:
+			if(!permission.write){
+				throw DangerousFileOperation(filePath);
+			}
+			break;
+		case O_RDWR:
+			if(!(permission.read&&permission.write)){
+				throw DangerousFileOperation(filePath);
+			}
+			break;
+		default:
+			throw DangerousSyscall(syscall_id);
+			break;
+	}
+	if(oflags&O_CREAT){
+		if(exists(filePath)){
+			// do nothing
+		}else{
+			if(!permission.create){
+				throw DangerousFileOperation(filePath);
+			}
+		}
+	}
+
+	// currently ignoring mode
 }
 
 inline static void checkOpenFile(
 		const SyscallHandler &handler,
 		ChildProcess &child,
+		uint64_t syscall_id,
 		string workDirSymlinkPath,
 		string _relPath,
-		int oflags
+		int oflags,
+		mode_t mode
 ){
 	string pathStr;
-	path relPath(move(_relPath));
+	fs::path relPath(move(_relPath));
 
 	if(relPath.is_absolute()){
 		pathStr = move(relPath);
 	}else{
-		path filePath;
-		if(exists(workDirSymlinkPath)&&is_symlink(workDirSymlinkPath)){
-			filePath = read_symlink(move(workDirSymlinkPath));
+		if(fs::exists(workDirSymlinkPath)&&fs::is_symlink(workDirSymlinkPath)){
+			const fs::path workDir = fs::read_symlink(move(workDirSymlinkPath));
+			pathStr = absolute(relPath, workDir);
 		}else{
 			throw GetSymlinkTargetFailed();
 		}
-		filePath.append(string(move(relPath)));
-		pathStr = move(filePath);
 	}
 
 	map<string, File::Permission>::const_iterator iti = handler.fileMap.find(pathStr);
@@ -113,14 +146,14 @@ inline static void checkOpenFile(
 				continue;
 			}else{
 				if(pathStr.substr(0, len)==file.filename){
-					checkPermission(oflags, file.permission);
+					checkPermission(syscall_id, pathStr, oflags, mode, file.permission);
 					return;
 				}
 			}
 		}
 		throw DangerousFileOperation(pathStr);
 	}else{
-		checkPermission(oflags, iti->second);
+		checkPermission(syscall_id, pathStr, oflags, mode, iti->second);
 		return;
 	}
 }
@@ -136,9 +169,11 @@ void SyscallHandler::HandleSyscall_open(ChildProcess &child)const{
 			throw GetSymlinkTargetFailed();
 		}
 
-		path symlinkPath = "/proc/"+to_string(child.pid)+"/cwd";
+		fs::path symlinkPath = "/proc/"+to_string(child.pid)+"/cwd";
 
-		checkOpenFile(*this, child, symlinkPath, relPath, static_cast<int>(regs.rsi));
+		const int oflags = static_cast<int>(regs.rsi);
+		const mode_t mode = static_cast<mode_t>(regs.rdx);
+		checkOpenFile(*this, child, SYS_open, move(symlinkPath), move(relPath), oflags, mode);
 
 	}catch(GetSymlinkTargetFailed){
 		throw DangerousSyscall(SYS_openat);
@@ -157,14 +192,16 @@ void SyscallHandler::HandleSyscall_openat(ChildProcess &child)const{
 			throw GetSymlinkTargetFailed();
 		}
 
-		path symlinkPath;
+		fs::path symlinkPath;
 		if(dirfd==AT_FDCWD){
 			symlinkPath = "/proc/"+to_string(child.pid)+"/cwd";
 		}else{
 			symlinkPath = "/proc/"+to_string(child.pid)+"/fd/"+to_string(dirfd);
 		}
 
-		checkOpenFile(*this, child, symlinkPath, relPath, static_cast<int>(regs.rdx));
+		const int oflags = static_cast<int>(regs.rdx);
+		const mode_t mode = static_cast<mode_t>(regs.r10);
+		checkOpenFile(*this, child, SYS_openat, move(symlinkPath), move(relPath), oflags, mode);
 
 	}catch(GetSymlinkTargetFailed){
 		throw DangerousSyscall(SYS_openat);

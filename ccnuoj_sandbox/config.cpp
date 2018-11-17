@@ -1,10 +1,13 @@
 #include <cstring>
 #include <cassert>
 
+#include <experimental/filesystem>
+
 #include "common.h"
 #include "SandboxException.h"
 
 using namespace std;
+namespace fs = std::experimental::filesystem;
 
 class ReadConfigError:public SandboxException{
 public:
@@ -362,10 +365,10 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 	while(iti!=fileList.end()){
 		SandboxConfig::File &config_file = config.fileList[i];
 
-		config_file.filename = requireType<Json::ValueType::stringValue>(
+		config_file.filename = fs::absolute(requireType<Json::ValueType::stringValue>(
 				"file::keyType["+iti.key().toStyledString()+"]",
 				iti.key()
-		);
+		));
 		const string key = "file.\'" + config_file.filename + "\'";
 
 		auto &config_permission = config_file.permission;
@@ -381,10 +384,13 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 						config_permission.read = 1;
 					}else if(permission_name=="write"){
 						config_permission.write = 1;
+					}else if(permission_name=="create"){
+						config_permission.create = 1;
 					}else{
 						Json::Value limit, allow_value;
 						allow_value.append("read");
 						allow_value.append("write");
+						allow_value.append("create");
 						limit["array"] = allow_value;
 						throw ConfigLimitExceeded(permission_key, limit, permission_name);
 					}
@@ -392,6 +398,7 @@ static void ReadConfigFromJson(SandboxConfig &config, const Json::Value &json){
 		}else if(value.isNull()){
 			config_permission.read = 1;
 			config_permission.write = 0;
+			config_permission.create = 0;
 		}else{
 			throw ConfigTypeError(
 					"file.\'"+key+"\'",

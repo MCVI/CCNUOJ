@@ -33,6 +33,7 @@ public:
 		struct Permission{
 			int read:1;
 			int write:1;
+			int create:1;
 		}permission;
 	};
 
