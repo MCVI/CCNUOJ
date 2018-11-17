@@ -17,6 +17,11 @@ import ContestPage from '../views/ContestPage'
 import ContestList from '../components/Contest/ContestList'
 import ContestDetail from '../components/Contest/ContestDetail'
 
+import ConquesList from '../components/Contest/ConDetailPage/ConquesList'
+import ConquesRank from '../components/Contest/ConDetailPage/ConquesRank'
+import ConquesUpdate from '../components/Contest/ConDetailPage/ConquesUpdate'
+import ConquesDetail from '../components/Contest/ConDetailPage/ConquesDetail'
+
 Vue.use(Router)
 
 export default new Router({
@@ -82,9 +87,35 @@ export default new Router({
           component: ContestList
         },
         {
-          path: ':contest_id',
+          path: '/:contest_id',
           name: 'ContestDetail',
-          component: ContestDetail
+          component: ContestDetail,
+          children: [
+            {
+              path: '',
+              redirect: 'queslist'
+            },
+            {
+              path: 'queslist',
+              name: 'ConquesList',
+              component: ConquesList
+            },
+            {
+              path: 'rank',
+              name: 'ConquesRank',
+              component: ConquesRank
+            },
+            {
+              path: 'update',
+              name: 'ConquesUpdate',
+              component: ConquesUpdate
+            },
+            {
+              path: ':problem_id',
+              name: 'ConquesDetail',
+              component: ConquesDetail
+            }
+          ]
         }
       ]
     },

@@ -3,51 +3,48 @@
    ContestDetail组件是当我们在ContestList点击某一个比赛的时候,进入到该比赛的详情界面
   -->
 <div>
-
  <p>{{ contest['title']}}</p>
-
- <el-tabs v-model="activeName" @tab-click="handleClick">
-
-  <el-tab-pane label="题目" name="conquestable">
-    <conquestable :objj="obj"></conquestable>
-  </el-tab-pane>
-
-  <el-tab-pane label="提交记录" name="conquesupdate">
-    <conquesupdate :objj="obj"></conquesupdate>
-  </el-tab-pane>
-
-  <el-tab-pane label="榜单" name="conquesrank">
-    <conquesrank :objj="obj"></conquesrank>
-  </el-tab-pane>
-
- </el-tabs>
-
+  <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="题目" name="ConquesList">
+      <conques-list :contest_id = this.contestid></conques-list>
+    </el-tab-pane>
+    <el-tab-pane label="提交记录" name="ConquesUpdate">
+      <conques-update></conques-update>
+    </el-tab-pane>
+    <el-tab-pane label="榜单" name="ConquesRank">
+      <conques-rank></conques-rank>
+    </el-tab-pane>
+  </el-tabs>
 </div>
 
 </template>
 
 <script>
-
-import conquesrank from '../Contest/ConDetailPage/conquesrank'
-import conquestable from '../Contest/ConDetailPage/conquestable'
-import conquesupdate from '../Contest/ConDetailPage/conquesupdate'
-import conquesdetail from '../Contest/ConDetailPage/conquesdetail'
-
+import ConquesRank from '../Contest/ConDetailPage/ConquesRank'
+import ConquesList from '../Contest/ConDetailPage/ConquesList'
+import ConquesUpdate from '../Contest/ConDetailPage/ConquesUpdate'
+import ConquesDetail from '../Contest/ConDetailPage/ConquesDetail'
 export default {
   name: 'ContestDetail',
   data () {
     return {
-      activeName: 'conquestable',
-      contest: null
+      contest: null,
+      contestid: null,
+      activeName: ''
     }
   },
-  mounted () {
+  created: function () {
+    this.activeName = 'ConquesList'
+  },
+  methods: {
+  },
+  mounted: function () {
     this.$http.get('/api/contest')
       .then((res) => {
-        const id = this.$route.params['contest_id']
+        this.contestid = this.$route.params['contest_id']
         const list = res.body.data
         for (let contest of list) {
-          if (contest.id === id) {
+          if (contest.id === this.contestid) {
             this.contest = contest
           }
         }
@@ -57,10 +54,10 @@ export default {
       })
   },
   components: {
-    conquesrank,
-    conquestable,
-    conquesupdate,
-    conquesdetail
+    ConquesRank,
+    ConquesList,
+    ConquesUpdate,
+    ConquesDetail
   }
 }
 

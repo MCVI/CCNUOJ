@@ -13,7 +13,8 @@ const portfinder = require('portfinder')
 /* add express 20180923*/
 var problem = require('../dev-data/problem.json').problem//加载本地数据文件
 var contest = require('../dev-data/contest.json').contest//加载本地数据文件
-/* add express 20181023 end */
+var contest_problem = require('../dev-data/contest_problem.json').contest_problem
+/* add express 20181101 end */
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -61,9 +62,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           code: 0,
           data: contest
         })
-      })
+      }),
+        app.get('/api/contest_problem', (req,res) => {
+         res.json({
+             code: 0,
+             data: contest_problem
+          })
+        })
     }
-    /** add express 20180923 end */
+    /** add express 20181101 end */
   },
   plugins: [
     new webpack.DefinePlugin({
