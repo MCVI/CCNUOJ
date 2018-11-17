@@ -16,11 +16,10 @@ import ProblemDetail from '../components/Problem/ProblemDetail'
 import ContestPage from '../views/ContestPage'
 import ContestList from '../components/Contest/ContestList'
 import ContestDetail from '../components/Contest/ContestDetail'
+import ContestRank from '../components/Contest/ContestRank'
 
-import ConquesList from '../components/Contest/ConDetailPage/ConquesList'
-import ConquesRank from '../components/Contest/ConDetailPage/ConquesRank'
-import ConquesUpdate from '../components/Contest/ConDetailPage/ConquesUpdate'
-import ConquesDetail from '../components/Contest/ConDetailPage/ConquesDetail'
+import ContestProblemList from '../components/Contest/Problem/ContestProblemList'
+import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail'
 
 Vue.use(Router)
 
@@ -87,33 +86,38 @@ export default new Router({
           component: ContestList
         },
         {
-          path: '/:contest_id',
+          path: ':contest_id',
           name: 'ContestDetail',
           component: ContestDetail,
           children: [
             {
-              path: '',
-              redirect: 'queslist'
-            },
-            {
-              path: 'queslist',
-              name: 'ConquesList',
-              component: ConquesList
+              path: 'problem',
+              children: [
+                {
+                  path: '',
+                  redirect: 'list'
+                },
+                {
+                  path: 'list',
+                  name: 'ContestProblemList',
+                  component: ContestProblemList
+                },
+                {
+                  path: ':problem_id',
+                  name: 'ProblemDetail',
+                  component: ProblemDetail
+                }
+              ]
             },
             {
               path: 'rank',
-              name: 'ConquesRank',
-              component: ConquesRank
-            },
-            {
-              path: 'update',
-              name: 'ConquesUpdate',
-              component: ConquesUpdate
+              name: 'ContestRank',
+              component: ContestRank
             },
             {
               path: ':problem_id',
-              name: 'ConquesDetail',
-              component: ConquesDetail
+              name: 'ContestProblemDetail',
+              component: ContestProblemDetail
             }
           ]
         }

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import ConquesDetail from '../ConDetailPage/ConquesDetail'
+import ContestProblemDetail from './ContestProblemDetail'
 export default {
   name: 'ConquesList',
   data () {
@@ -37,7 +37,7 @@ export default {
     }
   },
   components: {
-    ConquesDetail
+    ContestProblemDetail
   },
   mounted: function () {
     this.$http.get('/api/contest_problem')

@@ -5,13 +5,13 @@
 <div>
  <p>{{ contest['title']}}</p>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="题目" name="ConquesList">
+    <el-tab-pane label="题目" name="ContestProblemList">
       <conques-list :contest_id = this.contestid></conques-list>
     </el-tab-pane>
-    <el-tab-pane label="提交记录" name="ConquesUpdate">
+    <el-tab-pane label="提交记录" name="ContestSubmission">
       <conques-update></conques-update>
     </el-tab-pane>
-    <el-tab-pane label="榜单" name="ConquesRank">
+    <el-tab-pane label="榜单" name="ContestRank">
       <conques-rank></conques-rank>
     </el-tab-pane>
   </el-tabs>
@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import ConquesRank from '../Contest/ConDetailPage/ConquesRank'
-import ConquesList from '../Contest/ConDetailPage/ConquesList'
-import ConquesUpdate from '../Contest/ConDetailPage/ConquesUpdate'
-import ConquesDetail from '../Contest/ConDetailPage/ConquesDetail'
+import ContestRank from './ContestRank'
+import ContestProblemList from './Problem/ContestProblemList'
+import ContestDetail from './Problem/ContestProblemDetail'
+
 export default {
   name: 'ContestDetail',
   data () {
@@ -54,10 +54,9 @@ export default {
       })
   },
   components: {
-    ConquesRank,
-    ConquesList,
-    ConquesUpdate,
-    ConquesDetail
+    ContestRank,
+    ContestProblemList,
+    ContestDetail
   }
 }
 
