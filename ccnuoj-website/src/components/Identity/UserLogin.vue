@@ -2,14 +2,14 @@
 
   <el-form :model="UserLoginForm" :rules="UserRulers" label-width="80px" ref="UserForm" style="margin-top: 10%;">
 
-    <el-form-item label="昵称" prop="name">
-      <el-input v-model="UserLoginForm.name"></el-input>
+    <el-form-item label="账号" prop="account">
+      <el-input v-model="UserLoginForm.account"></el-input>
     </el-form-item>
 
     <div style="height:30px"></div>
 
     <el-form-item label="密码" prop="major">
-      <el-input v-model="UserLoginForm.major"></el-input>
+      <el-input v-model="UserLoginForm.password"></el-input>
     </el-form-item>
 
     <div style="height:35px"></div>
@@ -29,16 +29,13 @@ export default {
   data () {
     return {
       UserLoginForm: {
-        name: '',
-        phone: '',
-        school: '',
-        major: '',
-        sex: ''
+        account: '',
+        password: ''
       },
       UserRulers: {
-        name: [
-          {required: true, message: '请输入昵称', trigger: 'blur'},
-          {min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur'}
+        account: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+          {min: 3, max: 15, message: '长度在 5 到 30 个字符', trigger: 'blur'}
         ]
       }
     }

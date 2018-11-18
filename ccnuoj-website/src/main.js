@@ -7,6 +7,8 @@ import App from './App'
 import router from './router/index'
 import VueResource from 'vue-resource'
 
+import * as test from './api/User'
+
 // v-xxx 绑定  （自定义指令）
 
 Vue.config.productionTip = false

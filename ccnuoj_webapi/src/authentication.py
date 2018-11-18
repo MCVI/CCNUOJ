@@ -49,7 +49,7 @@ def sign_auth_token(user: User) -> str:
     return signer.dumps(payload).decode('ASCII')
 
 
-def get_info(user: User):
+def get_auth_info(user: User):
     return {
         "id": user.id,
         "salt": user.authentication["clientSalt"]
@@ -59,13 +59,13 @@ def get_info(user: User):
 @bp.route("/user/authentication_info/email/<string:email>", methods=["GET"])
 def get_info_by_email(email: str):
     user = User.query.filter_by(email=email).first()
-    return http.Success(result=get_info(user))
+    return http.Success(result=get_auth_info(user))
 
 
 @bp.route("/user/authentication_info/shortName/<string:username>", methods=["GET"])
 def get_info_by_username(username: str):
     user = User.query.filter_by(shortName=username).first()
-    return http.Success(result=get_info(user))
+    return http.Success(result=get_auth_info(user))
 
 
 @bp.route("/user/authentication/id/<int:user_id>", methods=["POST"])
@@ -86,8 +86,9 @@ def auth_by_id(user_id: int):
     user = User.query.get(user_id)
     server_hash_result = server_hash(user.authentication["serverSalt"], instance["hashResult"])
     if user.authentication["hashResult"] == server_hash_result:
-        token = sign_auth_token(user)
-        return http.Success(token=token)
+        g.user_auth_token = sign_auth_token(user)
+        g.user = user
+        return get_auth_echo()
     else:
         raise http.Conflict(reason="PasswordMismatch")
 
@@ -118,7 +119,7 @@ def load_token():
 
         user = User.query.get(payload["id"])
         if (user is not None) and (user.uuid == uuid.UUID(payload["uuid"])):
-            return user
+            return user, token
         else:
             raise InvalidToken()
 
@@ -134,7 +135,7 @@ def require_authentication(allow_anonymous: bool=False):
         def wrapper(*args, **kwargs):
 
             try:
-                user = load_token()
+                user, token = load_token()
                 token_status = "Valid"
             except NoTokenDetected:
                 token_status = "NotDetected"
@@ -145,9 +146,11 @@ def require_authentication(allow_anonymous: bool=False):
 
             if token_status == "Valid":
                 current_user = user
+                current_token = token
             else:
                 if allow_anonymous:
                     current_user = None
+                    current_token = None
                 else:
                     raise http.Unauthorized(
                         reason="AuthenticationFailed",
@@ -157,8 +160,20 @@ def require_authentication(allow_anonymous: bool=False):
                     )
 
             g.user = current_user
+            g.user_auth_token = current_token
             return func(*args, **kwargs)
 
         return wrapper
 
     return decorator
+
+
+@bp.route("/user/authentication/echo", methods=["GET"])
+@require_authentication(allow_anonymous=False)
+def get_auth_echo():
+    return http.Success(result={
+        "id": g.user.id,
+        "email": g.user.email,
+        "shortName": g.user.shortName,
+        "token": g.user_auth_token,
+    })
