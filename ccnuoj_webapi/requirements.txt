@@ -2,11 +2,11 @@ Click==7.0
 colour==0.1.5
 Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
-itsdangerous==0.24
+itsdangerous==1.1.0
 Jinja2==2.10
 jsonschema==2.6.0
-MarkupSafe==1.0
+MarkupSafe==1.1.0
 six==1.11.0
-SQLAlchemy==1.2.12
-SQLAlchemy-Utils==0.33.5
+SQLAlchemy==1.2.14
+SQLAlchemy-Utils==0.33.6
 Werkzeug==0.14.1
