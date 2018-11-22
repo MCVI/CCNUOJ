@@ -9,7 +9,7 @@
     <div style="height:30px"></div>
 
     <el-form-item label="密码" prop="major">
-      <el-input v-model="loginForm.password"></el-input>
+      <el-input v-model="loginForm.password" type="password"></el-input>
     </el-form-item>
 
     <div style="height:35px"></div>

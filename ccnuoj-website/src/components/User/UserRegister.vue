@@ -11,7 +11,7 @@
     </el-form-item>
 
     <el-form-item label="密码" prop="password">
-      <el-input v-model="registerForm.password"></el-input>
+      <el-input v-model="registerForm.password" type="password"></el-input>
     </el-form-item>
 
     <div style="height:12px"></div>
