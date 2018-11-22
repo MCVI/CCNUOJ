@@ -19,7 +19,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column border label="作者" prop="author" style="width: 20%"></el-table-column>
+    <el-table-column border label="作者" prop="author.shortName" style="width: 20%"></el-table-column>
 
     <el-table-column border label="创建时间" prop="createTime" style="width: 20%"></el-table-column>
 
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { getProblemList } from '@/api/Problem';
 
 export default {
   name: 'ProblemList',
@@ -44,13 +45,12 @@ export default {
 
   //  模拟 数据
   mounted() {
-    this.$http.get('/api/problem')
-      .then((res) => {
-        console.log(res);
-        this.problem = res.body.data;
+    getProblemList(1)
+      .then((problemList) => {
+        this.problem = problemList;
       })
       .catch((error) => {
-        console.log(error);
+        this.$message.error('获取数据错误');
       });
   },
   components: {},

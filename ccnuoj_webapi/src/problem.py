@@ -2,7 +2,7 @@ from flask import g
 
 from .util import get_request_json
 from .util import http
-from .model import Problem
+from .model import Problem, User
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .authentication import require_authentication
@@ -96,3 +96,30 @@ def update_problem(id: int):
 @bp.route("/problem/id/<int:id>", methods=["DELETE"])
 def delete_problem(id: int):
     pass
+
+
+@bp.route("/problem/page/<int:page_num>", methods=["GET"])
+def get_problem_list(page_num: int):
+    problem_list = Problem.query.paginate(
+        page=page_num,
+        per_page=20
+    ).items
+
+    instance = []
+    for problem in problem_list:
+        author: User = User.query.get(problem.author)
+
+        inst = {
+            "id": problem.id,
+            "title": problem.title,
+            "author": {
+                "id": author.id,
+                "shortName": author.shortName,
+            },
+            "createTime": problem.createTime,
+            "lastModifiedTime": problem.lastModifiedTime,
+        }
+
+        instance.append(inst)
+
+    return http.Success(result=instance)

@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { getProblem } from '@/api/Problem';
+
 export default {
   name: 'ProblemDetail',
   data() {
@@ -60,19 +62,13 @@ export default {
   },
   components: {},
   mounted() {
-    this.$http.get('/api/problem')
-      .then((res) => {
-        const id = this.$route.params.problem_id;
-        const list = res.body.data;
-        for (const problem of list) {
-          if (problem.id === id) {
-            problem.text = this.renderText(problem.text);
-            this.problem = problem;
-          }
-        }
+    const problemID = this.$route.params.problem_id;
+    getProblem(problemID)
+      .then((problem) => {
+        this.problem = problem;
       })
       .catch((error) => {
-        console.log(error);
+        this.$message.error('获取信息错误');
       });
   },
   methods: {

@@ -60,6 +60,11 @@ module.exports = {
       },
     ],
     'global-require': 'off',
+    'arrow-parens': [
+      'error',
+      'always',
+    ],
+    'import/prefer-default-export': 'off',
 
     'no-console': 'off',
     'no-alert': 'off',
