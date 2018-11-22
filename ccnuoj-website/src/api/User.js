@@ -1,4 +1,3 @@
-import { AUTH_TOKEN_HEADER_NAME } from './common';
 import request from './request';
 
 import * as PasswordHash from './PasswordHash';
@@ -95,10 +94,10 @@ export const userLoginByShortName = ({
     });
 });
 
-export const authEcho = token => new Promise((resolve, reject) => {
+export const authEcho = (token) => new Promise((resolve, reject) => {
   request.get('/user/authentication/echo', {
     headers: {
-      AUTH_TOKEN_HEADER_NAME: token,
+      'X-CCNU-AUTH-TOKEN': token,
     },
   })
     .then((response) => {
