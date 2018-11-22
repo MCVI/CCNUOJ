@@ -8,15 +8,15 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      id: this.$route.params['problem_id']
-    }
+      id: this.$route.params.problem_id,
+    };
   },
   components: {
 
-  }
-}
+  },
+};
 </script>
 
 <style>

@@ -59,13 +59,19 @@ def get_auth_info(user: User):
 @bp.route("/user/authentication_info/email/<string:email>", methods=["GET"])
 def get_info_by_email(email: str):
     user = User.query.filter_by(email=email).first()
-    return http.Success(result=get_auth_info(user))
+    if user is None:
+        raise http.NotFound()
+    else:
+        return http.Success(result=get_auth_info(user))
 
 
 @bp.route("/user/authentication_info/shortName/<string:username>", methods=["GET"])
 def get_info_by_username(username: str):
     user = User.query.filter_by(shortName=username).first()
-    return http.Success(result=get_auth_info(user))
+    if user is None:
+        raise http.NotFound()
+    else:
+        return http.Success(result=get_auth_info(user))
 
 
 @bp.route("/user/authentication/id/<int:user_id>", methods=["POST"])
@@ -133,34 +139,35 @@ def require_authentication(allow_anonymous: bool=False):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
+            if not hasattr(g, "user"):
 
-            try:
-                user, token = load_token()
-                token_status = "Valid"
-            except NoTokenDetected:
-                token_status = "NotDetected"
-            except InvalidToken:
-                token_status = "Invalid"
-            except TokenExpired:
-                token_status = "Expired"
+                try:
+                    user, token = load_token()
+                    token_status = "Valid"
+                except NoTokenDetected:
+                    token_status = "NotDetected"
+                except InvalidToken:
+                    token_status = "Invalid"
+                except TokenExpired:
+                    token_status = "Expired"
 
-            if token_status == "Valid":
-                current_user = user
-                current_token = token
-            else:
-                if allow_anonymous:
-                    current_user = None
-                    current_token = None
+                if token_status == "Valid":
+                    current_user = user
+                    current_token = token
                 else:
-                    raise http.Unauthorized(
-                        reason="AuthenticationFailed",
-                        detail={
-                            "tokenStatus": token_status
-                        }
-                    )
+                    if allow_anonymous:
+                        current_user = None
+                        current_token = None
+                    else:
+                        raise http.Unauthorized(
+                            reason="AuthenticationFailed",
+                            detail={
+                                "tokenStatus": token_status
+                            }
+                        )
+                g.user = current_user
+                g.user_auth_token = current_token
 
-            g.user = current_user
-            g.user_auth_token = current_token
             return func(*args, **kwargs)
 
         return wrapper

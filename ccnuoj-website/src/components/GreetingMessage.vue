@@ -21,8 +21,8 @@
 <script>
 
 export default {
-  name: 'GreetingMessage'
-}
+  name: 'GreetingMessage',
+};
 
 </script>
 

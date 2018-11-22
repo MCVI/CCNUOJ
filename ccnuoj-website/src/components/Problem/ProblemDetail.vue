@@ -35,48 +35,48 @@
 <script>
 export default {
   name: 'ProblemDetail',
-  data () {
+  data() {
     return {
       textarea: '',
       options: [{
         value: 'c++',
-        label: 'c++'
+        label: 'c++',
       }, {
         value: 'c',
-        label: 'c'
+        label: 'c',
       }, {
         value: 'c#',
-        label: 'c#'
+        label: 'c#',
       }, {
         value: 'python',
-        label: 'python'
+        label: 'python',
       }, {
         value: 'java',
-        label: 'java'
+        label: 'java',
       }],
       language: '',
-      problem: null
-    }
+      problem: null,
+    };
   },
   components: {},
-  mounted () {
+  mounted() {
     this.$http.get('/api/problem')
       .then((res) => {
-        const id = this.$route.params['problem_id']
-        const list = res.body.data
-        for (let problem of list) {
+        const id = this.$route.params.problem_id;
+        const list = res.body.data;
+        for (const problem of list) {
           if (problem.id === id) {
-            problem.text = this.renderText(problem.text)
-            this.problem = problem
+            problem.text = this.renderText(problem.text);
+            this.problem = problem;
           }
         }
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   },
   methods: {
-    'renderText' (text) {
+    renderText(text) {
       return text
         .replace(/\r\n/ig, '<br/><br/>')
         .replace(/描述/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
@@ -84,10 +84,10 @@ export default {
         .replace(/输出格式/g, '<br/><br/><p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
         .replace(/样例/g, '<br/><br/><p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
         .replace(/input/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/output/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-    }
-  }
-}
+        .replace(/output/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>');
+    },
+  },
+};
 
 </script>
 

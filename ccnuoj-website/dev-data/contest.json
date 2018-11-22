@@ -1,7 +1,0 @@
-{
-    "contest": [
-    {"id":"000001","startTime":"2018-09-08 10:00:00","endTime":"2018-09-08 11:00:00","freezeTime":"2018-09-08 10:59:00","unfreezeTime":"2018-09-08 10:59:00","title":"contest A"},
-    {"id":"000002","startTime":"2018-09-08 08:00:00","endTime":"2018-09-08 11:00:00","freezeTime":"2018-09-08 10:59:00","unfreezeTime":"2018-09-08 10:59:00","title":"contest B"},
-    {"id":"000003","startTime":"2018-09-09 08:00:00","endTime":"2018-09-09 11:00:00","freezeTime":"2018-09-09 10:59:00","unfreezeTime":"2018-09-08 10:59:00","title":"contest C"}
-    ]
-}

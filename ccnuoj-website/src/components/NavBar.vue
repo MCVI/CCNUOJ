@@ -21,20 +21,20 @@
 
 export default {
   name: 'NavBar',
-  data () {
+  data() {
     return {
-      activeName: 'UserLogin'
-    }
+      activeName: 'UserLogin',
+    };
   },
   components: {},
-  created () {
+  created() {
   },
   methods: {
-    'onClick' (tab, event) {
-      this.$router.push({name: tab.name}) //  动态加载 10.1 日
-    }
-  }
-}
+    onClick(tab, event) {
+      this.$router.push({ name: tab.name }); //  动态加载 10.1 日
+    },
+  },
+};
 </script>
 
 <style>

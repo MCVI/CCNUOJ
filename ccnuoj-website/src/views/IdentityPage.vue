@@ -20,13 +20,13 @@
 
 <script>
 
-import PageCommon from './PageCommon'
-import GreetingMessage from '../components/GreetingMessage'
+import PageCommon from './PageCommon';
+import GreetingMessage from '../components/GreetingMessage';
 
 export default {
   name: 'IdentityPage',
-  components: {GreetingMessage, PageCommon}
-}
+  components: { GreetingMessage, PageCommon },
+};
 
 </script>
 

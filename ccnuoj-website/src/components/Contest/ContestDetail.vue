@@ -20,45 +20,45 @@
 </template>
 
 <script>
-import ContestRank from './ContestRank'
-import ContestProblemList from './Problem/ContestProblemList'
-import ContestDetail from './Problem/ContestProblemDetail'
+import ContestRank from './ContestRank';
+import ContestProblemList from './Problem/ContestProblemList';
+import ContestDetail from './Problem/ContestProblemDetail';
 
 export default {
   name: 'ContestDetail',
-  data () {
+  data() {
     return {
       contest: null,
       contestid: null,
-      activeName: ''
-    }
+      activeName: '',
+    };
   },
-  created: function () {
-    this.activeName = 'ConquesList'
+  created() {
+    this.activeName = 'ConquesList';
   },
   methods: {
   },
-  mounted: function () {
+  mounted() {
     this.$http.get('/api/contest')
       .then((res) => {
-        this.contestid = this.$route.params['contest_id']
-        const list = res.body.data
-        for (let contest of list) {
+        this.contestid = this.$route.params.contest_id;
+        const list = res.body.data;
+        for (const contest of list) {
           if (contest.id === this.contestid) {
-            this.contest = contest
+            this.contest = contest;
           }
         }
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   },
   components: {
     ContestRank,
     ContestProblemList,
-    ContestDetail
-  }
-}
+    ContestDetail,
+  },
+};
 
 </script>
 

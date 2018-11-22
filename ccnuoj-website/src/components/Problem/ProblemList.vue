@@ -34,27 +34,27 @@
 
 export default {
   name: 'ProblemList',
-  data () {
+  data() {
     return {
-      problem: []
-    }
+      problem: [],
+    };
   },
-  created () {
+  created() {
   },
 
   //  模拟 数据
-  mounted () {
+  mounted() {
     this.$http.get('/api/problem')
       .then((res) => {
-        console.log(res)
-        this.problem = res.body.data
+        console.log(res);
+        this.problem = res.body.data;
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   },
-  components: {}
-}
+  components: {},
+};
 </script>
 
 <style scoped>

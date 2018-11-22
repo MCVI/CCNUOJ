@@ -1,8 +1,0 @@
-{
-    "contest_problem": [
-        {"contestid":"000001","problemid":"000001","identifier":"abc11111","color":"red"},
-        {"contestid":"000001","problemid":"000015","identifier":"abc11112","color":"blue"},
-        {"contestid":"000001","problemid":"000002","identifier":"abc11333","color":"green"},
-        {"contestid":"000002","problemid":"000002","identifier":"abc11333","color":"green"}
-    ]
-}

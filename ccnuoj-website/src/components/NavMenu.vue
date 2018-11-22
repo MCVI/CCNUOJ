@@ -18,18 +18,18 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      activeIndex: ''
-    }
+      activeIndex: '',
+    };
   },
-  mounted: function () {
-    this.activeIndex = this.$route.path
+  mounted() {
+    this.activeIndex = this.$route.path;
   },
   watch: {
-    $route: function () {
-      this.activeIndex = this.$route.path
-    }
-  }
-}
+    $route() {
+      this.activeIndex = this.$route.path;
+    },
+  },
+};
 </script>

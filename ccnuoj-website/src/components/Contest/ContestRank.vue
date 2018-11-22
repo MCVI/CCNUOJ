@@ -7,19 +7,19 @@
 <script>
 export default {
   name: 'ConquesRank',
-  data () {
+  data() {
     return {
 
-    }
+    };
   },
   props: {
   },
-  created () {
+  created() {
   },
   components: {
 
-  }
-}
+  },
+};
 </script>
 
 <style>

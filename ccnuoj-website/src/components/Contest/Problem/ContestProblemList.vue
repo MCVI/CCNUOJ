@@ -25,54 +25,55 @@
 </template>
 
 <script>
-import ContestProblemDetail from './ContestProblemDetail'
+import ContestProblemDetail from './ContestProblemDetail';
+
 export default {
   name: 'ConquesList',
-  data () {
+  data() {
     return {
-      contestid: this.$route.params['contest_id'], // props 赋值
+      contestid: this.$route.params.contest_id, // props 赋值
       contest: null,
       problem: [],
-      proid: 0
-    }
+      proid: 0,
+    };
   },
   components: {
-    ContestProblemDetail
+    ContestProblemDetail,
   },
-  mounted: function () {
+  mounted() {
     this.$http.get('/api/contest_problem')
       .then((res) => {
-        const prolist = res.body.data
-        for (let contestproblem of prolist) {
-          if (contestproblem.contestid === this.contestid) {
-            this.problem[this.proid] = contestproblem
-            this.proid++
+        const prolist = res.body.data;
+        prolist.forEach((contestProblem) => {
+          if (contestProblem.contestid === this.contestid) {
+            this.problem[this.proid] = contestProblem;
+            this.proid += 1;
           }
-        }
+        });
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
     this.$http.get('/api/problem')
       .then((res) => {
-        const prolist = res.body.data
-        for (let conpro of this.problem) {
-          for (let pro of prolist) {
-            if (conpro.problemid === pro.id) {
-              if (!conpro.title) {
-                this.$set(conpro, 'title', pro.title)
-                console.log('hhh', 'hhhh')
+        const problemList = res.body.data;
+        for (const contestProblem of this.problem) {
+          for (const problem of problemList) {
+            if (contestProblem.problemid === problem.id) {
+              if (!contestProblem.title) {
+                this.$set(contestProblem, 'title', problem.title);
+                console.log('hhh', 'hhhh');
               }
             }
           }
         }
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
     // 应该是在后台拼装好了传递到前端的。。。。。。 2018.11.01日
-  }
-}
+  },
+};
 </script>
 
 <style>

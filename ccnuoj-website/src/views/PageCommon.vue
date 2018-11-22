@@ -2,9 +2,9 @@
 
 <!-- 根组件（除了APP.VUE) -->
 <el-container>
-  
+
   <!-- <nav-menu/> -->
-  
+
   <el-main>
     <nav-menu/>
     <p class="title">CCNU Online Judge</p>
@@ -19,18 +19,18 @@
 
 <script>
 
-import NavMenu from '../components/NavMenu'
+import NavMenu from '../components/NavMenu';
 
 export default {
   name: 'PageCommon',
-  data () {
+  data() {
     return {
-    }
+    };
   },
   components: {
-    NavMenu
-  }
-}
+    NavMenu,
+  },
+};
 
 </script>
 

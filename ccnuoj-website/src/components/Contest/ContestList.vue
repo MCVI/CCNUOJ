@@ -27,28 +27,29 @@
 </template>
 
 <script>
-import ContestDetail from './ContestDetail'
+import ContestDetail from './ContestDetail';
+
 export default {
   name: 'ContestList',
-  data () {
+  data() {
     return {
-      contest: []
-    }
+      contest: [],
+    };
   },
   components: {
-    ContestDetail
+    ContestDetail,
   },
-  mounted: function () {
+  mounted() {
     this.$http.get('/api/contest')
       .then((res) => {
-        console.log(res)
-        this.contest = res.body.data
+        console.log(res);
+        this.contest = res.body.data;
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
-}
+        console.log(error);
+      });
+  },
+};
 </script>
 
 <style scoped>

@@ -16,24 +16,24 @@
 
 <script>
 
-import PageCommon from './PageCommon'
+import PageCommon from './PageCommon';
 
 export default {
   name: 'PhotoPage',
-  data () {
+  data() {
     return {
       photoList: [
-        {url: require('../assets/photocarousel/ccnuacm02.jpg')},
-        {url: require('../assets/photocarousel/ccnuacm03.jpg')},
-        {url: require('../assets/photocarousel/ccnuacm01.png')},
-        {url: require('../assets/photocarousel/ccnuacm04.jpg')}
-      ]
-    }
+        { url: require('../assets/photocarousel/ccnuacm02.jpg') },
+        { url: require('../assets/photocarousel/ccnuacm03.jpg') },
+        { url: require('../assets/photocarousel/ccnuacm01.png') },
+        { url: require('../assets/photocarousel/ccnuacm04.jpg') },
+      ],
+    };
   },
   components: {
-    PageCommon
-  }
-}
+    PageCommon,
+  },
+};
 
 </script>
 

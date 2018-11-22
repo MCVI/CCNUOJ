@@ -79,10 +79,6 @@ class NotFound(HTTPException):
     code = 404
 
 
-class InternalServerError(HTTPException):
-    code = 500
-
-
 class NotAcceptable(HTTPException):
     code = 406
 
@@ -93,6 +89,10 @@ class Conflict(HTTPException):
 
 class Gone(HTTPException):
     code = 410
+
+
+class InternalServerError(HTTPException):
+    code = 500
 
 
 class NotImplemented(HTTPException):
