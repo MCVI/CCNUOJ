@@ -37,7 +37,7 @@ export default new Router({
         },
         {
           path: 'login',
-          name: 'UerLogin',
+          name: 'UserLogin',
           component: UserLogin,
         },
         {

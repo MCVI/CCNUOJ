@@ -122,10 +122,14 @@ export default {
             password: this.registerForm.password,
           })
             .then((userID) => {
-              alert('注册成功！');
+              this.$message.success('注册成功');
+              this.$router.push({ name: 'UserLogin' });
+            })
+            .catch((error) => {
+              this.$message.error('注册失败');
             });
         } else {
-          alert('注册信息有无效部分！');
+          this.$message.error('注册信息有无效部分');
         }
       });
     },
