@@ -126,7 +126,20 @@ export default {
               this.$router.push({ name: 'UserLogin' });
             })
             .catch((error) => {
-              this.$message.error('注册失败');
+              switch (error) {
+                case 'NetworkError':
+                  this.$message.error('注册失败：网络错误');
+                  break;
+                case 'DuplicateEmail':
+                  this.$message.error('注册失败：邮箱已被占用');
+                  break;
+                case 'DuplicateShortName':
+                  this.$message.error('注册失败：用户名已被占用');
+                  break;
+                default:
+                  this.$message.error('注册失败：未知错误');
+                  break;
+              }
             });
         } else {
           this.$message.error('注册信息有无效部分');

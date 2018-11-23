@@ -1,5 +1,6 @@
 import uuid
 from flask import g
+from sqlalchemy.exc import IntegrityError
 
 from .util import random_string, get_request_json, http
 from .global_obj import database as db
@@ -79,8 +80,21 @@ def create_user():
 
     user.createTime = g.request_datetime
     user.uuid = uuid.uuid1()
-    db.session.add(user)
-    db.session.commit()
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError as excep:
+
+        # This is the only way I have found to get the name of the duplicated field
+        # Fuck you sqlalchemy developers!
+        errorInfo = excep.orig.__repr__()
+        if "email" in errorInfo:
+            raise http.Conflict(reason="DuplicateEmail")
+        elif "shortName" in errorInfo:
+            raise http.Conflict(reason="DuplicateShortName")
+        else:
+            raise http.Conflict(reason="UnknownIntegrityError")
 
     return http.Success({
         "userID": user.id

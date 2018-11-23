@@ -27,7 +27,17 @@ export const userRegister = ({
         resolve(response.data.userID);
       })
       .catch((error) => {
-        reject(error);
+        if ('response' in error) {
+          const data = error.response.data;
+          if ('reason' in data) {
+            console.log(['reason', data.reason]);
+            reject(data.reason);
+          } else {
+            reject('UnknownError');
+          }
+        } else {
+          reject('NetworkError');
+        }
       });
   });
 };
