@@ -12,8 +12,10 @@ service.interceptors.request.use(
   (req) => {
     const request = req;
     const state = store.state.user.loginState;
-    if (typeof state === 'object') {
-      request.headers['X-CCNU-AUTH-TOKEN'] = state.token;
+    if (!('X-CCNU-AUTH-TOKEN' in request.headers)) {
+      if ((typeof state === 'object') && (state !== null)) {
+        request.headers['X-CCNU-AUTH-TOKEN'] = state.token;
+      }
     }
     return request;
   },

@@ -8,6 +8,7 @@ export const getProblemList = (pageNum) => new Promise(
         resolve(problemList);
       })
       .catch((error) => {
+        console.log(error);
         reject(error);
       });
   },

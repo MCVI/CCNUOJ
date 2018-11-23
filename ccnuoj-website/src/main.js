@@ -22,3 +22,5 @@ new Vue({
   render: (h) => h(App),
   template: '<App><App/>',
 }).$mount('#app');
+
+store.dispatch('user/loadLocalToken');
