@@ -1,18 +1,12 @@
 <template>
 
-<div>
+<div style="background-color: azure;">
 
   <img src="../assets/acmlogo.jpg" alt="CCNU ACM">
 
   <p>Welcome to CCNU OJ and Analysis System</p>
 
-  <router-link style="height:50px" to="login">
-    <el-tag class="switch-button">登录</el-tag>
-  </router-link>
-
-  <router-link to="register">
-    <el-tag class="switch-button">注册</el-tag>
-  </router-link>
+  <br/><br/>
 
 </div>
 
@@ -32,15 +26,6 @@ export default {
 * {
   margin: 0;
   padding: 0;
-}
-
-.switch-button {
-  width: 100px;
-  height: 50px;
-  text-align: center;
-  line-height: 50px;
-  color: rgb(52, 119, 196);
-  background-color: white;
 }
 
 p {
