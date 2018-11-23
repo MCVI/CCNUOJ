@@ -21,9 +21,9 @@
     </el-form-item>
 
     <el-form-item label="性别" prop="gender">
-      <el-radio-group size="medium" v-model="registerForm.gender">
-        <el-radio border label="MALE"></el-radio>
-        <el-radio border label="FEMALE"></el-radio>
+      <el-radio-group size="medium" v-model="registerForm.gender" style="float: left;">
+        <el-radio-button label="Male">男</el-radio-button>
+        <el-radio-button label="Female">女</el-radio-button>
       </el-radio-group>
     </el-form-item>
 

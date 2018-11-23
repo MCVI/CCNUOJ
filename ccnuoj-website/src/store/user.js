@@ -4,7 +4,19 @@ const UserModule = {
   namespaced: true,
 
   state: {
-    loginState: null,
+    loginState: undefined,
+  },
+
+  getters: {
+    token: (state) => {
+      if (state.loginState === undefined) {
+        return undefined;
+      } else if (state.loginState === null) {
+        return null;
+      } else {
+        return state.loginState.token;
+      }
+    },
   },
 
   mutations: {

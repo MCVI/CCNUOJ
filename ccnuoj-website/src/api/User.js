@@ -105,11 +105,7 @@ export const userLoginByShortName = ({
 });
 
 export const authEcho = (token) => new Promise((resolve, reject) => {
-  request.get('/user/authentication/echo', {
-    headers: {
-      'X-CCNU-AUTH-TOKEN': token,
-    },
-  })
+  request.get('/user/authentication/echo')
     .then((response) => {
       resolve(response.data.result);
     })
