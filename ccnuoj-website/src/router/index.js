@@ -3,11 +3,12 @@ import Router from 'vue-router';
 
 import NotFoundPage from '../views/NotFoundPage';
 
-import PhotoPage from '../views/PhotoPage';
+import HomePage from '../views/HomePage';
 
-import IdentityPage from '../views/IdentityPage';
+import UserPage from '../views/UserPage';
 import UserLogin from '../components/User/UserLogin';
 import UserRegister from '../components/User/UserRegister';
+import UserInfoDisplay from '../components/User/UserInfoDisplay';
 
 import ProblemPage from '../views/ProblemPage';
 import ProblemList from '../components/Problem/ProblemList';
@@ -28,13 +29,17 @@ export default new Router({
   routes: [
     {
       path: '/',
-      alias: ['/login', '/register'],
-      component: IdentityPage,
+      redirect: '/home',
+    },
+    {
+      path: '/home',
+      name: 'HomePage',
+      component: HomePage,
+    },
+    {
+      path: '/user',
+      component: UserPage,
       children: [
-        {
-          path: '',
-          redirect: 'login',
-        },
         {
           path: 'login',
           name: 'UserLogin',
@@ -45,12 +50,12 @@ export default new Router({
           name: 'UserRegister',
           component: UserRegister,
         },
+        {
+          path: 'info',
+          name: 'UserInfoDisplay',
+          component: UserInfoDisplay,
+        },
       ],
-    },
-    {
-      path: '/photo',
-      name: 'PhotoPage',
-      component: PhotoPage,
     },
     {
       path: '/problem',

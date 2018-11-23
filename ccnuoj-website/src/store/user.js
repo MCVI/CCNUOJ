@@ -8,6 +8,15 @@ const UserModule = {
   },
 
   getters: {
+    id: (state) => {
+      if (state.loginState === undefined) {
+        return undefined;
+      } else if (state.loginState === null) {
+        return null;
+      } else {
+        return state.loginState.id;
+      }
+    },
     shortName: (state) => {
       if (state.loginState === undefined) {
         return undefined;

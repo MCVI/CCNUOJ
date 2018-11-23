@@ -6,7 +6,7 @@ from .util import random_string, get_request_json, http
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import User
-from .authentication import salt_available_char, server_hash
+from .authentication import salt_available_char, server_hash, require_authentication
 
 
 @bp.route("/user", methods=["POST"])
@@ -99,3 +99,22 @@ def create_user():
     return http.Success({
         "userID": user.id
     })
+
+
+@bp.route("/user/id/<int:id>", methods=["GET"])
+@require_authentication(allow_anonymous=False)
+def retrieve_user_info(id: int):
+    if id == g.user.id:
+        user = g.user
+        instance = {
+            "id": user.id,
+            "email": user.email,
+            "shortName": user.shortName,
+            "realPersonInfo": user.realPersonInfo,
+            "extraInfo": user.extraInfo,
+            "createTime": user.createTime,
+        }
+
+        return http.Success(result=instance)
+    else:
+        raise http.Forbidden(reason="PermissionDenied")

@@ -7,7 +7,7 @@
     text-color="#fff"
     active-text-color="#ffd04b">
 
-    <el-menu-item index="/photo">首 页</el-menu-item>
+    <el-menu-item index="/home">首 页</el-menu-item>
     <el-menu-item index="/contest/list">比 赛</el-menu-item>
     <el-menu-item index="/problem/list">题 库</el-menu-item>
     <el-menu-item disabled index="">课 堂</el-menu-item>
@@ -28,7 +28,10 @@
         />
       </template>
       <template v-else>
-        <el-menu-item index="/user/info">{{ loginState }}</el-menu-item>
+        <el-submenu index="/user/info">
+          <template slot="title">{{ loginState }}</template>
+          <el-menu-item index="/user/info">用户信息</el-menu-item>
+        </el-submenu>
       </template>
     </div>
 

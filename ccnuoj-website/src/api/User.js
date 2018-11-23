@@ -117,3 +117,18 @@ export const userAuthEcho = (token) => new Promise((resolve, reject) => {
       reject(error);
     });
 });
+
+export const getUserInfo = (userID) => new Promise((resolve, reject) => {
+  request.get(`/user/id/${userID}`)
+    .then((response) => {
+      resolve(response.data.result);
+    })
+    .catch((error) => {
+      if ('response' in error) {
+        const data = error.response.data;
+        reject(data.reason);
+      } else {
+        reject('NetworkError');
+      }
+    });
+});

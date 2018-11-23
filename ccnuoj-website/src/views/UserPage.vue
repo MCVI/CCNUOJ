@@ -24,7 +24,7 @@ import PageCommon from './PageCommon';
 import GreetingMessage from '../components/GreetingMessage';
 
 export default {
-  name: 'IdentityPage',
+  name: 'UserPage',
   components: { GreetingMessage, PageCommon },
 };
 

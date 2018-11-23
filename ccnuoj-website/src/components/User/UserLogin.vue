@@ -69,7 +69,7 @@ export default {
           }
           promise.then(() => {
             this.$message.success('登录成功');
-            this.$router.push({ path: '/photo' });
+            this.$router.push({ path: '/home' });
           }).catch((error) => {
             this.$message.error('登录失败');
           });

@@ -75,6 +75,10 @@ class Unauthorized(HTTPException):
     code = 401
 
 
+class Forbidden(HTTPException):
+    code = 403
+
+
 class NotFound(HTTPException):
     code = 404
 
