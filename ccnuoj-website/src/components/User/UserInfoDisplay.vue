@@ -75,9 +75,9 @@ export default {
 
     gender() {
       const gender = this.realPersonInfo.gender;
-      if (gender === 'MALE') {
+      if (gender === 'Male') {
         return '男';
-      } else if (gender === 'FEMALE') {
+      } else if (gender === 'Female') {
         return '女';
       } else {
         return gender;

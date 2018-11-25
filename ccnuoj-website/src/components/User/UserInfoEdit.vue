@@ -100,7 +100,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      detailInfo: 'user/detailInfo',
+      userID: 'user/id',
     }),
   },
 
@@ -178,7 +178,7 @@ export default {
       },
     },
 
-    detailInfo() {
+    userID() {
       this.loadDetailInfo();
     },
   },
