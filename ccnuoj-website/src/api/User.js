@@ -132,3 +132,18 @@ export const getUserInfo = (userID) => new Promise((resolve, reject) => {
       }
     });
 });
+
+export const updateUserInfo = (userID, userInfo) => new Promise((resolve, reject) => {
+  request.put(`/user/id/${userID}/detail_info`, userInfo)
+    .then((response) => {
+      resolve(response.data.result);
+    })
+    .catch((error) => {
+      if ('response' in error) {
+        const data = error.response.data;
+        reject(data.reason);
+      } else {
+        reject('NetworkError');
+      }
+    });
+});

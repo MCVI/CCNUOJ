@@ -3,6 +3,7 @@ import {
   userLoginByShortName,
   userAuthEcho,
   getUserInfo,
+  updateUserInfo,
 } from '@/api/User';
 
 const UserModule = {
@@ -147,6 +148,22 @@ const UserModule = {
           }
         } else {
           resolve(getters.detailInfo);
+        }
+      });
+    },
+    updateDetailInfo({ commit, getters }, info) {
+      return new Promise((resolve, reject) => {
+        if ((getters.id === undefined) || (getters.id === null)) {
+          reject('NotLoggedIn');
+        } else {
+          updateUserInfo(getters.id, info)
+            .then((result) => {
+              commit('changeDetailInfo', info);
+              resolve(result);
+            })
+            .catch((error) => {
+              reject(error);
+            });
         }
       });
     },

@@ -23,7 +23,7 @@
 
       <div slot="header" class="clearfix">
         <span>真实信息</span>
-        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
+        <el-button @click="onEditInfo()" style="float: right; padding: 3px 0" type="text">编辑</el-button>
       </div>
 
       <template v-if="loading">
@@ -105,6 +105,10 @@ export default {
               break;
           }
         });
+    },
+
+    onEditInfo() {
+      this.$router.push('/user/info/edit');
     },
   },
 

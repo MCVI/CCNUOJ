@@ -9,6 +9,7 @@ import UserPage from '../views/UserPage';
 import UserLogin from '../components/User/UserLogin';
 import UserRegister from '../components/User/UserRegister';
 import UserInfoDisplay from '../components/User/UserInfoDisplay';
+import UserInfoEdit from '../components/User/UserInfoEdit';
 
 import ProblemPage from '../views/ProblemPage';
 import ProblemList from '../components/Problem/ProblemList';
@@ -54,6 +55,11 @@ export default new Router({
           path: 'info',
           name: 'UserInfoDisplay',
           component: UserInfoDisplay,
+        },
+        {
+          path: 'info/edit',
+          name: 'UserInfoEdit',
+          component: UserInfoEdit,
         },
       ],
     },

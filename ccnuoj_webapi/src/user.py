@@ -118,3 +118,36 @@ def retrieve_user_info(id: int):
         return http.Success(result=instance)
     else:
         raise http.Forbidden(reason="PermissionDenied")
+
+
+@bp.route("/user/id/<int:id>/detail_info", methods=["PUT"])
+@require_authentication(allow_anonymous=False)
+def update_user_info(id: int):
+    schema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "description": "create a new user",
+        "type": "object",
+        "properties": {
+            "realPersonInfo": {
+                "description": "information about identity in reality",
+                "type": "object"
+            },
+            "extraInfo": {
+                "description": "extra information to store",
+                "type": "object"
+            },
+        },
+        "required": ["realPersonInfo", "extraInfo"],
+        "additionalProperties": False
+    }
+    instance = get_request_json(schema=schema)
+
+    if id == g.user.id:
+        user = g.user
+        user.realPersonInfo = instance["realPersonInfo"]
+        user.extraInfo = instance["extraInfo"]
+
+        db.session.commit()
+        return http.Success()
+    else:
+        raise http.Forbidden(reason="PermissionDenied")
