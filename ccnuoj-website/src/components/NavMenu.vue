@@ -15,8 +15,8 @@
 
     <div style="float: right;" class="el-menu--horizontal">
       <template v-if="loginState === null">
-        <el-menu-item index="/login">登 录</el-menu-item>
-        <el-menu-item index="/register">注 册</el-menu-item>
+        <el-menu-item index="/user/login">登 录</el-menu-item>
+        <el-menu-item index="/user/register">注 册</el-menu-item>
       </template>
       <template v-else-if="loginState === undefined">
         <el-menu-item

@@ -61,12 +61,17 @@ export default {
   data() {
     return {
       registerForm: {
-        name: '',
+        email: '',
+        shortName: '',
+        password: '',
+
+        realName: '',
+        gender: '',
+
         phone: '',
+
         school: '',
         major: '',
-        gender: '',
-        password: '',
       },
       registerRule: {
         email: [
