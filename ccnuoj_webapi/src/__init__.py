@@ -10,6 +10,8 @@ from . import user
 from . import judge_scheme
 from . import problem
 
+from . import contest
+
 from . import judge_command
 from . import judge_request
 from . import submission

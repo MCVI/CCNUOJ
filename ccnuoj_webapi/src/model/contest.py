@@ -1,11 +1,13 @@
 from ..global_obj import database as db
 from .entity import EntityMixin
 
-from sqlalchemy_utils import ColorType
+from sqlalchemy_utils import ColorType, JSONType
 
 
 class Contest(EntityMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+
+    needRegister = db.Column(db.Boolean, nullable=False)
 
     startTime = db.Column(db.DateTime, nullable=False)
     endTime = db.Column(db.DateTime, nullable=False)
@@ -33,3 +35,12 @@ class ContestProblem(db.Model):
     __table_args__ = (
         db.Index('ix_contest_problem_contest', 'contest'),
     )
+
+
+class ContestRegister(db.Model):
+    contest = db.Column(db.Integer, db.ForeignKey('contest.id'), primary_key=True, nullable=False)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+
+    realPersonInfo = db.Column(JSONType, nullable=False)
+    registerTime = db.Column(JSONType, nullable=False)
+    passed = db.Column(db.Boolean, nullable=False)

@@ -2,7 +2,7 @@
 <!-- 本组件是从后端调用所有比赛的简况,并按照时间顺序排序-->
 <div>
 
-  <el-table :data="contest" height="500" border style="width: 100%">
+  <el-table :data="contestList" height="500" border style="width: 100%">
 
     <el-table-column prop="id" label="编号" sortable style="width: 20%"></el-table-column>
 
@@ -27,26 +27,34 @@
 </template>
 
 <script>
+import { getContestList } from '../../api/Contest';
+
 import ContestDetail from './ContestDetail';
 
 export default {
   name: 'ContestList',
   data() {
     return {
-      contest: [],
+      contestList: [],
     };
   },
   components: {
     ContestDetail,
   },
   mounted() {
-    this.$http.get('/api/contest')
-      .then((res) => {
-        console.log(res);
-        this.contest = res.body.data;
+    getContestList()
+      .then((result) => {
+        this.contestList = result;
       })
       .catch((error) => {
-        console.log(error);
+        switch (error) {
+          case 'NetworkError':
+            this.$message.error('获取信息失败：网络错误');
+            break;
+          default:
+            this.$message.error('获取信息失败：未知错误');
+            break;
+        }
       });
   },
 };
