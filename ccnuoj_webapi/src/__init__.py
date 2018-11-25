@@ -4,6 +4,7 @@ from .global_obj import *
 from . import model
 
 from . import authentication
+from . import authorization
 from . import user
 
 from . import judge_scheme

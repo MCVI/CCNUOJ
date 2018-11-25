@@ -178,10 +178,10 @@ def require_authentication(allow_anonymous: bool=False):
 @bp.route("/user/authentication/echo", methods=["GET"])
 @require_authentication(allow_anonymous=False)
 def get_auth_echo():
-    import time
     return http.Success(result={
         "id": g.user.id,
         "email": g.user.email,
         "shortName": g.user.shortName,
         "token": g.user_auth_token,
+        "isSuper": g.user.isSuper,
     })

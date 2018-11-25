@@ -6,11 +6,12 @@ from .model import Problem, User
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .authentication import require_authentication
+from .authorization import require_super
 from .judge_scheme import judge_scheme_dict, JudgeSchemeNotFound
 
 
 @bp.route("/problem", methods=["POST"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def create_problem():
     schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",

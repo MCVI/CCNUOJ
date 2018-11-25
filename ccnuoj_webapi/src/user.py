@@ -80,6 +80,7 @@ def create_user():
 
     user.createTime = g.request_datetime
     user.uuid = uuid.uuid1()
+    user.isSuper = False
 
     try:
         db.session.add(user)
@@ -110,6 +111,7 @@ def retrieve_user_info(id: int):
             "id": user.id,
             "email": user.email,
             "shortName": user.shortName,
+            "isSuper": user.isSuper,
             "realPersonInfo": user.realPersonInfo,
             "extraInfo": user.extraInfo,
             "createTime": user.createTime,

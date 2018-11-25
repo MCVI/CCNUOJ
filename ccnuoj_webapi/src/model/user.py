@@ -15,6 +15,8 @@ class User(db.Model):
     uuid = db.Column(UUIDType, nullable=False)
     authentication = db.Column(JSONType, nullable=False)
 
+    isSuper = db.Column(db.Boolean, nullable=False)
+
     __table_args__ = (
         db.UniqueConstraint('email'),
         db.UniqueConstraint('shortName'),
