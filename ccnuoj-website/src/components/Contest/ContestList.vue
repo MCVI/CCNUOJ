@@ -8,6 +8,14 @@
 
     <el-table-column prop="title" label="比赛" border style="width: 20%">
       <template  slot-scope="scope">
+        {{scope.row.title}}
+        <el-button
+          v-if="scope.row.needRegister"
+          @click="onRegister(scope.row.id)"
+          type="primary">
+          我要报名
+        </el-button>
+        <!--
         <router-link :to="{
           name:'ContestDetail',
           params:{
@@ -16,6 +24,7 @@
          }">
           {{scope.row.title}}
         </router-link>
+        -->
       </template>
     </el-table-column>
 
@@ -29,17 +38,12 @@
 <script>
 import { getContestList } from '../../api/Contest';
 
-import ContestDetail from './ContestDetail';
-
 export default {
   name: 'ContestList',
   data() {
     return {
       contestList: [],
     };
-  },
-  components: {
-    ContestDetail,
   },
   mounted() {
     getContestList()
@@ -56,6 +60,16 @@ export default {
             break;
         }
       });
+  },
+  methods: {
+    onRegister(contestID) {
+      this.$router.push({
+        name: 'ContestRegister',
+        params: {
+          contest_id: contestID,
+        },
+      });
+    },
   },
 };
 </script>

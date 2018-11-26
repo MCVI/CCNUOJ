@@ -20,43 +20,36 @@
 </template>
 
 <script>
-import ContestRank from './ContestRank';
-import ContestProblemList from './Problem/ContestProblemList';
-import ContestDetail from './Problem/ContestProblemDetail';
+import { getContest } from '@/api/Contest';
 
 export default {
   name: 'ContestDetail',
   data() {
     return {
-      contest: null,
-      contestid: null,
-      activeName: '',
+      contest: {},
     };
   },
-  created() {
-    this.activeName = 'ConquesList';
-  },
-  methods: {
+
+  computed: {
+    contestID() {
+      return this.$route.params.contest_id;
+    },
   },
   mounted() {
-    this.$http.get('/api/contest')
-      .then((res) => {
-        this.contestid = this.$route.params.contest_id;
-        const list = res.body.data;
-        for (const contest of list) {
-          if (contest.id === this.contestid) {
-            this.contest = contest;
-          }
-        }
+    getContest(this.contestID)
+      .then((result) => {
+        this.contest = result;
       })
       .catch((error) => {
-        console.log(error);
+        switch (error) {
+          case 'NetworkError':
+            this.$message.error('获取信息失败：网络错误');
+            break;
+          default:
+            this.$message.error('获取信息失败：未知错误');
+            break;
+        }
       });
-  },
-  components: {
-    ContestRank,
-    ContestProblemList,
-    ContestDetail,
   },
 };
 
