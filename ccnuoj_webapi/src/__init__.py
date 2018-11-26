@@ -11,6 +11,7 @@ from . import judge_scheme
 from . import problem
 
 from . import contest
+from . import contest_register
 
 from . import judge_command
 from . import judge_request

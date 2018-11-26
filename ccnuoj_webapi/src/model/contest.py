@@ -42,5 +42,38 @@ class ContestRegister(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
 
     registerInfo = db.Column(JSONType, nullable=False)
-    registerTime = db.Column(JSONType, nullable=False)
+    registerTime = db.Column(db.DateTime, nullable=False)
     passed = db.Column(db.Boolean, nullable=False)
+
+
+contest_register_info_schema = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "register to a contest",
+    "type": "object",
+    "properties": {
+        "realName": {
+            "type": "string"
+        },
+        "phone": {
+            "type": "string"
+        },
+        "studentInfo": {
+            "type": "object",
+            "properties": {
+                "school": {
+                    "type": "string",
+                },
+                "major": {
+                    "type": "string",
+                },
+            },
+            "required": ["school", "major"],
+            "additionalProperties": False,
+        },
+        "remark": {
+            "type": "string",
+        },
+    },
+    "required": ["realName", "phone", "studentInfo", "remark"],
+    "additionalProperties": False,
+}

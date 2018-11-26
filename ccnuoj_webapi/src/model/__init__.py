@@ -12,7 +12,7 @@ from .types import LanguageType, JudgeSchemeType
 
 from .entity import TimestampMixin, EntityMixin
 from .problem import Problem
-from .contest import Contest, ContestProblem
+from .contest import Contest, ContestProblem, ContestRegister, contest_register_info_schema
 
 from .submission import Submission
 from .judge import JudgeState, JudgeStateType

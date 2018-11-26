@@ -22,7 +22,7 @@ import ContestRank from '../components/Contest/ContestRank';
 
 import ContestProblemList from '../components/Contest/Problem/ContestProblemList';
 import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail';
-import ContestRegister from '../components/Contest/ContestRegister';
+import ContestRegister from '../components/Contest/Register/ContestRegister';
 
 Vue.use(Router);
 

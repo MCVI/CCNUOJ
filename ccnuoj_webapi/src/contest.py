@@ -1,6 +1,6 @@
 from .util import http
-from .model import Contest, User
 from .global_obj import blueprint as bp
+from .model import Contest, User
 
 
 @bp.route("/contest/id/<int:id>", methods=["GET"])
