@@ -2,6 +2,7 @@
 
   <div v-loading="loading">
     <div v-html="text"></div>
+    <contest-register-state-display></contest-register-state-display>
   </div>
 
 </template>
@@ -10,10 +11,11 @@
 import marked from 'marked';
 
 import { getContest } from '@/api/Contest';
+import ContestRegisterStateDisplay from './ContestRgisterStateDisplay';
 
 export default {
   name: 'ContestRegister',
-
+  components: { ContestRegisterStateDisplay },
   data() {
     return {
       loading: true,
