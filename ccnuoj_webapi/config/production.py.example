@@ -1,0 +1,6 @@
+SQLALCHEMY_DATABASE_URI = 'postgresql://ccnuoj:ccnuoj@localhost/ccnuoj'
+
+SQLALCHEMY_ECHO = False
+
+CCNU_AUTH_TOKEN_SECRET_KEY = 'T1PlE6WWVUHx3w'
+CCNU_SERVER_FIXED_SALT = 'TjU8NOxv52wDqT'
