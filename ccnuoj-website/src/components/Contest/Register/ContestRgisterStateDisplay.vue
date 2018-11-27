@@ -24,18 +24,22 @@
 
         <div style="height:12px"></div>
 
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="registerInfoForm.phone"></el-input>
-        </el-form-item>
-
-        <div style="height:12px"></div>
-
         <el-form-item label="学校" prop="school">
           <el-input v-model="registerInfoForm.school"></el-input>
         </el-form-item>
 
         <el-form-item label="专业" prop="major">
           <el-input v-model="registerInfoForm.major"></el-input>
+        </el-form-item>
+
+        <div style="height:12px"></div>
+
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="registerInfoForm.phone"></el-input>
+        </el-form-item>
+
+        <el-form-item label="QQ" prop="qq">
+          <el-input v-model="registerInfoForm.qq"></el-input>
         </el-form-item>
 
         <div style="height:12px"></div>
@@ -77,13 +81,16 @@
           <span>姓名：{{ registerInfo.realName }}</span>
         </div>
         <div class="text item">
-          <span>电话：{{ registerInfo.phone }}</span>
-        </div>
-        <div class="text item">
           <span>学校：{{ registerInfo.studentInfo.school }}</span>
         </div>
         <div class="text item">
           <span>专业：{{ registerInfo.studentInfo.major }}</span>
+        </div>
+        <div class="text item">
+          <span>电话：{{ registerInfo.phone }}</span>
+        </div>
+        <div class="text item">
+          <span>QQ：{{ registerInfo.qq }}</span>
         </div>
         <div class="text item">
           <span>备注：{{ registerInfo.remark }}</span>
@@ -133,9 +140,10 @@ export default {
       formValid: false,
       registerInfoForm: {
         realName: '',
-        phone: '',
         school: '',
         major: '',
+        phone: '',
+        qq: '',
         remark: '',
       },
       registerInfoRule: {
@@ -144,16 +152,20 @@ export default {
           { min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur' },
         ],
 
-        phone: [
-          { required: true, message: '电话号码为必填项', trigger: 'blur' },
-          { min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur' },
-        ],
-
         school: [
           { required: true, message: '学校为必填项', trigger: 'blur' },
         ],
         major: [
           { required: true, message: '专业为必填项', trigger: 'blur' },
+        ],
+
+        phone: [
+          { required: true, message: '电话号码为必填项', trigger: 'blur' },
+          { min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur' },
+        ],
+        qq: [
+          { required: true, message: 'QQ号码为必填项', trigger: 'blur' },
+          { min: 5, max: 13, message: 'QQ号码格式不正确', trigger: 'blur' },
         ],
 
         remark: [
@@ -179,9 +191,10 @@ export default {
           const realPersonInfo = detailInfo.realPersonInfo;
           this.registerInfoForm = {
             realName: realPersonInfo.realName,
-            phone: realPersonInfo.phone,
             school: realPersonInfo.studentInfo.school,
             major: realPersonInfo.studentInfo.major,
+            phone: realPersonInfo.phone,
+            qq: '',
             remark: '',
           };
           this.editing = true;
@@ -191,9 +204,10 @@ export default {
           this.$message.error('获取默认信息失败，请手动填写。');
           this.registerInfoForm = {
             realName: '',
-            phone: '',
             school: '',
             major: '',
+            phone: '',
+            qq: '',
             remark: '',
           };
           this.editing = true;
@@ -204,9 +218,10 @@ export default {
       const registerInfo = this.registerInfo;
       this.registerInfoForm = {
         realName: registerInfo.realName,
-        phone: registerInfo.phone,
         school: registerInfo.studentInfo.school,
         major: registerInfo.studentInfo.major,
+        phone: registerInfo.phone,
+        qq: registerInfo.qq,
         remark: registerInfo.remark,
       };
       this.editing = true;
@@ -215,11 +230,12 @@ export default {
       const formData = this.registerInfoForm;
       const registerInfo = {
         realName: formData.realName,
-        phone: formData.phone,
         studentInfo: {
           school: formData.school,
           major: formData.major,
         },
+        phone: formData.phone,
+        qq: formData.qq,
         remark: formData.remark,
       };
       if (this.registered) {

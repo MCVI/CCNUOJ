@@ -54,9 +54,6 @@ contest_register_info_schema = {
         "realName": {
             "type": "string"
         },
-        "phone": {
-            "type": "string"
-        },
         "studentInfo": {
             "type": "object",
             "properties": {
@@ -70,10 +67,16 @@ contest_register_info_schema = {
             "required": ["school", "major"],
             "additionalProperties": False,
         },
+        "phone": {
+            "type": "string",
+        },
+        "qq": {
+            "type": "string",
+        },
         "remark": {
             "type": "string",
         },
     },
-    "required": ["realName", "phone", "studentInfo", "remark"],
+    "required": ["realName", "studentInfo", "phone", "qq", "remark"],
     "additionalProperties": False,
 }
