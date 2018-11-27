@@ -22,6 +22,7 @@ import ContestRank from '../components/Contest/ContestRank';
 
 import ContestProblemList from '../components/Contest/Problem/ContestProblemList';
 import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail';
+import ContestTextEditor from '../components/Contest/ContestTextEditor';
 import ContestRegister from '../components/Contest/Register/ContestRegister';
 
 Vue.use(Router);
@@ -131,6 +132,11 @@ export default new Router({
           path: ':contest_id/register',
           name: 'ContestRegister',
           component: ContestRegister,
+        },
+        {
+          path: ':contest_id/text/editor',
+          name: 'ContestTextEditor',
+          component: ContestTextEditor,
         },
       ],
     },

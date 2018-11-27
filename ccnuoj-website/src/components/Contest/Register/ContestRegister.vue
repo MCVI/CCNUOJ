@@ -1,7 +1,11 @@
 <template>
 
   <div v-loading="loading">
-    <div v-html="text"></div>
+    <div>
+      <el-button @click="onClickEditText()" style="float: right;" type="primary">编辑文本</el-button>
+      <div v-html="text" class="contest-text"></div>
+    </div>
+
     <contest-register-state-display></contest-register-state-display>
   </div>
 
@@ -22,6 +26,17 @@ export default {
       contest: {},
       text: '',
     };
+  },
+
+  methods: {
+    onClickEditText() {
+      this.$router.push({
+        name: 'ContestTextEditor',
+        params: {
+          contest_id: this.$route.params.contest_id,
+        },
+      });
+    },
   },
 
   mounted() {
@@ -47,4 +62,7 @@ export default {
 </script>
 
 <style scoped>
+  .contest-text {
+    font-size: 20px;
+  }
 </style>
