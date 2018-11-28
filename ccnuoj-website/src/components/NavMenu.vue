@@ -31,6 +31,7 @@
         <el-submenu index="/user/info">
           <template slot="title">{{ loginState }}</template>
           <el-menu-item index="/user/info">用户信息</el-menu-item>
+          <el-menu-item @click="onClickLogout()" index="">退出登录</el-menu-item>
         </el-submenu>
       </template>
     </div>
@@ -45,13 +46,20 @@ export default {
       activeIndex: 'undefined',
     };
   },
-  mounted() {
-    this.activeIndex = this.$route.path;
-  },
   computed: {
     loginState() {
       return this.$store.getters['user/shortName'];
     },
+  },
+
+  methods: {
+    onClickLogout() {
+      this.$store.dispatch('user/logout');
+    },
+  },
+
+  mounted() {
+    this.activeIndex = this.$route.path;
   },
   watch: {
     $route() {
