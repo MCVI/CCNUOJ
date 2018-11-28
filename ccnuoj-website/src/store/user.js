@@ -51,6 +51,15 @@ const UserModule = {
         return state.loginState.token;
       }
     },
+    isSuper: (state) => {
+      if (state.loginState === undefined) {
+        return undefined;
+      } else if (state.loginState === null) {
+        return null;
+      } else {
+        return state.loginState.isSuper;
+      }
+    },
     detailInfo: (state) => {
       if (state.detailInfo === undefined) {
         return undefined;

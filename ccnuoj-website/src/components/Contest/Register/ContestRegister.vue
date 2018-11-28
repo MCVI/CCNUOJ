@@ -1,17 +1,27 @@
 <template>
 
-  <div v-loading="loading">
-    <div>
-      <el-button @click="onClickEditText()" style="float: right;" type="primary">编辑文本</el-button>
-      <div v-html="text" class="contest-text"></div>
-    </div>
+  <div>
 
-    <contest-register-state-display></contest-register-state-display>
+    <template v-if="loading">
+      <div v-loading="true"></div>
+    </template>
+
+    <template v-else>
+      <template v-if="textEditable">
+        <el-button @click="onClickEditText()" style="float: right;" type="primary">编辑文本</el-button>
+      </template>
+
+      <div v-html="text" class="contest-text"></div>
+      <contest-register-state-display></contest-register-state-display>
+    </template>
+
   </div>
 
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex';
 import marked from 'marked';
 
 import { getContest } from '@/api/Contest';
@@ -26,6 +36,20 @@ export default {
       contest: {},
       text: '',
     };
+  },
+  computed: {
+    textEditable() {
+      if (this.loading) {
+        return undefined;
+      } else {
+        return (this.userID === this.contest.author.id) || (this.isSuper);
+      }
+    },
+
+    ...mapGetters({
+      userID: 'user/id',
+      isSuper: 'user/isSuper',
+    }),
   },
 
   methods: {
