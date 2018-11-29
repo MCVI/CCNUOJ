@@ -7,6 +7,7 @@ import Vue from 'vue';
 import App from './App';
 import router from './router/index';
 import store from './store';
+import './marked-config';
 
 // v-xxx 绑定  （自定义指令）
 
