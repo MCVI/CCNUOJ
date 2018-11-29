@@ -87,6 +87,7 @@ export default {
 
 <style scoped>
   .contest-text {
+    text-align: left;
     font-size: 20px;
   }
 </style>

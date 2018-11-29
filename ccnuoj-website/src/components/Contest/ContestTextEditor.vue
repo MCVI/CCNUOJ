@@ -8,17 +8,34 @@
     <template v-else>
 
       <el-row>
-        <el-col :span="12">
+        <el-col :span="1">
+          <br/>
+        </el-col>
+        <el-col :span="9">
           <el-input
+            v-model="text"
             type="textarea"
             autosize
             placeholder="请输入比赛文本"
-            v-model="text"
           >
           </el-input>
         </el-col>
-        <el-col :span="12">
-          <div v-html="renderResult" class="contest-text"></div>
+        <el-col :span="3">
+          <br/>
+        </el-col>
+        <el-col :span="9">
+          <el-input
+            v-html="renderResult"
+            class="contest-text"
+            type="textarea"
+            readonly="true"
+            autosize
+            placeholder="比赛文本为空"
+          >
+          </el-input>
+        </el-col>
+        <el-col :span="1">
+          <br/>
         </el-col>
       </el-row>
 
@@ -107,6 +124,7 @@ export default {
 
 <style scoped>
   .contest-text {
+    text-align: left;
     font-size: 20px;
   }
 </style>
