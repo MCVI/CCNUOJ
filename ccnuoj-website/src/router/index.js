@@ -24,6 +24,8 @@ import ContestProblemList from '../components/Contest/Problem/ContestProblemList
 import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail';
 import ContestTextEditor from '../components/Contest/ContestTextEditor';
 import ContestRegister from '../components/Contest/Register/ContestRegister';
+import ContestRegisterAllList from '../components/Contest/Register/ContestRegisterAllList';
+import ContestRegisterPassedList from '../components/Contest/Register/ContestRegisterPassedList';
 
 Vue.use(Router);
 
@@ -132,6 +134,16 @@ export default new Router({
           path: ':contest_id/register',
           name: 'ContestRegister',
           component: ContestRegister,
+        },
+        {
+          path: ':contest_id/register/all/list',
+          name: 'ContestRegister',
+          component: ContestRegisterAllList,
+        },
+        {
+          path: ':contest_id/register/passed/list',
+          name: 'ContestRegister',
+          component: ContestRegisterPassedList,
         },
         {
           path: ':contest_id/text/editor',
