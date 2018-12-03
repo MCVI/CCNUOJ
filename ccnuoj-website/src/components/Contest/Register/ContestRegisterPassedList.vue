@@ -10,7 +10,7 @@
       <el-table
         :data="registerList"
         style="width: 100%">
-        <el-table-column prop="registerInfo.realName" label="真实姓名"></el-table-column>
+        <el-table-column prop="registerInfo.realName" label="姓名"></el-table-column>
         <el-table-column prop="registerInfo.studentInfo.school" label="学校"></el-table-column>
       </el-table>
       <div style="font-size: 14px;">
@@ -91,9 +91,12 @@ export default {
       this.loadData();
     },
   },
+  mounted() {
+    this.loadData();
+  },
   watch: {
     userID() {
-      return this.loadData();
+      this.loadData();
     },
   },
 };

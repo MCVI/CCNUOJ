@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <template v-if="loading">
       <div v-loading="true"></div>
     </template>

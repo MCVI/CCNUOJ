@@ -19,11 +19,12 @@ import ContestPage from '../views/ContestPage';
 import ContestList from '../components/Contest/ContestList';
 import ContestDetail from '../components/Contest/ContestDetail';
 import ContestRank from '../components/Contest/ContestRank';
-
 import ContestProblemList from '../components/Contest/Problem/ContestProblemList';
 import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail';
+
+import ContestText from '../components/Contest/ContestText';
 import ContestTextEditor from '../components/Contest/ContestTextEditor';
-import ContestRegister from '../components/Contest/Register/ContestRegister';
+import ContestRegisterStateDisplay from '../components/Contest/Register/ContestRgisterStateDisplay';
 import ContestRegisterAllList from '../components/Contest/Register/ContestRegisterAllList';
 import ContestRegisterPassedList from '../components/Contest/Register/ContestRegisterPassedList';
 
@@ -105,6 +106,35 @@ export default new Router({
           component: ContestDetail,
           children: [
             {
+              path: '',
+              redirect: 'introduction',
+            },
+            {
+              path: 'introduction',
+              name: 'ContestText',
+              component: ContestText,
+            },
+            {
+              path: 'introduction/editor',
+              name: 'ContestTextEditor',
+              component: ContestTextEditor,
+            },
+            {
+              path: 'register',
+              name: 'ContestRegisterStateDisplay',
+              component: ContestRegisterStateDisplay,
+            },
+            {
+              path: 'register/all/list',
+              name: 'ContestRegisterAllList',
+              component: ContestRegisterAllList,
+            },
+            {
+              path: 'register/passed/list',
+              name: 'ContestRegisterPassedList',
+              component: ContestRegisterPassedList,
+            },
+            {
               path: 'problem',
               children: [
                 {
@@ -129,26 +159,6 @@ export default new Router({
               component: ContestRank,
             },
           ],
-        },
-        {
-          path: ':contest_id/register',
-          name: 'ContestRegister',
-          component: ContestRegister,
-        },
-        {
-          path: ':contest_id/register/all/list',
-          name: 'ContestRegister',
-          component: ContestRegisterAllList,
-        },
-        {
-          path: ':contest_id/register/passed/list',
-          name: 'ContestRegister',
-          component: ContestRegisterPassedList,
-        },
-        {
-          path: ':contest_id/text/editor',
-          name: 'ContestTextEditor',
-          component: ContestTextEditor,
         },
       ],
     },

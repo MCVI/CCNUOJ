@@ -151,6 +151,9 @@ export default {
       this.loadData();
     },
   },
+  mounted() {
+    this.loadData();
+  },
   watch: {
     userID() {
       return this.loadData();
