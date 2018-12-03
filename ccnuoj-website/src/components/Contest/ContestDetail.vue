@@ -22,12 +22,14 @@
           style="float: left;">
           查看已通过审核列表
         </el-button>
-        <el-button
-          @click="$router.push({name:'ContestRegisterAllList'})"
-          type="primary"
-          style="float: left;">
-          管理报名信息
-        </el-button>
+        <template v-if="isManager">
+          <el-button
+            @click="$router.push({name:'ContestRegisterAllList'})"
+            type="primary"
+            style="float: left;">
+            管理报名信息
+          </el-button>
+        </template>
       </el-row>
     </el-tab-pane>
     <el-tab-pane label="题目" disabled></el-tab-pane>
