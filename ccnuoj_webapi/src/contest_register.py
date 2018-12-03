@@ -186,11 +186,10 @@ def get_register_list(contest_id: int, page_num: int):
     if not ((g.user.id == contest.author) or g.user.isSuper):
         raise http.Forbidden(reason="PermissionDenied")
 
-    pagination = ContestRegister.query.filter_by(
-        contest=contest.id
-    ).paginate(
-        page=page_num,
-        error_out=False
+    pagination = (ContestRegister.query
+        .filter_by(contest=contest.id)
+        .order_by(ContestRegister.registerTime)
+        .paginate(page=page_num,error_out=False)
     )
     page_count = pagination.pages
     register_list = pagination.items
@@ -226,12 +225,10 @@ def get_register_passed_list(contest_id: int, page_num: int):
     elif not contest.needRegister:
         raise http.Conflict(reason="NoRegisterInContest")
 
-    pagination = ContestRegister.query.filter_by(
-        contest=contest.id,
-        passed=True
-    ).paginate(
-        page=page_num,
-        error_out=False
+    pagination = (ContestRegister.query
+        .filter_by(contest=contest.id, passed=True)
+        .order_by(ContestRegister.registerTime)
+        .paginate(page=page_num, error_out=False)
     )
     page_count = pagination.pages
     register_list = pagination.items
