@@ -84,7 +84,7 @@ def getResult(handle, problemId):
     problemId = str(problemId)
     if user_result.get(problemId) == None:
         return 'undo'
-    if user_result['problemId'] > 0:
+    if user_result[problemId] > 0:
         return 'pass'
     return 'try but unpassed'
 
