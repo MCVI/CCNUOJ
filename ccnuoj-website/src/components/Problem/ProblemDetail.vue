@@ -11,8 +11,9 @@
         {{ problem.title }}
       </p>
 
-      <div class="text-css">
-        {{ renderedText }}
+      <div
+        v-html="renderedText"
+        class="text-css">
       </div>
 
       <br/>
