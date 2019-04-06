@@ -20,14 +20,13 @@
 
       <el-table-column prop="id" label="编号" sortable style="width: 20%"></el-table-column>
 
-      <el-table-column prop="user" label="用户" border style="width: 20%"></el-table-column> 
+      <el-table-column prop="user" label="用户" border style="width: 20%"></el-table-column>
 
       <el-table-column prop="status" label="状态" sortable border style="width: 20%"></el-table-column>
       <el-table-column prop="probability" label="预测通过概率" sortable border style="width: 20%"></el-table-column>
 
     </el-table>
   </div>
-
 
 
 </template>
@@ -43,24 +42,24 @@ export default {
       problemId: '',
       predictList: [],
     };
-  },  
+  },
 
   methods: {
     onSubmit() {
       getPredictById(this.problemId)
-      .then((result) => {
-        this.predictList = result.result;
-      })
-      .catch((error) => {
-        switch (error) {
-          case 'NetworkError':
-            this.$message.error('获取信息失败：网络错误');
-            break;
-          default:
-            this.$message.error('获取信息失败：未知错误');
-            break;
-        }
-      });
+        .then((result) => {
+          this.predictList = result.result;
+        })
+        .catch((error) => {
+          switch (error) {
+            case 'NetworkError':
+              this.$message.error('获取信息失败：网络错误');
+              break;
+            default:
+              this.$message.error('获取信息失败：未知错误');
+              break;
+          }
+        });
     },
   },
 };
