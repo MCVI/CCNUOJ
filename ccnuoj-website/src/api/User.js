@@ -2,22 +2,21 @@ import request from './request';
 
 import * as PasswordHash from './PasswordHash';
 
-export const userRegister = ({
-  email,
-  shortName,
-  realPersonInfo,
-  extraInfo,
-  password,
-}) => {
-  const salt = PasswordHash.generateRandomSalt();
-  const hashResult = PasswordHash.passwordHash(salt, password);
+const userRegisterWithFixedSalt = (fixedSalt, userInfo) => {
+  const randomSalt = PasswordHash.generateRandomSalt();
+  const hashResult = PasswordHash.passwordHash(
+    randomSalt,
+    fixedSalt,
+    userInfo.password,
+  );
+
   const requestData = {
-    email,
-    shortName,
-    realPersonInfo,
-    extraInfo,
+    email: userInfo.email,
+    shortName: userInfo.shortName,
+    realPersonInfo: userInfo.realPersonInfo,
+    extraInfo: userInfo.extraInfo,
     authentication: {
-      salt,
+      salt: randomSalt,
       hashResult,
     },
   };
@@ -42,17 +41,54 @@ export const userRegister = ({
   });
 };
 
+export const userRegister = ({
+  email,
+  shortName,
+  realPersonInfo,
+  extraInfo,
+  password,
+}) => {
+  const userInfo = {
+    email,
+    shortName,
+    realPersonInfo,
+    extraInfo,
+    password,
+  };
+
+  return new Promise((resolve, reject) => {
+    PasswordHash.fetchFixedSalt()
+      .then((fixedSalt) => {
+        userRegisterWithFixedSalt(fixedSalt, userInfo)
+          .then((userID) => {
+            resolve(userID);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 const userLoginInternal = ({
   authInfo,
   password,
 }) => {
-  const { id } = authInfo;
-  const { salt } = authInfo;
-  const hashResult = PasswordHash.passwordHash(salt, password);
+  const { id, salt } = authInfo;
   return new Promise((resolve, reject) => {
-    request.post(`/user/authentication/id/${id}`, { hashResult })
-      .then((res) => {
-        resolve(res.data.result);
+    PasswordHash.fetchFixedSalt()
+      .then((fixedSalt) => {
+        const hashResult = PasswordHash.passwordHash(salt, fixedSalt, password);
+        request.post(`/user/authentication/id/${id}`, { hashResult })
+          .then((res) => {
+            resolve(res.data.result);
+          })
+          .catch((error) => {
+            reject(error);
+          });
       })
       .catch((error) => {
         reject(error);

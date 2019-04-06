@@ -20,3 +20,5 @@ from . import submission
 from . import judge_data
 
 from . import help
+
+from .init_database import init_database

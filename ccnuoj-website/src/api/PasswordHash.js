@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js/crypto-js';
-import { CCNU_PASSWORD_FIXED_SALT } from './common';
+
+import request from './request';
 
 const saltAvailableChar = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -21,12 +22,40 @@ export const generateRandomSalt = () => ({
   back: generateRandomSaltString(),
 });
 
-export const passwordHash = (randomSalt, password) => {
+export const passwordHash = (randomSalt, fixedSalt, password) => {
   const plain = [
     randomSalt.front,
-    CCNU_PASSWORD_FIXED_SALT,
+    fixedSalt.fixed,
     password,
     randomSalt.back,
   ].join('-');
   return CryptoJS.SHA512(plain).toString();
 };
+
+let fixedSalt;
+
+export const fetchFixedSalt = () => new Promise(
+  (resolve, reject) => {
+    if (fixedSalt === undefined) {
+      request.get('/user/authentication_info/fixed_salt')
+        .then((response) => {
+          fixedSalt = response.data.result;
+          resolve(fixedSalt);
+        })
+        .catch((error) => {
+          if ('response' in error) {
+            const { data } = error.response;
+            if ('reason' in data) {
+              reject(data.reason);
+            } else {
+              reject('UnknownError');
+            }
+          } else {
+            reject('NetworkError');
+          }
+        });
+    } else {
+      resolve(fixedSalt);
+    }
+  },
+);

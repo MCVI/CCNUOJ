@@ -2,8 +2,7 @@ import uuid
 import string
 import hashlib
 from functools import wraps
-from flask import Flask, request, g
-from flask import current_app as app
+from flask import Flask, request, g, current_app
 from itsdangerous import TimedJSONWebSignatureSerializer
 from itsdangerous import BadSignature, SignatureExpired
 
@@ -11,14 +10,16 @@ from .util import random_string
 from .util import get_request_json
 from .util import http
 from .global_obj import blueprint as bp
-from .model import User
+from .model import User, get_kv
 
+
+module_inited = False
 
 salt_available_char = string.ascii_letters+string.digits
 
 
-def init(app: Flask):
-    secret_key = app.config['CCNU_AUTH_TOKEN_SECRET_KEY']
+def do_init(app: Flask):
+    secret_key = get_kv('AuthTokenSecretKey')
     expiration = app.config['CCNU_AUTH_TOKEN_EXPIRATION']
     global signer
     signer = TimedJSONWebSignatureSerializer(
@@ -26,12 +27,31 @@ def init(app: Flask):
         expires_in=expiration,
         algorithm_name='HS512'
     )
+    global server_fixed_salt
+    server_fixed_salt = get_kv('AuthServerFixedSalt')
+    global client_fixed_salt
+    client_fixed_salt = get_kv('AuthClientFixedSalt')
 
 
+def need_init(wrapped: callable) -> callable:
+
+    @wraps(wrapped)
+    def func(*args, **kwargs):
+        global module_inited
+        if not module_inited:
+            do_init(current_app)
+            module_inited = True
+
+        return wrapped(*args, **kwargs)
+
+    return func
+
+
+@need_init
 def server_hash(salt, text) -> str:
     full_text = '-'.join([
         salt["front"],
-        app.config['CCNU_SERVER_FIXED_SALT'],
+        server_fixed_salt,
         text,
         salt["back"]
     ])
@@ -40,6 +60,7 @@ def server_hash(salt, text) -> str:
     return hash_obj.hexdigest()
 
 
+@need_init
 def sign_auth_token(user: User) -> str:
     payload = {
         "id": user.id,
@@ -52,8 +73,16 @@ def sign_auth_token(user: User) -> str:
 def get_auth_info(user: User):
     return {
         "id": user.id,
-        "salt": user.authentication["clientSalt"]
+        "salt": user.authentication["clientSalt"],
     }
+
+
+@bp.route("/user/authentication_info/fixed_salt", methods=["GET"])
+@need_init
+def get_client_fixed_salt():
+    return http.Success(result={
+        "fixed": client_fixed_salt,
+    })
 
 
 @bp.route("/user/authentication_info/email/<string:email>", methods=["GET"])

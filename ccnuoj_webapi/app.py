@@ -2,7 +2,6 @@ import os
 
 from flask import Flask
 from src import database, blueprint
-from src import authentication
 
 
 common_config_file = ["common.py"]
@@ -32,8 +31,6 @@ app = Flask(__name__)
 load_config(app)
 database.init_app(app)
 app.register_blueprint(blueprint)
-
-authentication.init(app)
 
 
 if __name__ == '__main__':
