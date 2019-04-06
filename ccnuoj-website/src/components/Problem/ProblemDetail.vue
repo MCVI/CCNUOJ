@@ -1,16 +1,22 @@
 <template>
   <div>
-    <!-- 取值如下 -->
+    <template v-if="loading">
+      <div v-loading="true"></div>
+    </template>
 
-    <p class="title-css">
-      {{ problem['title'] }}
-    </p>
+    <template v-else>
+      <!-- 取值如下 -->
 
-    <div class="text-css">
-      {{ problem['text'] }}
-    </div>
+      <p class="title-css">
+        {{ problem.title }}
+      </p>
 
-    <br/>
+      <div class="text-css">
+        {{ renderedText }}
+      </div>
+
+      <br/>
+    </template>
 
     <p style='font-size: 20px;font-weight:500;text-align:left;'>提交代码</p>
 
@@ -25,30 +31,39 @@
 
     <br/>
 
-    <el-input :rows="10" placeholder="请输入内容" type="textarea" v-model="textarea"></el-input>
+    <el-input :rows="10" placeholder="请输入内容" type="textarea" v-model="code"></el-input>
 
-    <el-button round type="primary">提交</el-button>
+    <el-button
+      @click="onClickSubmit"
+      round type="primary">
+      提交
+    </el-button>
 
   </div>
 </template>
 
 <script>
 import { getProblem } from '@/api/Problem';
+import { createSubmission } from '@/api/Submission';
+import marked from 'marked';
 
 export default {
   name: 'ProblemDetail',
   data() {
     return {
-      textarea: '',
+      loading: true,
+      problem: undefined,
+      renderedText: undefined,
+      code: '',
       options: [{
-        value: 'c++',
+        value: 'cpp',
         label: 'c++',
       }, {
         value: 'c',
         label: 'c',
       }, {
         value: 'c#',
-        label: 'c#',
+        label: 'csharp',
       }, {
         value: 'python',
         label: 'python',
@@ -57,30 +72,52 @@ export default {
         label: 'java',
       }],
       language: '',
-      problem: null,
     };
   },
-  components: {},
+  computed: {
+    problemID() {
+      return parseInt(this.$route.params.problem_id, 10);
+    },
+  },
+
   mounted() {
     const problemID = this.$route.params.problem_id;
     getProblem(problemID)
       .then((problem) => {
         this.problem = problem;
+        this.renderedText = this.renderText(this.problem.text);
+        this.loading = false;
       })
       .catch((error) => {
-        this.$message.error('获取信息错误');
+        switch (error) {
+          case 'NetworkError':
+            this.$message.error('获取信息失败：网络错误');
+            break;
+          default:
+            this.$message.error('获取信息失败：未知错误');
+            break;
+        }
       });
   },
   methods: {
     renderText(text) {
-      return text
-        .replace(/\r\n/ig, '<br/><br/>')
-        .replace(/描述/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/输入格式/g, '<br/><br/><p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/输出格式/g, '<br/><br/><p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/样例/g, '<br/><br/><p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/input/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>')
-        .replace(/output/g, '<p style=\'font-size: 20px;font-weight:500;text-align:left\'> $&</p>');
+      return marked(text, { sanitize: true });
+    },
+    onClickSubmit() {
+      createSubmission(this.problemID, this.language, this.code)
+        .then((result) => {
+          this.$message.success('提交成功');
+        })
+        .catch((error) => {
+          switch (error) {
+            case 'NetworkError':
+              this.$message.error('提交失败：网络错误');
+              break;
+            default:
+              this.$message.error('提交失败：未知错误');
+              break;
+          }
+        });
     },
   },
 };

@@ -6,25 +6,16 @@
 
     <el-table-column prop="id" label="编号" sortable style="width: 20%"></el-table-column>
 
-    <el-table-column prop="title" label="比赛" border style="width: 20%">
+    <el-table-column prop="title" label="比赛" border style="width: 20%;">
       <template  slot-scope="scope">
-        {{scope.row.title}}
-        <el-button
-          v-if="scope.row.needRegister"
-          @click="onRegister(scope.row.id)"
-          type="primary">
-          我要报名
-        </el-button>
-        <!--
         <router-link :to="{
-          name:'ContestDetail',
-          params:{
+          name: 'ContestText',
+          params: {
             contest_id: scope.row.id
-           }
-         }">
+          }
+         }" style="font-size: 20px;">
           {{scope.row.title}}
         </router-link>
-        -->
       </template>
     </el-table-column>
 
@@ -38,9 +29,12 @@
 
 <script>
 import { getContestList } from '../../api/Contest';
+import ContestDetail from './ContestDetail';
 
 export default {
   name: 'ContestList',
+  components: { ContestDetail },
+
   data() {
     return {
       contestList: [],
@@ -65,7 +59,7 @@ export default {
   methods: {
     onRegister(contestID) {
       this.$router.push({
-        name: 'ContestRegister',
+        name: 'ContestText',
         params: {
           contest_id: contestID,
         },

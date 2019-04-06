@@ -12,7 +12,6 @@
       </template>
 
       <div v-html="text" class="contest-text"></div>
-      <contest-register-state-display></contest-register-state-display>
     </template>
 
   </div>
@@ -25,10 +24,10 @@ import { mapGetters } from 'vuex';
 import marked from 'marked';
 
 import { getContest } from '@/api/Contest';
-import ContestRegisterStateDisplay from './ContestRgisterStateDisplay';
+import ContestRegisterStateDisplay from './Register/ContestRgisterStateDisplay';
 
 export default {
-  name: 'ContestRegister',
+  name: 'ContestText',
   components: { ContestRegisterStateDisplay },
   data() {
     return {

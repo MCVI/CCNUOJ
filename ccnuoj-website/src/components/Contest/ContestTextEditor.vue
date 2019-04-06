@@ -81,7 +81,7 @@ export default {
         .then(() => {
           this.$message.success('更新比赛信息成功');
           this.$router.push({
-            name: 'ContestRegister',
+            name: 'ContestText',
             params: {
               contest_id: this.contestID,
             },
