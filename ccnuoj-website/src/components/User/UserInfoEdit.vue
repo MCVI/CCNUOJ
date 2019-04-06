@@ -79,13 +79,17 @@ export default {
       userInfoRule: {
         realName: [
           { required: true, message: '真实姓名为必填项', trigger: 'blur' },
-          { min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur' },
+          {
+            min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur',
+          },
         ],
         gender: [
           { required: true, message: '性别为必填项', trigger: 'change' },
         ],
         phone: [
-          { min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur' },
+          {
+            min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur',
+          },
         ],
 
         school: [

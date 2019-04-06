@@ -7,7 +7,7 @@ export const getPredictById = (id) => new Promise((resolve, reject) => {
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         if ('reason' in data) {
           reject(data.reason);
         } else {

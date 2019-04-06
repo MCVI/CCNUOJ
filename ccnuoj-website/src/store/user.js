@@ -75,7 +75,7 @@ const UserModule = {
     changeLoginState(state, newState) {
       state.loginState = newState;
       if ((typeof newState === 'object') && (newState !== null)) {
-        const token = newState.token;
+        const { token } = newState;
         localStorage.setItem('UserLoginToken', token);
         state.detailInfo = undefined;
       } else if (newState === null) {

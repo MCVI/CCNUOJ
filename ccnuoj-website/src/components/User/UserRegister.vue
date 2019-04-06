@@ -76,26 +76,36 @@ export default {
       registerRule: {
         email: [
           { required: true, message: '电子邮箱为必填项', trigger: 'blur' },
-          { min: 8, max: 30, message: '电子邮箱长度不符合要求', trigger: 'blur' },
+          {
+            min: 8, max: 30, message: '电子邮箱长度不符合要求', trigger: 'blur',
+          },
         ],
         shortName: [
           { required: true, message: '用户名为必填项', trigger: 'blur' },
-          { min: 3, max: 15, message: '长度在 5 到 20 个字符', trigger: 'blur' },
+          {
+            min: 3, max: 15, message: '长度在 5 到 20 个字符', trigger: 'blur',
+          },
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' },
+          {
+            min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur',
+          },
         ],
 
         realName: [
           { required: true, message: '真实姓名为必填项', trigger: 'blur' },
-          { min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur' },
+          {
+            min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur',
+          },
         ],
         gender: [
           { required: true, message: '性别为必填项', trigger: 'change' },
         ],
         phone: [
-          { min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur' },
+          {
+            min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur',
+          },
         ],
 
         school: [

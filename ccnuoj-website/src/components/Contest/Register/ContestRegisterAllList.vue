@@ -114,7 +114,7 @@ export default {
     },
 
     onMark(index, passState) {
-      const userID = this.registerList[index].userID;
+      const { userID } = this.registerList[index];
 
       if (this.registerList[index].passed === true) {
         this.passedNum -= 1;

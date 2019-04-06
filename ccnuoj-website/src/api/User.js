@@ -28,7 +28,7 @@ export const userRegister = ({
       })
       .catch((error) => {
         if ('response' in error) {
-          const data = error.response.data;
+          const { data } = error.response;
           if ('reason' in data) {
             console.log(['reason', data.reason]);
             reject(data.reason);
@@ -46,8 +46,8 @@ const userLoginInternal = ({
   authInfo,
   password,
 }) => {
-  const id = authInfo.id;
-  const salt = authInfo.salt;
+  const { id } = authInfo;
+  const { salt } = authInfo;
   const hashResult = PasswordHash.passwordHash(salt, password);
   return new Promise((resolve, reject) => {
     request.post(`/user/authentication/id/${id}`, { hashResult })
@@ -125,7 +125,7 @@ export const getUserInfo = (userID) => new Promise((resolve, reject) => {
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         reject(data.reason);
       } else {
         reject('NetworkError');
@@ -140,7 +140,7 @@ export const updateUserInfo = (userID, userInfo) => new Promise((resolve, reject
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         reject(data.reason);
       } else {
         reject('NetworkError');

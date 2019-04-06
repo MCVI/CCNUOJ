@@ -36,7 +36,9 @@ export default {
       loginRulers: {
         account: [
           { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 3, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' },
+          {
+            min: 3, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur',
+          },
         ],
       },
     };
@@ -46,8 +48,8 @@ export default {
     onSubmit() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          const account = this.loginForm.account;
-          const password = this.loginForm.password;
+          const { account } = this.loginForm;
+          const { password } = this.loginForm;
 
           let promise;
           if (validator.isEmail(account)) {

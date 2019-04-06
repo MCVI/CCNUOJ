@@ -148,7 +148,9 @@ export default {
       registerInfoRule: {
         realName: [
           { required: true, message: '真实姓名为必填项', trigger: 'blur' },
-          { min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur' },
+          {
+            min: 3, max: 15, message: '真实姓名长度限制在 3 到 15 个字符之间', trigger: 'blur',
+          },
         ],
 
         school: [
@@ -160,11 +162,15 @@ export default {
 
         phone: [
           { required: true, message: '电话号码为必填项', trigger: 'blur' },
-          { min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur' },
+          {
+            min: 11, max: 11, message: '电话号码格式不正确', trigger: 'blur',
+          },
         ],
         qq: [
           { required: true, message: 'QQ号码为必填项', trigger: 'blur' },
-          { min: 5, max: 13, message: 'QQ号码格式不正确', trigger: 'blur' },
+          {
+            min: 5, max: 13, message: 'QQ号码格式不正确', trigger: 'blur',
+          },
         ],
 
         remark: [
@@ -187,7 +193,7 @@ export default {
       this.loading = true;
       this.$store.dispatch('user/getDetailInfo')
         .then((detailInfo) => {
-          const realPersonInfo = detailInfo.realPersonInfo;
+          const { realPersonInfo } = detailInfo;
           this.registerInfoForm = {
             realName: realPersonInfo.realName,
             school: realPersonInfo.studentInfo.school,
@@ -214,7 +220,7 @@ export default {
         });
     },
     onClickEdit() {
-      const registerInfo = this.registerInfo;
+      const { registerInfo } = this;
       this.registerInfoForm = {
         realName: registerInfo.realName,
         school: registerInfo.studentInfo.school,

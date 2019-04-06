@@ -8,8 +8,7 @@ module.exports = {
   },
   'extends': [
     'plugin:vue/essential',
-    '@vue/standard',
-    'airbnb-base'
+    '@vue/airbnb'
   ],
   // required to lint *.vue files
   plugins: [

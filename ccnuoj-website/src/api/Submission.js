@@ -8,7 +8,7 @@ export const createSubmission = (problemID, language, code) => new Promise(
       text: code,
     })
       .then((response) => {
-        const data = response.data;
+        const { data } = response;
         resolve({
           submissionID: data.submissionID,
           judgeRequestID: data.judgeRequestID,
@@ -16,7 +16,7 @@ export const createSubmission = (problemID, language, code) => new Promise(
       })
       .catch((error) => {
         if ('response' in error) {
-          const data = error.response.data;
+          const { data } = error.response;
           if ('reason' in data) {
             reject(error);
           } else {

@@ -7,7 +7,7 @@ export const getContestRegister = (contestID, userID) => new Promise((resolve, r
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         if ('reason' in data) {
           reject(data.reason);
         } else {
@@ -28,7 +28,7 @@ export const createContestRegister = (contestID, userID, registerInfo) => new Pr
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         if ('reason' in data) {
           reject(data.reason);
         } else {
@@ -49,7 +49,7 @@ export const updateContestRegister = (contestID, userID, registerInfo) => new Pr
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         if ('reason' in data) {
           reject(data.reason);
         } else {
@@ -68,7 +68,7 @@ export const deleteContestRegister = (contestID, userID) => new Promise((resolve
     })
     .catch((error) => {
       if ('response' in error) {
-        const data = error.response.data;
+        const { data } = error.response;
         if ('reason' in data) {
           reject(data.reason);
         } else {
@@ -90,7 +90,7 @@ export const updateContestRegisterPassState = (contestID, userID, passed) => new
       })
       .catch((error) => {
         if ('response' in error) {
-          const data = error.response.data;
+          const { data } = error.response;
           if ('reason' in data) {
             reject(data.reason);
           } else {
@@ -111,7 +111,7 @@ export const getContestRegisterAllList = (contestID, pageNum) => new Promise(
       })
       .catch((error) => {
         if ('response' in error) {
-          const data = error.response.data;
+          const { data } = error.response;
           if ('reason' in data) {
             reject(data.reason);
           } else {
@@ -132,7 +132,7 @@ export const getContestRegisterPassedList = (contestID, pageNum) => new Promise(
       })
       .catch((error) => {
         if ('response' in error) {
-          const data = error.response.data;
+          const { data } = error.response;
           if ('reason' in data) {
             reject(data.reason);
           } else {
