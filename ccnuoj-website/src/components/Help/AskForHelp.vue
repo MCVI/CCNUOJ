@@ -18,11 +18,11 @@
 
     <el-table :data="predictList" height="500" border style="width: 100%">
 
-      <el-table-column prop="id" label="编号" sortable style="width: 20%"></el-table-column>
+      <el-table-column prop="problemId" label="编号" sortable style="width: 20%"></el-table-column>
 
-      <el-table-column prop="user" label="用户" border style="width: 20%"></el-table-column>
+      <el-table-column prop="handle" label="用户" border style="width: 20%"></el-table-column>
 
-      <el-table-column prop="status" label="状态" sortable border style="width: 20%"></el-table-column>
+      <el-table-column prop="result" label="状态" sortable border style="width: 20%"></el-table-column>
       <el-table-column prop="probability" label="预测通过概率" sortable border style="width: 20%"></el-table-column>
 
     </el-table>
