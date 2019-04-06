@@ -12,6 +12,7 @@
     <el-menu-item index="/problem/list">题 库</el-menu-item>
     <el-menu-item disabled index="">课 堂</el-menu-item>
     <el-menu-item disabled index="">数据中心</el-menu-item>
+    <el-menu-item index="/help">帮助</el-menu-item>
 
     <div style="float: right;" class="el-menu--horizontal">
       <template v-if="loginState === null">

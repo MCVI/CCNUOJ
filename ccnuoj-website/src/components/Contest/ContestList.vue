@@ -29,6 +29,7 @@
     </el-table-column>
 
     <el-table-column prop="startTime" label="开始时间" sortable border style="width: 20%"></el-table-column>
+    <el-table-column prop="endTime" label="结束时间" sortable border style="width: 20%"></el-table-column>
 
   </el-table>
 

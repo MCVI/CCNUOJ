@@ -18,3 +18,5 @@ from . import judge_request
 from . import submission
 
 from . import judge_data
+
+from . import help

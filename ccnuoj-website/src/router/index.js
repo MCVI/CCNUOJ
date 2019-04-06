@@ -25,6 +25,8 @@ import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDe
 import ContestTextEditor from '../components/Contest/ContestTextEditor';
 import ContestRegister from '../components/Contest/Register/ContestRegister';
 
+import HelpPage from '../views/HelpPage';
+
 Vue.use(Router);
 
 export default new Router({
@@ -139,6 +141,11 @@ export default new Router({
           component: ContestTextEditor,
         },
       ],
+    },
+    {
+      path: '/help',
+      name: 'HelpPage',
+      component: HelpPage,
     },
     {
       path: '*',
