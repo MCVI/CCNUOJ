@@ -140,6 +140,7 @@ class TokenExpired(Exception):
     pass
 
 
+@need_init
 def load_token():
     if 'X-CCNU-AUTH-TOKEN' in request.headers:
 

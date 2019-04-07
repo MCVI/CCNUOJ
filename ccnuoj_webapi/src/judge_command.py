@@ -7,6 +7,7 @@ from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import JudgeCommand, JudgeRequest
 from .authentication import require_authentication
+from .authorization import require_super
 
 
 def create_for_judge_request(
@@ -31,8 +32,31 @@ def create_for_judge_request(
     return command
 
 
+@bp.route("/judge_command/fetched/all", methods=["GET"])
+@require_super
+def get_fetched_command():
+    commands = (
+        JudgeCommand.query
+        .filter(db.and_(
+            JudgeCommand.fetchTime!=None,
+            JudgeCommand.finishTime==None
+        ))
+        .order_by(JudgeCommand.createTime.asc())
+        .all()
+    )
+
+    result = []
+    for command in commands:
+        obj = {}
+        for key in ["id", "operator", "createTime", "fetchTime", "command"]:
+            obj[key] = getattr(command, key)
+        result.append(obj)
+
+    return http.Success(result=result)
+
+
 @bp.route("/judge_command/unfetched/<int:limit>", methods=["GET"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def get_unfetched_command(limit: int):
     commands = (
         JudgeCommand.query
@@ -45,7 +69,7 @@ def get_unfetched_command(limit: int):
     result = []
     for command in commands:
         obj = {}
-        for key in ["id", "operator", "createTime", "command"]:
+        for key in ["id", "operator", "createTime", "fetchTime", "command"]:
             obj[key] = getattr(command, key)
         result.append(obj)
 
@@ -53,7 +77,7 @@ def get_unfetched_command(limit: int):
 
 
 @bp.route("/judge_command/<int:id>/fetched", methods=["POST"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def mark_command_fetched(id: int):
     command = JudgeCommand.query.get(id)
 
@@ -74,7 +98,7 @@ def mark_command_fetched(id: int):
 
 
 @bp.route("/judge_command/<int:id>/finished", methods=["POST"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def mark_command_finished(id: int):
     schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",

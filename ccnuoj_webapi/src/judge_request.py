@@ -7,6 +7,7 @@ from .global_obj import blueprint as bp
 from .model import Submission
 from .model import JudgeRequest, JudgeState
 from .authentication import require_authentication
+from .authorization import require_super
 from . import judge_command
 
 
@@ -29,7 +30,7 @@ def auto_create_for_submission(submission: Submission) -> JudgeRequest:
 
 
 @bp.route("/judge_request/id/<int:id>/state", methods=["PUT"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def update_judge_request_state(id: int):
     schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -73,7 +74,7 @@ def update_judge_request_state(id: int):
 
 
 @bp.route("/judge_request/id/<int:id>/finished", methods=["POST"])
-@require_authentication(allow_anonymous=False)
+@require_super
 def mark_judge_request_finished(id: int):
     judge_request = JudgeRequest.query.get(id)
     if judge_request is None:
@@ -90,3 +91,25 @@ def mark_judge_request_finished(id: int):
                     "finishTime": judge_request.finishTime
                 }
             )
+
+
+@bp.route("/judge_request/id/<int:id>", methods=["GET"])
+@require_authentication(allow_anonymous=False)
+def retrieve_judge_request(id: int):
+    judge_request = JudgeRequest.query.get(id)
+    if judge_request is None:
+        raise http.NotFound(reason="JudgeRequestNotFound")
+    else:
+        if g.user.isSuper or (g.user.id == judge_request.operator):
+            return http.Success(result={
+                "id": judge_request.id,
+                "submission": judge_request.submission,
+                "operator": judge_request.operator,
+                "reason": judge_request.reason,
+                "createTime": judge_request.createTime,
+                "finishTime": judge_request.finishTime,
+                "state": judge_request.state.value,
+                "detail": judge_request.detail,
+            })
+        else:
+            raise http.Forbidden(reason="PermissionDenied")
