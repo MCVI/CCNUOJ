@@ -41,10 +41,17 @@ def update_judge_request_state(id: int):
                 "type": "string"
             },
             "detail": {
-                "type": "object"
+                "oneOf": [
+                    {
+                        "type": "null",
+                    },
+                    {
+                        "type": "object",
+                    },
+                ],
             }
         },
-        "required": ["state"],
+        "required": ["state", "detail"],
         "additionalProperties": False
     }
     instance = get_request_json(schema=schema)

@@ -1,3 +1,4 @@
+from . import common
 from .global_object import *
 
 from . import webapi

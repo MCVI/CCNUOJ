@@ -8,8 +8,8 @@ command_handlers = {
 
 
 def dispatch_command(command: dict):
-    handler = command_handlers[command["type"]]
-    result = handler(command)
+    handler = command_handlers[command["command"]["type"]]
+    result = handler(command["command"])
     mark_judge_command_finished(command["id"])
     return result
 
@@ -19,4 +19,4 @@ def execute_command_list(command_list: list):
         if command["fetchTime"] is None:
             mark_judge_command_fetched(command["id"])
         print("Successfully fetched judge command #%d: %s" % (command["id"], command["command"]))
-        dispatch_command(command["command"])
+        dispatch_command(command)

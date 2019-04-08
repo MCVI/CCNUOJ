@@ -106,7 +106,14 @@ def mark_command_finished(id: int):
         "type": "object",
         "properties": {
             "result": {
-                "type": "object"
+                "oneOf": [
+                    {
+                        "type": "null",
+                    },
+                    {
+                        "type": "object",
+                    }
+                ]
             }
         },
         "required": ["result"],

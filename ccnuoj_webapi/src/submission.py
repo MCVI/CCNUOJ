@@ -78,37 +78,49 @@ def create_submission():
     })
 
 
-def submission_to_dict(submission: Submission) -> dict:
-    problem: Problem = Problem.query.get(submission.problem)
-    contest = None  # not implemented
-    author: User = User.query.get(submission.author)
-    latest_judge_request: JudgeRequest = (
-        JudgeRequest
-            .query
-            .filter_by(submission=submission.id)
-            .order_by(JudgeRequest.createTime.desc())
-            .limit(1)
-            .first()
-    )
+def submission_to_dict(submission: Submission, fields: list) -> dict:
+    instance = {}
+    plain_fields = [
+        "id",
+        "createTime",
+        "language",
+        "text",
+    ]
 
-    instance = {
-        "id": submission.id,
-        "createTime": submission.createTime,
-        "problem": {
+    for plain_field in plain_fields:
+        if plain_field in fields:
+            instance[plain_field] = getattr(submission, plain_field)
+
+    if "problem" in fields:
+        problem: Problem = Problem.query.get(submission.problem)
+        instance["problem"] = {
             "id": submission.problem,
             "title": problem.title,
-        },
-        "contest": contest,
-        "author": {
+        }
+
+    if "contest" in fields:
+        instance["contest"] = None # not implemented
+
+    if "author" in fields:
+        author: User = User.query.get(submission.author)
+        instance["author"] = {
             "id": author.id,
             "shortName": author.shortName,
-        },
-        "language": submission.language,
-        "latestJudgeRequest": {
+        }
+
+    if "latestJudgeRequest" in fields:
+        latest_judge_request: JudgeRequest = (
+            JudgeRequest
+                .query
+                .filter_by(submission=submission.id)
+                .order_by(JudgeRequest.createTime.desc())
+                .limit(1)
+                .first()
+        )
+        instance["latestJudgeRequest"] = {
             "id": latest_judge_request.id,
             "state": latest_judge_request.state.value,
-        },
-    }
+        }
 
     return instance
 
@@ -120,7 +132,15 @@ def get_submission_list(page_num: int):
 
     instance_list = []
     for submission in submission_list.items:
-        instance = submission_to_dict(submission)
+        instance = submission_to_dict(submission, [
+            "id",
+            "createTime",
+            "language",
+            "problem",
+            "contest",
+            "author",
+            "latestJudgeRequest",
+        ])
         instance_list.append(instance)
 
     return http.Success(result={
@@ -137,5 +157,14 @@ def get_submission_by_id(submission_id: int):
     if submission is None:
         raise http.NotFound(reason="SubmissionNotFound")
     else:
-        instance = submission_to_dict(submission)
+        instance = submission_to_dict(submission, [
+            "id",
+            "createTime",
+            "language",
+            "text",
+            "problem",
+            "contest",
+            "author",
+            "latestJudgeRequest",
+        ])
         return http.Success(result=instance)
