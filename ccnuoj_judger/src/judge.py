@@ -1,3 +1,4 @@
+import re
 import os
 import json
 import shutil
@@ -9,6 +10,22 @@ from .webapi import get_problem
 from .webapi import update_judge_request_state
 from .judge_data import JudgeDataNotUploaded
 from .judge_data import prepare_judge_data
+
+
+ignore_all_space = re.compile(r'\s+')
+ignore_trailing = re.compile(r'(\n+$)|( +(?=\n))')
+
+
+def diff_ignore_all_space(a: str, b: str) -> bool:
+    sa = ignore_all_space.sub('', a)
+    sb = ignore_all_space.sub('', b)
+    return sa == sb
+
+
+def diff_ignore_trailing(a: str, b: str) -> bool:
+    sa = ignore_trailing.sub('', a)
+    sb = ignore_trailing.sub('', b)
+    return sa == sb
 
 
 def do_judge(judge_request: dict):
@@ -50,6 +67,8 @@ def do_judge(judge_request: dict):
 
         update_judge_request_state(judge_request_id, JudgeState.running)
 
+        wa_flag = False
+        pe_flag = False
         for (testcase_name, testcase) in settings['testcases'].items():
             testcase_folder = '%s/%s' % (judge_request_folder, testcase_name)
             os.mkdir(testcase_folder)
@@ -66,13 +85,27 @@ def do_judge(judge_request: dict):
                 update_judge_request_state(judge_request_id, JudgeState.runtimeError)
                 return
 
-            answer_path = '%s/extracted/%s' % (judge_data_folder, testcase['answer'])
-            diff_status = os.system('diff -q {output} {answer}'.format(output=output_path, answer=answer_path))
-            if diff_status != 0:
-                update_judge_request_state(judge_request_id, JudgeState.wrongAnswer)
-                return
+            with open(output_path, 'rt') as file:
+                output_content = file.read()
 
-        update_judge_request_state(judge_request_id, JudgeState.accepted)
+            answer_path = '%s/extracted/%s' % (judge_data_folder, testcase['answer'])
+            with open(answer_path, 'rt') as file:
+                answer_content = file.read()
+
+            if not diff_ignore_trailing(output_content, answer_content):
+                if diff_ignore_all_space(output_content, answer_content):
+                    pe_flag = True
+                else:
+                    wa_flag = True
+
+        if wa_flag:
+            judge_state = JudgeState.wrongAnswer
+        elif pe_flag:
+            judge_state = JudgeState.presentationError
+        else:
+            judge_state = JudgeState.accepted
+
+        update_judge_request_state(judge_request_id, judge_state)
         return
 
     else:
