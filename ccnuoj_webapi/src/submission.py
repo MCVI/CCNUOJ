@@ -128,7 +128,14 @@ def submission_to_dict(submission: Submission, fields: list) -> dict:
 @bp.route("/submission/page/<int:page_num>", methods=["GET"])
 @require_authentication(allow_anonymous=True)
 def get_submission_list(page_num: int):
-    submission_list = pagination_list(Submission.query, page=page_num)
+    submission_list = pagination_list(
+        objs=(
+            Submission
+                .query
+                .order_by(Submission.id.desc())
+        ),
+        page=page_num
+    )
 
     instance_list = []
     for submission in submission_list.items:
