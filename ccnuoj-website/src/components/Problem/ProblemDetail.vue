@@ -108,6 +108,7 @@ export default {
       createSubmission(this.problemID, this.language, this.code)
         .then((result) => {
           this.$message.success('提交成功');
+          this.$router.push('/submission/list');
         })
         .catch((error) => {
           switch (error) {

@@ -10,6 +10,7 @@
     <el-menu-item index="/home">首 页</el-menu-item>
     <el-menu-item index="/contest/list">比 赛</el-menu-item>
     <el-menu-item index="/problem/list">题 库</el-menu-item>
+    <el-menu-item index="/submission/list">提 交</el-menu-item>
     <el-menu-item disabled index="">课 堂</el-menu-item>
     <el-menu-item disabled index="">数据中心</el-menu-item>
     <el-menu-item index="/help">帮助</el-menu-item>
