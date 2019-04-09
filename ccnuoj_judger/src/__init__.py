@@ -3,6 +3,7 @@ from .global_object import *
 
 from . import webapi
 
+from . import diff
 from . import judge
 from . import judge_request
 from . import command
