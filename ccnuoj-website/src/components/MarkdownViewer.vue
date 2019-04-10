@@ -48,9 +48,14 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 .markdown-text {
   text-align: left;
   font-size: 20px;
 }
+
+.MathJax{
+  outline:0;
+}
+
 </style>
