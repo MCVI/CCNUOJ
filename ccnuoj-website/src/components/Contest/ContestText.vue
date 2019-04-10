@@ -11,7 +11,7 @@
         <el-button @click="onClickEditText()" style="float: right;" type="primary">编辑文本</el-button>
       </template>
 
-      <div v-html="text" class="contest-text"></div>
+      <markdown-viewer :value="contest.text"></markdown-viewer>
     </template>
 
   </div>
@@ -21,19 +21,20 @@
 <script>
 
 import { mapGetters } from 'vuex';
-import marked from 'marked';
 
 import { getContest } from '@/api/Contest';
-import ContestRegisterStateDisplay from './Register/ContestRgisterStateDisplay';
+
+import MarkdownViewer from '../MarkdownViewer';
 
 export default {
   name: 'ContestText',
-  components: { ContestRegisterStateDisplay },
+  components: {
+    MarkdownViewer,
+  },
   data() {
     return {
       loading: true,
-      contest: {},
-      text: '',
+      contest: undefined,
     };
   },
   computed: {
@@ -66,7 +67,6 @@ export default {
     getContest(this.$route.params.contest_id)
       .then((result) => {
         this.contest = result;
-        this.text = marked(this.contest.text, { sanitize: true });
         this.loading = false;
       })
       .catch((error) => {
@@ -85,8 +85,4 @@ export default {
 </script>
 
 <style scoped>
-  .contest-text {
-    text-align: left;
-    font-size: 20px;
-  }
 </style>

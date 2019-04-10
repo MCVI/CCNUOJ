@@ -7,37 +7,7 @@
 
     <template v-else>
 
-      <el-row>
-        <el-col :span="1">
-          <br/>
-        </el-col>
-        <el-col :span="9">
-          <el-input
-            v-model="text"
-            type="textarea"
-            autosize
-            placeholder="请输入比赛文本"
-          >
-          </el-input>
-        </el-col>
-        <el-col :span="3">
-          <br/>
-        </el-col>
-        <el-col :span="9">
-          <el-input
-            v-html="renderResult"
-            class="contest-text"
-            type="textarea"
-            readonly="true"
-            autosize
-            placeholder="比赛文本为空"
-          >
-          </el-input>
-        </el-col>
-        <el-col :span="1">
-          <br/>
-        </el-col>
-      </el-row>
+      <markdown-editor v-model="text"></markdown-editor>
 
       <el-row>
         <el-button @click="onClickSubmit()" type="primary">提交</el-button>
@@ -50,12 +20,14 @@
 </template>
 
 <script>
-import marked from 'marked';
-
 import { getContest, updateContestText } from '@/api/Contest';
+import MarkdownEditor from '../MarkdownEditor';
 
 export default {
   name: 'ContestTextEditor',
+  components: {
+    MarkdownEditor,
+  },
   data() {
     return {
       loading: true,
@@ -65,13 +37,6 @@ export default {
   computed: {
     contestID() {
       return this.$route.params.contest_id;
-    },
-    renderResult() {
-      if (this.text === undefined) {
-        return undefined;
-      } else {
-        return marked(this.text, { sanitize: true });
-      }
     },
   },
 
@@ -101,7 +66,6 @@ export default {
   },
 
   mounted() {
-    this.loading = false;
     getContest(this.contestID)
       .then((result) => {
         this.text = result.text;
@@ -123,8 +87,4 @@ export default {
 </script>
 
 <style scoped>
-  .contest-text {
-    text-align: left;
-    font-size: 20px;
-  }
 </style>

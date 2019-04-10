@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     callMathJax() {
-      console.log('a');
       this.$nextTick(() => {
         window.MathJax.Hub.Queue([
           'Typeset',
