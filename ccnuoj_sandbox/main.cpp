@@ -6,9 +6,9 @@
 
 using namespace std;
 
-SandboxException::RetValue main_Internal(){
+SandboxException::RetValue main_Internal(const char *config_file_path){
 	ifstream configFile;
-	configFile.open("config.json", ios::in);
+	configFile.open(config_file_path, ios::in);
 	if(!configFile.is_open()){
 		return SandboxException::RetValue::CannotOpenConfigFile;
 	}
@@ -33,10 +33,13 @@ SandboxException::RetValue main_Internal(){
 	return SandboxException::RetValue::Finished;
 }
 
-int main(){
-	SyscallList_Init();
-
-	int ret = static_cast<int>(main_Internal());
-
-	return ret;
+int main(int argc, char *(argv[])){
+	SandboxException::RetValue ret;
+	if(argc == 2){
+		SyscallList_Init();
+		ret = main_Internal(argv[1]);
+	}else{
+		ret = SandboxException::RetValue::CommandLineUsageError;
+	}
+	return static_cast<int>(ret);
 }

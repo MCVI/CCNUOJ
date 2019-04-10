@@ -11,6 +11,7 @@ public:
 		Finished = 0,
 		UnknownError = 1,
 		FileOperationError = 2,
+		CommandLineUsageError = 3,
 
 		ReadConfigError = 10,
 		CannotOpenConfigFile = 11,

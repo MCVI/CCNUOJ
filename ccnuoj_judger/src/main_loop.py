@@ -16,6 +16,7 @@ def init(config_module):
         "data_folder",
         "default_folder_mode",
         "default_file_mode",
+        "sandbox_command",
         "api_base",
         "token"
     ]
