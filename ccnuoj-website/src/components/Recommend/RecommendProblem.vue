@@ -1,8 +1,8 @@
 <template>
-  <!-- 本组件 是 用于求助题目 -->
-  <!-- 本组件是由HelpPage跳转过来的 -->
+  <!-- 本组件 是 用于推荐题目 -->
+  <!-- 本组件是由RecommendPage跳转过来的 -->
   <div>
-    <el-form label-width="80px" ref="askHelpForm" style="margin-top: 10%;">
+    <el-form label-width="80px" ref="RecommendForm" style="margin-top: 10%;">
 
       <el-form-item label="题号" prop="account">
         <el-input v-model="problemId"> </el-input>
@@ -20,8 +20,6 @@
 
       <el-table-column prop="problemId" label="编号" sortable style="width: 20%"></el-table-column>
 
-      <el-table-column prop="title" label="题目" sortable style="width: 20%"></el-table-column>
-
       <el-table-column prop="handle" label="用户" border style="width: 20%"></el-table-column>
 
       <el-table-column prop="result" label="状态" sortable border style="width: 20%"></el-table-column>
@@ -38,7 +36,7 @@
 import { getPredictById } from '../../api/Help';
 
 export default {
-  name: 'AskForHelp',
+  name: 'RecommendProblem',
   data() {
     return {
       problemId: '',

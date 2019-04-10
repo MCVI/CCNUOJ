@@ -3,7 +3,7 @@ from flask import g
 from .util import http, get_request_json
 from .global_obj import database as db
 from .global_obj import blueprint as bp
-from .model import Contest, User
+from .model import Contest, User, Problem
 from .authentication import require_authentication
 
 import math
@@ -96,8 +96,12 @@ def highest_proba_users(problemId, highest_k, fileName):
         handles = json.load(f)
     proba = predict(handles, problemId)
     ret = list()
+    problem = Problem.query.get(problemId)
+    title = ""
+    if problem != None:
+        title = getattr(problem, "title")
     for i in range(len(handles)):
-        tmp = {'problemId':problemId, 'handle':handles[i], 'probability' : proba[i][1]}
+        tmp = {'problemId':problemId, 'title':title, 'handle':handles[i], 'probability' : proba[i][1]}
         ret.append(tmp);
     ret.sort(key=lambda x: x['probability'], reverse=True)
     ans = list()

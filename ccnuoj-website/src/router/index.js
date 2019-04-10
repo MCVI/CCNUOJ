@@ -32,6 +32,7 @@ import ContestRegisterAllList from '../components/Contest/Register/ContestRegist
 import ContestRegisterPassedList from '../components/Contest/Register/ContestRegisterPassedList';
 
 import HelpPage from '../views/HelpPage';
+import RecommendPage from '../views/RecommendPage';
 
 Vue.use(Router);
 
@@ -186,6 +187,11 @@ export default new Router({
       path: '/help',
       name: 'HelpPage',
       component: HelpPage,
+    },
+    {
+      path: '/recommend',
+      name: 'RecommendPage',
+      component: RecommendPage,
     },
     {
       path: '*',
