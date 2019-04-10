@@ -90,10 +90,7 @@ def getResult(handle, problemId):
 
 
 # 选出最高highest_k个能解除第problemId道题的用户
-def highest_proba_users(problemId, highest_k, fileName):
-    print(PredictPath + fileName)
-    with open(PredictPath + fileName,'r') as f:
-        handles = json.load(f)
+def highest_proba_users(problemId, highest_k, handles):
     proba = predict(handles, problemId)
     ret = list()
     problem = Problem.query.get(problemId)
@@ -113,7 +110,41 @@ def highest_proba_users(problemId, highest_k, fileName):
 
 @bp.route("/help/predict/<int:id>", methods=["GET"])
 def retrieve_help_predict(id):
+    fileName = 'user_list.json'
+    with open(PredictPath + fileName,'r') as f:
+        handles = json.load(f)
     instance = {
-        "result": highest_proba_users(id, 10, 'user_list.json'),
+        "result": highest_proba_users(id, 10, handles),
+    }
+    return http.Success(result=instance)
+
+
+def recommend_problem(handle, num, maxID=50):
+    handles = [handle]
+    ret = list()
+    for i in range(maxID):
+        tmp = highest_proba_users(i+1, 1, handles)
+        res = getResult(handle, tmp[0]['problemId'])
+        if res == 'pass':
+            continue
+        proba = tmp[0]['probability']
+        if proba < 0.3:
+            continue
+        if proba > 0.7:
+            continue
+        tmp[0]['result'] = res
+        ret.append(tmp[0])
+    ret.sort(key=lambda x: x['probability'], reverse=True)
+    ans = list()
+    n = min(num, len(ret))
+    for i in range(n):
+        ans.append(ret[i])
+    return ans
+
+
+@bp.route("/help/recommend/<string:handle>", methods=["GET"])
+def retrieve_recommend_problem(handle):
+    instance = {
+        "result": recommend_problem(handle, 5),
     }
     return http.Success(result=instance)

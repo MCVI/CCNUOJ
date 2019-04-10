@@ -4,14 +4,14 @@
   <div>
     <el-form label-width="80px" ref="RecommendForm" style="margin-top: 10%;">
 
-      <el-form-item label="题号" prop="account">
+      <el-form-item label="用户" prop="account">
         <el-input v-model="problemId"> </el-input>
       </el-form-item>
 
       <div style="height:35px"></div>
 
       <el-form-item size="large">
-        <el-button @click="onSubmit()" style="width:200px ; height:40px" type="primary">预测</el-button>
+        <el-button @click="onSubmit()" style="width:200px ; height:40px" type="primary">推荐</el-button>
       </el-form-item>
 
     </el-form>
@@ -19,6 +19,8 @@
     <el-table :data="predictList" height="500" border style="width: 100%">
 
       <el-table-column prop="problemId" label="编号" sortable style="width: 20%"></el-table-column>
+
+      <el-table-column prop="title" label="题目" border style="width: 20%"></el-table-column>
 
       <el-table-column prop="handle" label="用户" border style="width: 20%"></el-table-column>
 
@@ -33,7 +35,7 @@
 
 
 <script>
-import { getPredictById } from '../../api/Help';
+import { getRecommendByHandle } from '../../api/Help';
 
 export default {
   name: 'RecommendProblem',
@@ -46,7 +48,7 @@ export default {
 
   methods: {
     onSubmit() {
-      getPredictById(this.problemId)
+      getRecommendByHandle(this.problemId)
         .then((result) => {
           this.predictList = result.result;
         })

@@ -18,3 +18,22 @@ export const getPredictById = (id) => new Promise((resolve, reject) => {
       }
     });
 });
+
+export const getRecommendByHandle = (handle) => new Promise((resolve, reject) => {
+  request.get(`/help/recommend/${handle}`)
+    .then((response) => {
+      resolve(response.data.result);
+    })
+    .catch((error) => {
+      if ('response' in error) {
+        const { data } = error.response;
+        if ('reason' in data) {
+          reject(data.reason);
+        } else {
+          reject('UnknownError');
+        }
+      } else {
+        reject('NetworkError');
+      }
+    });
+});
