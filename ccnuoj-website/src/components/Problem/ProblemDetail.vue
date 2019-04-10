@@ -7,9 +7,17 @@
     <template v-else>
       <!-- 取值如下 -->
 
-      <p class="title-css">
-        {{ problem.title }}
-      </p>
+      <el-row>
+        <p class="title-css">
+          {{ problem.title }}
+        </p>
+        <el-button
+          @click="$router.push({name:'UpdateProblem'})"
+          id="update-problem"
+          type="primary">
+          编辑题目
+        </el-button>
+      </el-row>
 
       <div
         v-html="renderedText"
@@ -161,4 +169,7 @@ export default {
   font-size: 12px;
 }
 
+#update-problem {
+  float: right;
+}
 </style>

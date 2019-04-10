@@ -2,6 +2,13 @@
 <!-- 本组件是 从后端调用题目数据 显示题目list  -->
 <div>
 
+  <el-button
+    @click="$router.push({name:'CreateProblem'})"
+    id="create-problem"
+    type="primary">
+    添加题目
+  </el-button>
+
   <el-table :data="problem" border height="500" style="width: 100%">
 
     <el-table-column label="编号" prop="id" sortable style="width: 20%"></el-table-column>
@@ -58,5 +65,7 @@ export default {
 </script>
 
 <style scoped>
-
+#create-problem {
+  float: right;
+}
 </style>
