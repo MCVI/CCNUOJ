@@ -25,6 +25,7 @@
           :readonly="true"
           autosize
           placeholder="文本为空"
+          ref="markdown-area"
         >
         </el-input>
       </el-col>
@@ -53,9 +54,18 @@ export default {
     event: 'change',
   },
   methods: {
+    callMathJax() {
+      this.$nextTick(() => {
+        window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, this.$refs['markdown-area'].name]);
+      });
+    },
     onInput(value) {
       this.$emit('change', value);
+      this.callMathJax();
     },
+  },
+  mounted() {
+    this.callMathJax();
   },
 };
 
