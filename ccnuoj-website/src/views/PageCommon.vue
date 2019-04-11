@@ -6,11 +6,17 @@
   <!-- <nav-menu/> -->
 
   <el-main>
+
     <nav-menu/>
-    <p class="title">CCNU Online Judge</p>
+
+    <template v-if="displayCommonLine">
+      <p class="title">CCNU Online Judge</p>
+    </template>
+
     <div class="content">
       <slot></slot>
     </div>
+
   </el-main>
 
 </el-container>
@@ -23,9 +29,11 @@ import NavMenu from '../components/NavMenu';
 
 export default {
   name: 'PageCommon',
-  data() {
-    return {
-    };
+  props: {
+    displayCommonLine: {
+      type: Boolean,
+      default: true,
+    },
   },
   components: {
     NavMenu,

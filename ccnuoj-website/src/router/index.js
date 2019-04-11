@@ -11,10 +11,9 @@ import UserRegister from '../components/User/UserRegister';
 import UserInfoDisplay from '../components/User/UserInfoDisplay';
 import UserInfoEdit from '../components/User/UserInfoEdit';
 
-import ProblemPage from '../views/ProblemPage';
-import ProblemList from '../components/Problem/ProblemList';
-import ProblemDetail from '../components/Problem/ProblemDetail';
-import ProblemEditor from '../components/Problem/ProblemEditor';
+import ProblemList from '../views/Problem/ProblemList';
+import ProblemDetail from '../views/Problem/ProblemDetail';
+import ProblemEditor from '../views/Problem/ProblemEditor';
 
 import SubmissionPage from '../views/SubmissionPage';
 import SubmissionList from '../components/Submission/SubmissionList';
@@ -77,37 +76,31 @@ export default new Router({
     },
     {
       path: '/problem',
-      component: ProblemPage,
-      children: [
-        {
-          path: '',
-          redirect: 'list',
-        },
-        {
-          path: 'list',
-          name: 'ProblemList',
-          component: ProblemList,
-        },
-        {
-          path: ':problem_id(\\d+)',
-          name: 'ProblemDetail',
-          component: ProblemDetail,
-        },
-        {
-          path: ':problem_id(\\d+)/editor',
-          name: 'UpdateProblem',
-          component: ProblemEditor,
-          props: true,
-        },
-        {
-          path: 'new/editor',
-          name: 'CreateProblem',
-          component: ProblemEditor,
-          props: {
-            problem_id: null,
-          },
-        },
-      ],
+      redirect: 'problem/list',
+    },
+    {
+      path: '/problem/list',
+      name: 'ProblemList',
+      component: ProblemList,
+    },
+    {
+      path: '/problem/:problem_id(\\d+)',
+      name: 'ProblemDetail',
+      component: ProblemDetail,
+    },
+    {
+      path: '/problem/:problem_id(\\d+)/editor',
+      name: 'UpdateProblem',
+      component: ProblemEditor,
+      props: true,
+    },
+    {
+      path: '/problem/new/editor',
+      name: 'CreateProblem',
+      component: ProblemEditor,
+      props: {
+        problem_id: null,
+      },
     },
     {
       path: '/submission',

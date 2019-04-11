@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <page-common :display-common-line="false">
+
     <template v-if="loading">
       <div v-loading="true"></div>
     </template>
@@ -45,18 +46,20 @@
       提交
     </el-button>
 
-  </div>
+  </page-common>
 </template>
 
 <script>
 import { getProblem } from '@/api/Problem';
 import { createSubmission } from '@/api/Submission';
 
-import MarkdownViewer from '../MarkdownViewer';
+import PageCommon from '../PageCommon';
+import MarkdownViewer from '../../components/MarkdownViewer';
 
 export default {
   name: 'ProblemDetail',
   components: {
+    PageCommon,
     MarkdownViewer,
   },
   data() {

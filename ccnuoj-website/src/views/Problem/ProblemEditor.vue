@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <page-common>
 
     <template v-if="loading">
       <div v-loading="true"></div>
@@ -46,7 +46,7 @@
       </el-form>
     </template>
 
-  </div>
+  </page-common>
 
 </template>
 
@@ -57,11 +57,13 @@ import {
   updateProblem,
 } from '../../api/Problem';
 
-import MarkdownEditor from '../MarkdownEditor';
+import PageCommon from '../PageCommon';
+import MarkdownEditor from '../../components/MarkdownEditor';
 
 export default {
   name: 'ProblemEditor',
   components: {
+    PageCommon,
     MarkdownEditor,
   },
   props: ['problem_id'],

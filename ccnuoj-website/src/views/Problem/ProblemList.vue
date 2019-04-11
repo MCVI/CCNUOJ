@@ -1,6 +1,6 @@
 <template>
 <!-- 本组件是 从后端调用题目数据 显示题目list  -->
-<div>
+<page-common>
 
   <el-button
     @click="$router.push({name:'CreateProblem'})"
@@ -34,11 +34,14 @@
 
   </el-table>
 
-</div>
+</page-common>
 </template>
 
 <script>
+
 import { getProblemList } from '@/api/Problem';
+
+import PageCommon from '../PageCommon';
 
 export default {
   name: 'ProblemList',
@@ -60,7 +63,7 @@ export default {
         this.$message.error('获取数据错误');
       });
   },
-  components: {},
+  components: { PageCommon },
 };
 </script>
 
