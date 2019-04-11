@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <page-common>
     <template v-if="initialLoading">
       <div v-loading="true"></div>
     </template>
@@ -26,7 +26,11 @@
 
         <el-table-column border label="语言" prop="language" style="width: 15%"></el-table-column>
 
-        <el-table-column border label="状态" prop="latestJudgeRequest.state" style="width: 15%"></el-table-column>
+        <el-table-column border label="状态" prop="latestJudgeRequest.state" style="width: 15%">
+          <template slot-scope="scope">
+            <judge-request-state :value="scope.row.latestJudgeRequest.state"></judge-request-state>
+          </template>
+        </el-table-column>
 
         <el-table-column border label="创建时间" prop="createTime" style="width: 20%"></el-table-column>
 
@@ -41,11 +45,15 @@
 
     </template>
 
-  </div>
+  </page-common>
 </template>
 
 <script>
+
 import { getSubmissionList } from '@/api/Submission';
+
+import PageCommon from '../PageCommon';
+import JudgeRequestState from '../../components/JudgeRequestState';
 
 export default {
   name: 'SubmissionList',
@@ -107,10 +115,9 @@ export default {
         this.initialLoading = false;
       });
   },
-  components: {},
+  components: { JudgeRequestState, PageCommon },
 };
 </script>
 
 <style>
-
 </style>

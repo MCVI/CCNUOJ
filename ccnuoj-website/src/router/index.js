@@ -16,7 +16,7 @@ import ProblemDetail from '../views/Problem/ProblemDetail';
 import ProblemEditor from '../views/Problem/ProblemEditor';
 
 import SubmissionPage from '../views/SubmissionPage';
-import SubmissionList from '../components/Submission/SubmissionList';
+import SubmissionList from '../views/Submission/SubmissionList';
 
 import ContestPage from '../views/ContestPage';
 import ContestList from '../components/Contest/ContestList';
