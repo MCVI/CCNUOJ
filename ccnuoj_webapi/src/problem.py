@@ -2,6 +2,7 @@ from flask import g
 
 from .util import get_request_json
 from .util import http
+from .util import pagination_list
 from .global_obj import database as db
 from .global_obj import blueprint as bp
 from .model import Problem, User
@@ -169,10 +170,14 @@ def get_problem(id: int):
 
 @bp.route("/problem/page/<int:page_num>", methods=["GET"])
 def get_problem_list(page_num: int):
-    problem_list = Problem.query.paginate(
+    problems = pagination_list(
+        objs=Problem.query.order_by(Problem.id.asc()),
         page=page_num,
-        per_page=20
-    ).items
+        limit=20,
+    )
+
+    problem_list = problems.items
+    page_count = problems.pages
 
     instance = []
     for problem in problem_list:
@@ -191,4 +196,7 @@ def get_problem_list(page_num: int):
 
         instance.append(inst)
 
-    return http.Success(result=instance)
+    return http.Success(result={
+        "list": instance,
+        "pageCount": page_count,
+    })
