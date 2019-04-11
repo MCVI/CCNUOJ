@@ -15,7 +15,7 @@
         添加题目
       </el-button>
 
-      <el-table v-loading="loading" :data="problemList" border height="500" style="width: 100%">
+      <el-table v-loading="loading" :data="problemList" border style="width: 100%">
 
         <el-table-column label="编号" prop="id" sortable style="width: 20%"></el-table-column>
 
