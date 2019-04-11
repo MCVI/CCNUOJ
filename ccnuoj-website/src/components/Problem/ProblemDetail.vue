@@ -7,14 +7,19 @@
     <template v-else>
       <!-- 取值如下 -->
 
-      <p class="title-css">
-        {{ problem.title }}
-      </p>
+      <el-row>
+        <p class="title-css">
+          {{ problem.title }}
+        </p>
+        <el-button
+          @click="$router.push({name:'UpdateProblem'})"
+          id="update-problem"
+          type="primary">
+          编辑题目
+        </el-button>
+      </el-row>
 
-      <div
-        v-html="renderedText"
-        class="text-css">
-      </div>
+      <markdown-viewer :value="problem.text"></markdown-viewer>
 
       <br/>
     </template>
@@ -46,15 +51,18 @@
 <script>
 import { getProblem } from '@/api/Problem';
 import { createSubmission } from '@/api/Submission';
-import marked from 'marked';
+
+import MarkdownViewer from '../MarkdownViewer';
 
 export default {
   name: 'ProblemDetail',
+  components: {
+    MarkdownViewer,
+  },
   data() {
     return {
       loading: true,
       problem: undefined,
-      renderedText: undefined,
       code: '',
       options: [{
         value: 'cpp',
@@ -86,7 +94,6 @@ export default {
     getProblem(problemID)
       .then((problem) => {
         this.problem = problem;
-        this.renderedText = this.renderText(this.problem.text);
         this.loading = false;
       })
       .catch((error) => {
@@ -101,9 +108,6 @@ export default {
       });
   },
   methods: {
-    renderText(text) {
-      return marked(text, { sanitize: true });
-    },
     onClickSubmit() {
       createSubmission(this.problemID, this.language, this.code)
         .then((result) => {
@@ -161,4 +165,7 @@ export default {
   font-size: 12px;
 }
 
+#update-problem {
+  float: right;
+}
 </style>

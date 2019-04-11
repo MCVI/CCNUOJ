@@ -14,6 +14,7 @@ import UserInfoEdit from '../components/User/UserInfoEdit';
 import ProblemPage from '../views/ProblemPage';
 import ProblemList from '../components/Problem/ProblemList';
 import ProblemDetail from '../components/Problem/ProblemDetail';
+import ProblemEditor from '../components/Problem/ProblemEditor';
 
 import SubmissionPage from '../views/SubmissionPage';
 import SubmissionList from '../components/Submission/SubmissionList';
@@ -88,9 +89,23 @@ export default new Router({
           component: ProblemList,
         },
         {
-          path: ':problem_id',
+          path: ':problem_id(\\d+)',
           name: 'ProblemDetail',
           component: ProblemDetail,
+        },
+        {
+          path: ':problem_id(\\d+)/editor',
+          name: 'UpdateProblem',
+          component: ProblemEditor,
+          props: true,
+        },
+        {
+          path: 'new/editor',
+          name: 'CreateProblem',
+          component: ProblemEditor,
+          props: {
+            problem_id: null,
+          },
         },
       ],
     },

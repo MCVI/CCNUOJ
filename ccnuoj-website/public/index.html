@@ -32,5 +32,22 @@
     /* 这个是移动端设备横屏、竖屏转换时触发的事件处理函数 */
   })(window,document);
 </script>
-</html>
 
+<script type="text/x-mathjax-config">
+window.MathJax.Hub.Config({
+  showProcessingMessages: false, //关闭js加载过程信息
+  messageStyle: "none", //不显示信息
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [["$", "$"]], //行内公式选择符
+    displayMath: [["$$", "$$"]], //段内公式选择符
+    skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+  },
+  "HTML-CSS": {
+    availableFonts: ["STIX", "TeX"], //可选字体
+    showMathMenu: false //关闭右击菜单显示
+  }
+});
+</script>
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</html>
