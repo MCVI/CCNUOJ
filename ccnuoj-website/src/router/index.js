@@ -15,7 +15,6 @@ import ProblemList from '../views/Problem/ProblemList';
 import ProblemDetail from '../views/Problem/ProblemDetail';
 import ProblemEditor from '../views/Problem/ProblemEditor';
 
-import SubmissionPage from '../views/SubmissionPage';
 import SubmissionList from '../views/Submission/SubmissionList';
 
 import ContestPage from '../views/ContestPage';
@@ -103,19 +102,9 @@ export default new Router({
       },
     },
     {
-      path: '/submission',
-      component: SubmissionPage,
-      children: [
-        {
-          path: '',
-          redirect: 'list',
-        },
-        {
-          path: 'list',
-          name: 'SubmissionList',
-          component: SubmissionList,
-        },
-      ],
+      path: '/submission/list',
+      name: 'SubmissionList',
+      component: SubmissionList,
     },
     {
       path: '/contest',
