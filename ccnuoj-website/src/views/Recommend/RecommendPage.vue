@@ -20,9 +20,9 @@
 
 <script>
 
-import PageCommon from './PageCommon';
-import RecommendProblem from '../components/Recommend/RecommendProblem';
-import AskForHelp from '../components/Help/AskForHelp';
+import PageCommon from '../PageCommon';
+import RecommendProblem from './RecommendProblem';
+import AskForHelp from '../Help/AskForHelp';
 
 export default {
   name: 'RecommendPage',

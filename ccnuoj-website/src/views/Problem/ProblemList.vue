@@ -1,6 +1,6 @@
 <template>
 
-<!-- 本组件是 从后端调用题目数据 显示题目list  -->
+  <!-- 本组件是 从后端调用题目数据 显示题目list  -->
 
   <page-common>
     <template v-if="initialLoading">
@@ -49,7 +49,7 @@
 
     </template>
 
-</page-common>
+  </page-common>
 
 </template>
 

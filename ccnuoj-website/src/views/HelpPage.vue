@@ -21,7 +21,7 @@
 <script>
 
 import PageCommon from './PageCommon';
-import AskForHelp from '../components/Help/AskForHelp';
+import AskForHelp from './Help/AskForHelp';
 
 export default {
   name: 'HelpPage',

@@ -24,7 +24,7 @@ import { mapGetters } from 'vuex';
 
 import { getContest } from '@/api/Contest';
 
-import MarkdownViewer from '../MarkdownViewer';
+import MarkdownViewer from '../../components/MarkdownViewer';
 
 export default {
   name: 'ContestText',

@@ -5,11 +5,11 @@ import NotFoundPage from '../views/NotFoundPage';
 
 import HomePage from '../views/HomePage';
 
-import UserPage from '../views/UserPage';
-import UserLogin from '../components/User/UserLogin';
-import UserRegister from '../components/User/UserRegister';
-import UserInfoDisplay from '../components/User/UserInfoDisplay';
-import UserInfoEdit from '../components/User/UserInfoEdit';
+import UserPage from '../views/User/UserPage';
+import UserLogin from '../views/User/UserLogin';
+import UserRegister from '../views/User/UserRegister';
+import UserInfoDisplay from '../views/User/UserInfoDisplay';
+import UserInfoEdit from '../views/User/UserInfoEdit';
 
 import ProblemList from '../views/Problem/ProblemList';
 import ProblemDetail from '../views/Problem/ProblemDetail';
@@ -17,21 +17,21 @@ import ProblemEditor from '../views/Problem/ProblemEditor';
 
 import SubmissionList from '../views/Submission/SubmissionList';
 
-import ContestPage from '../views/ContestPage';
-import ContestList from '../components/Contest/ContestList';
-import ContestDetail from '../components/Contest/ContestDetail';
-import ContestRank from '../components/Contest/ContestRank';
-import ContestProblemList from '../components/Contest/Problem/ContestProblemList';
-import ContestProblemDetail from '../components/Contest/Problem/ContestProblemDetail';
+import ContestPage from '../views/Contest/ContestPage';
+import ContestList from '../views/Contest/ContestList';
+import ContestDetail from '../views/Contest/ContestDetail';
+import ContestRank from '../views/Contest/ContestRank';
+import ContestProblemList from '../views/Contest/Problem/ContestProblemList';
+import ContestProblemDetail from '../views/Contest/Problem/ContestProblemDetail';
 
-import ContestText from '../components/Contest/ContestText';
-import ContestTextEditor from '../components/Contest/ContestTextEditor';
-import ContestRegisterStateDisplay from '../components/Contest/Register/ContestRgisterStateDisplay';
-import ContestRegisterAllList from '../components/Contest/Register/ContestRegisterAllList';
-import ContestRegisterPassedList from '../components/Contest/Register/ContestRegisterPassedList';
+import ContestText from '../views/Contest/ContestText';
+import ContestTextEditor from '../views/Contest/ContestTextEditor';
+import ContestRegisterStateDisplay from '../views/Contest/Register/ContestRgisterStateDisplay';
+import ContestRegisterAllList from '../views/Contest/Register/ContestRegisterAllList';
+import ContestRegisterPassedList from '../views/Contest/Register/ContestRegisterPassedList';
 
 import HelpPage from '../views/HelpPage';
-import RecommendPage from '../views/RecommendPage';
+import RecommendPage from '../views/Recommend/RecommendPage';
 
 Vue.use(Router);
 

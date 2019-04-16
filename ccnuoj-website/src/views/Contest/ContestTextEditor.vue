@@ -21,7 +21,7 @@
 
 <script>
 import { getContest, updateContestText } from '@/api/Contest';
-import MarkdownEditor from '../MarkdownEditor';
+import MarkdownEditor from '../../components/MarkdownEditor';
 
 export default {
   name: 'ContestTextEditor',

@@ -10,7 +10,7 @@
 
 <script>
 
-import PageCommon from './PageCommon';
+import PageCommon from '../PageCommon';
 
 export default {
   name: 'ContestPage',
