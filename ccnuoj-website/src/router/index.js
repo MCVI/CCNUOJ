@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import asyncLoad from '../components/async-load';
+
 import homePageRoute from './HomePage';
 import userRoute from './User';
 import problemRoute from './Problem';
@@ -9,7 +11,7 @@ import contestRoute from './Contest';
 import helpRoute from './Help';
 import recommendRoute from './Recommend';
 
-const NotFoundPage = () => import('../views/NotFoundPage');
+const NotFoundPage = asyncLoad(import('../views/NotFoundPage'));
 
 Vue.use(Router);
 

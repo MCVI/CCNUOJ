@@ -1,6 +1,8 @@
-const ProblemList = () => import('../views/Problem/ProblemList');
-const ProblemDetail = () => import('../views/Problem/ProblemDetail');
-const ProblemEditor = () => import('../views/Problem/ProblemEditor');
+import asyncLoad from '../components/async-load';
+
+const ProblemList = asyncLoad(import('../views/Problem/ProblemList'));
+const ProblemDetail = asyncLoad(import('../views/Problem/ProblemDetail'));
+const ProblemEditor = asyncLoad(import('../views/Problem/ProblemEditor'));
 
 export default [
   {

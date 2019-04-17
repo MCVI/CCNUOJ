@@ -1,4 +1,6 @@
-const HelpPage = () => import('../views/HelpPage');
+import asyncLoad from '../components/async-load';
+
+const HelpPage = asyncLoad(import('../views/HelpPage'));
 
 export default [
   {

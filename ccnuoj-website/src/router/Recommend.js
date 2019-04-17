@@ -1,4 +1,6 @@
-const RecommendPage = () => import('../views/Recommend/RecommendPage');
+import asyncLoad from '../components/async-load';
+
+const RecommendPage = asyncLoad(import('../views/Recommend/RecommendPage'));
 
 export default [
   {

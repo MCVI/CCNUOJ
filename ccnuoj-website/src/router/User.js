@@ -1,8 +1,10 @@
-const UserPage = () => import('../views/User/UserPage');
-const UserLogin = () => import('../views/User/UserLogin');
-const UserRegister = () => import('../views/User/UserRegister');
-const UserInfoDisplay = () => import('../views/User/UserInfoDisplay');
-const UserInfoEdit = () => import('../views/User/UserInfoEdit');
+import asyncLoad from '../components/async-load';
+
+const UserPage = asyncLoad(import('../views/User/UserPage'));
+const UserLogin = asyncLoad(import('../views/User/UserLogin'));
+const UserRegister = asyncLoad(import('../views/User/UserRegister'));
+const UserInfoDisplay = asyncLoad(import('../views/User/UserInfoDisplay'));
+const UserInfoEdit = asyncLoad(import('../views/User/UserInfoEdit'));
 
 export default [
   {

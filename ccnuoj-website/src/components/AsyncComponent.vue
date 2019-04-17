@@ -17,16 +17,7 @@
   Asynchronous Dynamic Component Loader
 */
 
-import AsyncComponentLoading from './AsyncComponentLoading';
-import AsyncComponentError from './AsyncComponentError';
-
-const asyncComponentFactory = (path, delay, timeout) => () => ({
-  component: import(`@/${path}`),
-  loading: AsyncComponentLoading,
-  error: AsyncComponentError,
-  delay,
-  timeout,
-});
+import asyncLoad from './async-load';
 
 export default {
   name: 'AsyncComponent',
@@ -36,25 +27,25 @@ export default {
       type: String,
       required: true,
     },
-    keepAlive: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
     delay: {
       type: Number,
       required: false,
-      default: 200, // delay before display to avoid flickering
+      default: undefined,
     },
     timeout: {
       type: Number,
       required: false,
       default: undefined,
     },
+    keepAlive: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   computed: {
     comp() {
-      return asyncComponentFactory(this.path, this.delay, this.timeout);
+      return asyncLoad(import(this.path), this.delay, this.timeout);
     },
   },
 };

@@ -1,4 +1,6 @@
-const HomePage = () => import('../views/HomePage');
+import asyncLoad from '../components/async-load';
+
+const HomePage = asyncLoad(import('../views/HomePage'));
 
 export default [
   {

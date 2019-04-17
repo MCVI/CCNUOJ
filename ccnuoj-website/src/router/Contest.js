@@ -1,15 +1,17 @@
-const ContestPage = () => import('../views/Contest/ContestPage');
-const ContestList = () => import('../views/Contest/ContestList');
-const ContestDetail = () => import('../views/Contest/ContestDetail');
-const ContestRank = () => import('../views/Contest/ContestRank');
-const ContestProblemList = () => import('../views/Contest/Problem/ContestProblemList');
-const ContestProblemDetail = () => import('../views/Contest/Problem/ContestProblemDetail');
+import asyncLoad from '../components/async-load';
 
-const ContestText = () => import('../views/Contest/ContestText');
-const ContestTextEditor = () => import('../views/Contest/ContestTextEditor');
-const ContestRegisterStateDisplay = () => import('../views/Contest/Register/ContestRgisterStateDisplay');
-const ContestRegisterAllList = () => import('../views/Contest/Register/ContestRegisterAllList');
-const ContestRegisterPassedList = () => import('../views/Contest/Register/ContestRegisterPassedList');
+const ContestPage = asyncLoad(import('../views/Contest/ContestPage'));
+const ContestList = asyncLoad(import('../views/Contest/ContestList'));
+const ContestDetail = asyncLoad(import('../views/Contest/ContestDetail'));
+const ContestRank = asyncLoad(import('../views/Contest/ContestRank'));
+const ContestProblemList = asyncLoad(import('../views/Contest/Problem/ContestProblemList'));
+const ContestProblemDetail = asyncLoad(import('../views/Contest/Problem/ContestProblemDetail'));
+
+const ContestText = asyncLoad(import('../views/Contest/ContestText'));
+const ContestTextEditor = asyncLoad(import('../views/Contest/ContestTextEditor'));
+const ContestRegisterStateDisplay = asyncLoad(import('../views/Contest/Register/ContestRgisterStateDisplay'));
+const ContestRegisterAllList = asyncLoad(import('../views/Contest/Register/ContestRegisterAllList'));
+const ContestRegisterPassedList = asyncLoad(import('../views/Contest/Register/ContestRegisterPassedList'));
 
 export default [
   {

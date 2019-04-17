@@ -1,4 +1,6 @@
-const SubmissionList = () => import('../views/Submission/SubmissionList');
+import asyncLoad from '../components/async-load';
+
+const SubmissionList = asyncLoad(import('../views/Submission/SubmissionList'));
 
 export default [
   {
